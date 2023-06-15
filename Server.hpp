@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 12:38:42 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/15 12:48:18 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include <vector>
 #include <exception>
 #include <poll.h>
-
-#define BACKLOG 10
 
 class Server
 {
