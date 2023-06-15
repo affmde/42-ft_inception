@@ -114,7 +114,7 @@ void Server::poll_client_events()
 					pollfd_iter->fd = -1;
 					continue;
 				}
-				emit(msg_buf, bytes_read, sockfd, pollfd_iter->fd);
+				emit(msg_buf, sockfd, pollfd_iter->fd);
 				std::cout << msg_buf << std::endl;
 			}
 		}
@@ -123,17 +123,39 @@ void Server::poll_client_events()
 	std::cerr << "Error: poll: " << strerror(errno) << std::endl;
 }
 
-void	Server::emit(unsigned char *msg, int bytes_read, int socketfd, int sender)
+void	Server::emit(unsigned char *msg, int socketfd, int sender)
 {
+	int	len = strlen((const char *)msg);
 	std::vector<pollfd>::iterator it = this->pollfds.begin();
 	for (;it != this->pollfds.end(); ++it)
 	{
 		int dest_fd = (*it).fd;
 		if (dest_fd != socketfd && dest_fd != sender)
-			if (send(dest_fd, msg, bytes_read, 0) == -1)
+			if (sendAllData(dest_fd, msg, &len) == -1)
 			{
 				std::cerr << "Error: send " << strerror(errno) << std::endl;
 				exit(1);
 			}
 	}
+}
+
+int	Server::sendAllData(int socket, unsigned char *msg, int *len)
+{
+	int	total = 0;
+	int	bytes_left = *len;
+	int	n;
+
+	while (total < *len)
+	{
+		n = send(socket, msg, bytes_left, 0);
+		if (n == -1)
+			break;
+		total += n;
+		bytes_left -= n;
+	}
+
+	*len = total;
+	if (n == -1)
+		return (-1);
+	return (0);
 }

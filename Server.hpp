@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 13:03:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:15:55 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ public:
 	~Server();
 
 	void	poll_client_events();
-	void	emit(unsigned char	*, int, int, int);
+	void	emit(unsigned char*, int, int);
+	int		sendAllData(int, unsigned char*, int*);
 
 private:
 	static const int listen_timeout = 10;
