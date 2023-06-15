@@ -74,14 +74,11 @@ void Server::poll_client_events()
 	int event_count = 0;
 	while ((event_count = poll(pollfds.data(), pollfds.size(), -1)) != -1)
 	{
-		std::vector<pollfd>::iterator pollfd_iter = pollfds.begin();
-		while (pollfd_iter != pollfds.end() && event_count > 0)
+		for (std::vector<pollfd>::iterator pollfd_iter = pollfds.begin();
+			pollfd_iter != pollfds.end() && event_count > 0; pollfd_iter++)
 		{
 			if (pollfd_iter->revents == 0)
-			{
-				pollfd_iter++;
 				continue;
-			}
 			event_count--;
 			if (pollfd_iter->fd == sockfd)
 			{
@@ -117,12 +114,10 @@ void Server::poll_client_events()
 					std::cout << "Client closed connection!" << std::endl;
 					close(pollfd_iter->fd);
 					pollfd_iter->fd = -1;
-					pollfd_iter++;
 					continue;
 				}
 				std::cout << msg_buf << std::endl;
 			}
-			pollfd_iter++;
 		}
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}
