@@ -37,7 +37,7 @@ Server::Server(const char *port)
 
 	freeaddrinfo(servinfo);
 
-	if (listen(sockfd, listen_timeout) == -1)
+	if (listen(sockfd, listenTimeout) == -1)
 		throw InitFailed(std::string("Error: listen: ") + strerror(errno));
 
 	pollfd server_poll_fd;
@@ -51,7 +51,7 @@ Server::~Server()
 	close(sockfd);
 }
 
-void Server::poll_client_events()
+void Server::pollClientEvents()
 {
 	int event_count = 0;
 	while ((event_count = poll(pollfds.data(), pollfds.size(), -1)) != -1)
@@ -63,16 +63,16 @@ void Server::poll_client_events()
 				continue;
 			event_count--;
 			if (pollfd_iter->fd == sockfd)
-				register_new_user();
+				registerNewUser();
 			else
-				handle_client_msg(&pollfd_iter->fd);
+				handleClientMessage(&pollfd_iter->fd);
 		}
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}
 	std::cerr << "Error: poll: " << strerror(errno) << std::endl;
 }
 
-void Server::register_new_user()
+void Server::registerNewUser()
 {
 	std::cout << "New connection!" << std::endl;
 	sockaddr_storage client_addr;
@@ -90,11 +90,11 @@ void Server::register_new_user()
 	pollfds.push_back(client_poll_fd);
 }
 
-void Server::handle_client_msg(int *client_fd)
+void Server::handleClientMessage(int *client_fd)
 {
 	std::cout << "Client sent something!" << std::endl;
 	// TODO(Hans): Find way to detect/handle messages longer than msg_buf_size
-	int bytes_read = recv(*client_fd, msg_buf, sizeof(msg_buf) - 1, 0);
+	int bytes_read = recv(*client_fd, buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
 	if (bytes_read == 0)
@@ -104,44 +104,29 @@ void Server::handle_client_msg(int *client_fd)
 		*client_fd = -1;
 		return;
 	}
-	msg_buf[bytes_read] = '\0';
-	std::cout << msg_buf << std::endl;
-	emit(msg_buf, *client_fd);
+	buffer[bytes_read] = '\0';
+	std::cout << buffer << std::endl;
+	emit(*client_fd, buffer);
 }
 
-void	Server::emit(unsigned char *msg, int sender)
+void Server::sendAllData(int client_fd, const char *msg)
 {
-	int	len = strlen((const char *)msg);
+	int	bytes_left = strlen(msg);
+	while (bytes_left > 0)
+	{
+		int bytes_sent = send(client_fd, msg, bytes_left, 0);
+		if (bytes_sent == -1)
+			throw SendFailed(std::string("Error: send: ") + strerror(errno));
+		bytes_left -= bytes_sent;
+	}
+}
+
+void Server::emit(int client_fd, const char *msg)
+{
 	for (std::vector<pollfd>::iterator it = this->pollfds.begin();
 		it != this->pollfds.end(); ++it)
 	{
-		int dest_fd = (*it).fd;
-		if (dest_fd != sockfd && dest_fd != sender)
-			if (sendAllData(dest_fd, msg, &len) == -1)
-			{
-				std::cerr << "Error: send " << strerror(errno) << std::endl;
-				exit(1);
-			}
+		if (it->fd != sockfd && it->fd != client_fd)
+			sendAllData(it->fd, msg);
 	}
-}
-
-int	Server::sendAllData(int socket, unsigned char *msg, int *len)
-{
-	int	total = 0;
-	int	bytes_left = *len;
-	int	n;
-
-	while (total < *len)
-	{
-		n = send(socket, msg, bytes_left, 0);
-		if (n == -1)
-			break;
-		total += n;
-		bytes_left -= n;
-	}
-
-	*len = total;
-	if (n == -1)
-		return (-1);
-	return (0);
 }

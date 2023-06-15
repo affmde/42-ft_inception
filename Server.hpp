@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 13:29:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/15 14:16:36 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,26 @@ public:
 	{
 		RecvFailed(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct SendFailed : public std::runtime_error
+	{
+		SendFailed(const std::string &msg) : runtime_error(msg) {}
+	};
 
 	Server(const char *port);
 	~Server();
 
-	void	poll_client_events();
+	void	pollClientEvents();
 private:
-	static const int listen_timeout = 10;
-	static const int msg_buf_size = 1024;
+	static const int listenTimeout = 10;
+	static const int bufferSize = 1024;
 	int sockfd;
-	unsigned char msg_buf[msg_buf_size];
+	char buffer[bufferSize];
 	std::vector<pollfd> pollfds;
 
-	void	register_new_user();
-	void	handle_client_msg(int *client_fd);
-	void	emit(unsigned char *msg, int sender);
-	int		sendAllData(int socket, unsigned char *msg, int *len);
+	void	registerNewUser();
+	void	handleClientMessage(int *client_fd);
+	void	sendAllData(int client_fd, const char *msg);
+	void	emit(int client_fd, const char *msg);
 };
 
 #endif

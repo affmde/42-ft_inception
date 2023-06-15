@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
 	try {
 		Server server(argv[1]);
-		server.poll_client_events();
+		server.pollClientEvents();
 	}
 	catch (const Server::InitFailed &e)
 	{
