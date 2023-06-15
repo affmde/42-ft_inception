@@ -54,7 +54,6 @@ Server::Server(const char *port)
 	pollfd server_poll_fd;
 	server_poll_fd.fd = sockfd;
 	server_poll_fd.events = POLLIN;
-
 	pollfds.push_back(server_poll_fd);
 }
 
@@ -79,59 +78,60 @@ void Server::poll_client_events()
 				continue;
 			event_count--;
 			if (pollfd_iter->fd == sockfd)
-			{
-				std::cout << "New connection!" << std::endl;
-				sockaddr_storage client_addr;
-				socklen_t client_addr_size = sizeof(client_addr);
-				int client_fd = accept(pollfd_iter->fd, (sockaddr *)&client_addr, &client_addr_size);
-				if (client_fd == -1)
-				{
-					close(sockfd);
-					std::cerr << "Error: accept: " << strerror(errno) << std::endl;
-					exit(1);
-				}
-				pollfd client_poll_fd;
-				client_poll_fd.fd = client_fd;
-				client_poll_fd.events = POLLIN;
-				pollfds.push_back(client_poll_fd);
-			}
+				register_new_user();
 			else
-			{
-				std::cout << "Client sent something!" << std::endl;
-				unsigned char msg_buf[1024];
-				bzero(msg_buf, sizeof(msg_buf));
-				int bytes_read = recv(pollfd_iter->fd, msg_buf, sizeof(msg_buf), 0);
-				if (bytes_read == -1)
-				{
-					close(sockfd);
-					std::cerr << "Error: recv: " << strerror(errno) << std::endl;
-					exit(1);
-				}
-				if (bytes_read == 0)
-				{
-					std::cout << "Client closed connection!" << std::endl;
-					close(pollfd_iter->fd);
-					pollfd_iter->fd = -1;
-					continue;
-				}
-				emit(msg_buf, sockfd, pollfd_iter->fd);
-				std::cout << msg_buf << std::endl;
-			}
+				handle_client_msg(&pollfd_iter->fd);
 		}
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}
 	std::cerr << "Error: poll: " << strerror(errno) << std::endl;
 }
 
-void	Server::emit(unsigned char *msg, int socketfd, int sender)
+void Server::register_new_user()
 {
-	int	len = strlen((const char *)msg);
-	std::vector<pollfd>::iterator it = this->pollfds.begin();
-	for (;it != this->pollfds.end(); ++it)
+	std::cout << "New connection!" << std::endl;
+	sockaddr_storage client_addr;
+	socklen_t client_addr_size = sizeof(client_addr);
+	int client_fd = accept(sockfd, (sockaddr *)&client_addr, &client_addr_size);
+	if (client_fd == -1)
+	{
+		close(sockfd);
+		std::cerr << "Error: accept: " << strerror(errno) << std::endl;
+		exit(1);
+	}
+	pollfd client_poll_fd;
+	client_poll_fd.fd = client_fd;
+	client_poll_fd.events = POLLIN;
+	pollfds.push_back(client_poll_fd);
+}
+
+void Server::handle_client_msg(int *client_fd)
+{
+	std::cout << "Client sent something!" << std::endl;
+	// TODO(Hans): Find way to detect/handle messages longer than msg_buf_size
+	int bytes_read = recv(*client_fd, msg_buf, sizeof(msg_buf) - 1, 0);
+	if (bytes_read == -1)
+		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
+	if (bytes_read == 0)
+	{
+		std::cout << "Client closed connection!" << std::endl;
+		close(*client_fd);
+		*client_fd = -1;
+		return;
+	}
+	msg_buf[bytes_read] = '\0';
+	std::cout << bytes_read << msg_buf << std::endl;
+	emit(msg_buf, bytes_read, *client_fd);
+}
+
+void	Server::emit(unsigned char *msg, int bytes_read, int sender)
+{
+	for (std::vector<pollfd>::iterator it = this->pollfds.begin();
+		it != this->pollfds.end(); ++it)
 	{
 		int dest_fd = (*it).fd;
-		if (dest_fd != socketfd && dest_fd != sender)
-			if (sendAllData(dest_fd, msg, &len) == -1)
+		if (dest_fd != sockfd && dest_fd != sender)
+			if (send(dest_fd, msg, bytes_read, 0) == -1)
 			{
 				std::cerr << "Error: send " << strerror(errno) << std::endl;
 				exit(1);
