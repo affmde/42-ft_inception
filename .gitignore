@@ -1,12 +1,4 @@
-ircserv
-*.o
-*.o
-*.gch
-*.a
-minishell
-.gitignore
 .DS_STORE
-node_modules
 scripts/flow/*/.flowconfig
 .flowconfig
 *~
@@ -18,8 +10,6 @@ build/
 remote-repo/
 coverage/
 .module-cache
-fixtures/dom/public/react-dom.js
-fixtures/dom/public/react.js
 test/the-files-to-test.generated.js
 *.log*
 chrome-user-data
@@ -27,13 +17,16 @@ chrome-user-data
 *.sublime-workspace
 .idea
 *.iml
-.vscode
 *.swp
 *.swo
 
+*.o
+*.a
+.vscode
 *.sh
 cub3D
 *.gch
 *.dSYM
 cub3D_bonus
 *.txt
+ircserv
