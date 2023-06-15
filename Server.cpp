@@ -26,30 +26,19 @@ Server::Server(const char *port)
 		throw InitFailed(std::string("Error: socket: ") + strerror(errno));
 
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
-	{
-		close(sockfd);
 		throw InitFailed(std::string("Error: fcntl: ") + strerror(errno));
-	}
 
 	int yes = 1;
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-		close(sockfd);
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
 		throw InitFailed(std::string("Error: setsockopt: ") + strerror(errno));
-	}
 
 	if (bind(sockfd, servinfo->ai_addr, servinfo->ai_addrlen) == -1)
-	{
-		close(sockfd);
 		throw InitFailed(std::string("Error: bind: ") + strerror(errno));
-	}
 
 	freeaddrinfo(servinfo);
 
 	if (listen(sockfd, listen_timeout) == -1)
-	{
-		close(sockfd);
 		throw InitFailed(std::string("Error: listen: ") + strerror(errno));
-	}
 
 	pollfd server_poll_fd;
 	server_poll_fd.fd = sockfd;
@@ -59,11 +48,7 @@ Server::Server(const char *port)
 
 Server::~Server()
 {
-	if (close(sockfd) == -1)
-	{
-		std::cerr << "Error: close: " << strerror(errno) << std::endl;
-		exit(1);
-	}
+	close(sockfd);
 }
 
 void Server::poll_client_events()
