@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 13:27:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:29:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ public:
 	~Server();
 
 	void	poll_client_events();
-	void	emit(unsigned char *msg, int bytes_read, int sender);
 private:
 	static const int listen_timeout = 10;
 	static const int msg_buf_size = 1024;
@@ -42,9 +41,10 @@ private:
 	unsigned char msg_buf[msg_buf_size];
 	std::vector<pollfd> pollfds;
 
-	void register_new_user();
-	void handle_client_msg(int *client_fd);
-	int	sendAllData(int socket, unsigned char *msg, int *len);
+	void	register_new_user();
+	void	handle_client_msg(int *client_fd);
+	void	emit(unsigned char *msg, int sender);
+	int		sendAllData(int socket, unsigned char *msg, int *len);
 };
 
 #endif
