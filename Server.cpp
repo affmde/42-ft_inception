@@ -1,3 +1,11 @@
+#include <iostream>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
 #include "Server.hpp"
 
 Server::Server(const char *port)
@@ -11,37 +19,28 @@ Server::Server(const char *port)
 	addrinfo *servinfo;
 	int status = getaddrinfo(NULL, port, &hints, &servinfo);
 	if (status != 0)
-	{
-		std::cerr << "Error: getaddrinfo: " << gai_strerror(status) << std::endl;
-		exit(1);
-	}
+		throw InitFailed(std::string("Error: getaddrinfo: ") + gai_strerror(status));
 
 	sockfd = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
 	if (sockfd == -1)
-	{
-		std::cerr << "Error: socket: " << strerror(errno) << std::endl;
-		exit(1);
-	}
+		throw InitFailed(std::string("Error: socket: ") + strerror(errno));
 
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
 	{
 		close(sockfd);
-		std::cerr << "Error: fcntl: " << strerror(errno) << std::endl;
-		exit(1);
+		throw InitFailed(std::string("Error: fcntl: ") + strerror(errno));
 	}
 
 	int yes = 1;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
 		close(sockfd);
-		std::cerr << "Error: setsockopt: " << strerror(errno) << std::endl;
-		exit(1);
+		throw InitFailed(std::string("Error: setsockopt: ") + strerror(errno));
 	}
 
 	if (bind(sockfd, servinfo->ai_addr, servinfo->ai_addrlen) == -1)
 	{
 		close(sockfd);
-		std::cerr << "Error: bind: " << strerror(errno) << std::endl;
-		exit(1);
+		throw InitFailed(std::string("Error: bind: ") + strerror(errno));
 	}
 
 	freeaddrinfo(servinfo);
@@ -49,8 +48,7 @@ Server::Server(const char *port)
 	if (listen(sockfd, listen_timeout) == -1)
 	{
 		close(sockfd);
-		std::cerr << "Error: listen: " << strerror(errno) << std::endl;
-		exit(1);
+		throw InitFailed(std::string("Error: listen: ") + strerror(errno));
 	}
 
 	pollfd server_poll_fd;
@@ -74,14 +72,11 @@ void Server::poll_client_events()
 	int event_count = 0;
 	while ((event_count = poll(pollfds.data(), pollfds.size(), -1)) != -1)
 	{
-		std::vector<pollfd>::iterator pollfd_iter = pollfds.begin();
-		while (pollfd_iter != pollfds.end() && event_count > 0)
+		for (std::vector<pollfd>::iterator pollfd_iter = pollfds.begin();
+			pollfd_iter != pollfds.end() && event_count > 0; pollfd_iter++)
 		{
 			if (pollfd_iter->revents == 0)
-			{
-				pollfd_iter++;
 				continue;
-			}
 			event_count--;
 			if (pollfd_iter->fd == sockfd)
 			{
@@ -117,13 +112,11 @@ void Server::poll_client_events()
 					std::cout << "Client closed connection!" << std::endl;
 					close(pollfd_iter->fd);
 					pollfd_iter->fd = -1;
-					pollfd_iter++;
 					continue;
 				}
 				emit(msg_buf, bytes_read, sockfd, pollfd_iter->fd);
 				std::cout << msg_buf << std::endl;
 			}
-			pollfd_iter++;
 		}
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}

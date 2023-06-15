@@ -10,6 +10,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	Server server(argv[1]);
-	server.poll_client_events();
+	try {
+		Server server(argv[1]);
+		server.poll_client_events();
+	}
+	catch (const Server::InitFailed &e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 }

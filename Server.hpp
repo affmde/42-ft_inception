@@ -6,28 +6,26 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 12:14:23 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:03:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <iostream>
+#include <string>
 #include <vector>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
+#include <exception>
 #include <poll.h>
-
-#define BACKLOG 10
 
 class Server
 {
 public:
+	struct InitFailed : public std::runtime_error
+	{
+		InitFailed(const std::string &msg) : runtime_error(msg) {}
+	};
+
 	Server(const char *port);
 	~Server();
 
