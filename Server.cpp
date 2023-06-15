@@ -93,7 +93,6 @@ void Server::registerNewUser()
 void Server::handleClientMessage(int *client_fd)
 {
 	std::cout << "Client sent something!" << std::endl;
-	// TODO(Hans): Find way to detect/handle messages longer than msg_buf_size
 	int bytes_read = recv(*client_fd, buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
