@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 13:14:43 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/15 13:23:38 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ public:
 	Server(const char *port);
 	~Server();
 
-	void poll_client_events();
+	void	poll_client_events();
+	void	emit(unsigned char *msg, int bytes_read, int sender);
 
 private:
 	static const int listen_timeout = 10;

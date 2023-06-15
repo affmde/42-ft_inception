@@ -121,4 +121,20 @@ void Server::handle_client_msg(int *client_fd)
 	}
 	msg_buf[bytes_read] = '\0';
 	std::cout << bytes_read << msg_buf << std::endl;
+	emit(msg_buf, bytes_read, *client_fd);
+}
+
+void	Server::emit(unsigned char *msg, int bytes_read, int sender)
+{
+	for (std::vector<pollfd>::iterator it = this->pollfds.begin();
+		it != this->pollfds.end(); ++it)
+	{
+		int dest_fd = (*it).fd;
+		if (dest_fd != sockfd && dest_fd != sender)
+			if (send(dest_fd, msg, bytes_read, 0) == -1)
+			{
+				std::cerr << "Error: send " << strerror(errno) << std::endl;
+				exit(1);
+			}
+	}
 }
