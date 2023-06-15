@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 12:48:18 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/15 13:14:43 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ public:
 	{
 		InitFailed(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct RecvFailed : public std::runtime_error
+	{
+		RecvFailed(const std::string &msg) : runtime_error(msg) {}
+	};
 
 	Server(const char *port);
 	~Server();
@@ -33,8 +37,13 @@ public:
 
 private:
 	static const int listen_timeout = 10;
+	static const int msg_buf_size = 1024;
 	int sockfd;
+	unsigned char msg_buf[msg_buf_size];
 	std::vector<pollfd> pollfds;
+
+	void register_new_user();
+	void handle_client_msg(int *client_fd);
 };
 
 #endif
