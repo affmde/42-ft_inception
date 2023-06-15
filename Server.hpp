@@ -6,21 +6,16 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/14 17:42:51 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/15 12:38:42 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <iostream>
+#include <string>
 #include <vector>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
+#include <exception>
 #include <poll.h>
 
 #define BACKLOG 10
@@ -28,6 +23,11 @@
 class Server
 {
 public:
+	struct InitFailed : public std::runtime_error
+	{
+		InitFailed(const std::string &msg) : runtime_error(msg) {}
+	};
+
 	Server(const char *port);
 	~Server();
 
