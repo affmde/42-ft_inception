@@ -120,6 +120,7 @@ void Server::poll_client_events()
 					pollfd_iter++;
 					continue;
 				}
+				emit(msg_buf, bytes_read, sockfd, pollfd_iter->fd);
 				std::cout << msg_buf << std::endl;
 			}
 			pollfd_iter++;
@@ -127,4 +128,19 @@ void Server::poll_client_events()
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}
 	std::cerr << "Error: poll: " << strerror(errno) << std::endl;
+}
+
+void	Server::emit(unsigned char *msg, int bytes_read, int socketfd, int sender)
+{
+	std::vector<pollfd>::iterator it = this->pollfds.begin();
+	for (;it != this->pollfds.end(); ++it)
+	{
+		int dest_fd = (*it).fd;
+		if (dest_fd != socketfd && dest_fd != sender)
+			if (send(dest_fd, msg, bytes_read, 0) == -1)
+			{
+				std::cerr << "Error: send " << strerror(errno) << std::endl;
+				exit(1);
+			}
+	}
 }
