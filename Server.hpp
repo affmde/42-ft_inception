@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/15 14:16:36 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/16 09:24:25 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #define SERVER_HPP
 
 #include <string>
+#include <cstring>
+#include <cstdlib>
 #include <vector>
 #include <exception>
 #include <poll.h>
