@@ -67,7 +67,7 @@ void Server::pollClientEvents()
 			if (pollfd_iter->revents == 0)
 				continue;
 			event_count--;
-			if (pollfd_iter->fd == sockfd)
+			if (!client)
 				registerNewUser();
 			else
 				handleClientMessage(*client);
@@ -115,6 +115,8 @@ void Server::handleClientMessage(Client &c)
 	std::cout << "message from : " << c.getClientFd() << std::endl;
 	std::cout << buffer << std::endl;
 	emit(c.getClientFd(), buffer);
+	c.increaseTotalMessages();
+	std::cout << "User " << c.getClientFd() << " has sent " << c.getTotalMessages() << " messages" << std::endl;
 }
 
 void Server::sendAllData(int client_fd, const char *msg)
