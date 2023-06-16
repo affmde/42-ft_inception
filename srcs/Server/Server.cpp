@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-
+#include <algorithm>
 #include "Server.hpp"
 
 Server::Server(const char *port)
@@ -46,8 +46,12 @@ Server::Server(const char *port)
 	pollfds.push_back(server_poll_fd);
 }
 
+
 Server::~Server()
 {
+	for(std::vector<Client*>::iterator it = this->clientsList.begin();
+		it != this->clientsList.end(); ++it)
+		delete *it;
 	close(sockfd);
 }
 
@@ -59,6 +63,7 @@ void Server::pollClientEvents()
 		for (std::vector<pollfd>::iterator pollfd_iter = pollfds.begin();
 			pollfd_iter != pollfds.end() && event_count > 0; pollfd_iter++)
 		{
+			Client *client = findClientByFD(pollfd_iter->fd);
 			if (pollfd_iter->revents == 0)
 				continue;
 			event_count--;
@@ -88,6 +93,10 @@ void Server::registerNewUser()
 	client_poll_fd.fd = client_fd;
 	client_poll_fd.events = POLLIN;
 	pollfds.push_back(client_poll_fd);
+	Client *newClient = new Client;
+	newClient->setClientFd(client_fd);
+	newClient->setConnected(true);
+	clientsList.push_back(newClient);
 }
 
 void Server::handleClientMessage(int *client_fd)
@@ -99,11 +108,13 @@ void Server::handleClientMessage(int *client_fd)
 	if (bytes_read == 0)
 	{
 		std::cout << "Client closed connection!" << std::endl;
+		removeClientByFD(*client_fd);
 		close(*client_fd);
 		*client_fd = -1;
 		return;
 	}
 	buffer[bytes_read] = '\0';
+	std::cout << "message from : " << *client_fd << std::endl;
 	std::cout << buffer << std::endl;
 	emit(*client_fd, buffer);
 }
@@ -122,10 +133,32 @@ void Server::sendAllData(int client_fd, const char *msg)
 
 void Server::emit(int client_fd, const char *msg)
 {
-	for (std::vector<pollfd>::iterator it = this->pollfds.begin();
-		it != this->pollfds.end(); ++it)
+	for (std::vector<Client *>::iterator it = this->clientsList.begin();
+		it != this->clientsList.end(); ++it)
 	{
-		if (it->fd != sockfd && it->fd != client_fd)
-			sendAllData(it->fd, msg);
+		if ((*it)->getClientFd() != sockfd && (*it)->getClientFd() != client_fd)
+			sendAllData((*it)->getClientFd(), msg);
 	}
+}
+
+Client	*Server::findClientByFD(int fd)
+{
+	for (std::vector<Client *>::iterator it = this->clientsList.begin();
+		it != this->clientsList.end(); ++it)
+	{
+		if ((*it)->getClientFd() == fd)
+			return (*it);
+	}
+	return(NULL);
+}
+
+void	Server::removeClientByFD(int fd)
+{
+	for (std::vector<Client *>::iterator it = clientsList.begin(); it != clientsList.end(); ++it)
+		if (fd == (*it)->getClientFd())
+		{
+			this->clientsList.erase(it);
+			delete findClientByFD((*it)->getClientFd());
+			return ;
+		}
 }

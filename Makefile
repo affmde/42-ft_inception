@@ -55,3 +55,5 @@ fclean: clean
 	@echo "$(COLOUR_RED)$(NAME) removed$(COLOUR_END)"
 
 re: fclean all
+
+.PHONY: all clean fclean re
