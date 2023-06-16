@@ -70,7 +70,7 @@ void Server::pollClientEvents()
 			if (pollfd_iter->fd == sockfd)
 				registerNewUser();
 			else
-				handleClientMessage(&pollfd_iter->fd);
+				handleClientMessage(*client);
 		}
 		// TODO(Hans): erase disconnected users from pollfds vector
 	}
@@ -99,24 +99,22 @@ void Server::registerNewUser()
 	clientsList.push_back(newClient);
 }
 
-void Server::handleClientMessage(int *client_fd)
+void Server::handleClientMessage(Client &c)
 {
 	std::cout << "Client sent something!" << std::endl;
-	int bytes_read = recv(*client_fd, buffer, sizeof(buffer) - 1, 0);
+	int bytes_read = recv(c.getClientFd(), buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
 	if (bytes_read == 0)
 	{
 		std::cout << "Client closed connection!" << std::endl;
-		removeClientByFD(*client_fd);
-		close(*client_fd);
-		*client_fd = -1;
+		removeClientByFD(c.getClientFd());
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	std::cout << "message from : " << *client_fd << std::endl;
+	std::cout << "message from : " << c.getClientFd() << std::endl;
 	std::cout << buffer << std::endl;
-	emit(*client_fd, buffer);
+	emit(c.getClientFd(), buffer);
 }
 
 void Server::sendAllData(int client_fd, const char *msg)
@@ -152,12 +150,26 @@ Client	*Server::findClientByFD(int fd)
 	return(NULL);
 }
 
+pollfd	*Server::findPollEventByFD(int fd)
+{
+	for (std::vector<pollfd>::iterator it = this->pollfds.begin();
+		it != this->pollfds.end(); ++it)
+	{
+		if (it->fd == fd)
+			return (&(*it));
+	}
+	return (NULL);
+}
+
 void	Server::removeClientByFD(int fd)
 {
 	for (std::vector<Client *>::iterator it = clientsList.begin(); it != clientsList.end(); ++it)
 		if (fd == (*it)->getClientFd())
 		{
 			this->clientsList.erase(it);
+			close((*it)->getClientFd());
+			int	*fd = &findPollEventByFD((*it)->getClientFd())->fd;
+			*fd = -1;
 			delete findClientByFD((*it)->getClientFd());
 			return ;
 		}

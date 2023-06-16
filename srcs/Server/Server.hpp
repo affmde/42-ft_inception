@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/16 18:27:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:07:04 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ private:
 	std::vector<Client *> clientsList;
 
 	void	registerNewUser();
-	void	handleClientMessage(int *client_fd);
+	void	handleClientMessage(Client &);
 	void	sendAllData(int client_fd, const char *msg);
 	void	emit(int client_fd, const char *msg);
 	Client	*findClientByFD(int);
+	pollfd	*findPollEventByFD(int);
 	void	removeClientByFD(int);
 };
 
