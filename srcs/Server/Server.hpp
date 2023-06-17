@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/16 19:07:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 07:45:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ private:
 	int sockfd;
 	char buffer[bufferSize];
 	std::vector<pollfd> pollfds;
-	std::vector<Client *> clientsList;
+	std::vector<Client> clientsList;
 
 	void	registerNewUser();
 	void	handleClientMessage(Client &);

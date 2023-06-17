@@ -49,9 +49,6 @@ Server::Server(const char *port)
 
 Server::~Server()
 {
-	for(std::vector<Client*>::iterator it = this->clientsList.begin();
-		it != this->clientsList.end(); ++it)
-		delete *it;
 	close(sockfd);
 }
 
@@ -93,9 +90,9 @@ void Server::registerNewUser()
 	client_poll_fd.fd = client_fd;
 	client_poll_fd.events = POLLIN;
 	pollfds.push_back(client_poll_fd);
-	Client *newClient = new Client;
-	newClient->setClientFd(client_fd);
-	newClient->setConnected(true);
+	Client newClient;
+	newClient.setClientFd(client_fd);
+	newClient.setConnected(true);
 	clientsList.push_back(newClient);
 }
 
@@ -133,21 +130,21 @@ void Server::sendAllData(int client_fd, const char *msg)
 
 void Server::emit(int client_fd, const char *msg)
 {
-	for (std::vector<Client *>::iterator it = this->clientsList.begin();
+	for (std::vector<Client>::iterator it = this->clientsList.begin();
 		it != this->clientsList.end(); ++it)
 	{
-		if ((*it)->getClientFd() != sockfd && (*it)->getClientFd() != client_fd)
-			sendAllData((*it)->getClientFd(), msg);
+		if (it->getClientFd() != sockfd && it->getClientFd() != client_fd)
+			sendAllData(it->getClientFd(), msg);
 	}
 }
 
 Client	*Server::findClientByFD(int fd)
 {
-	for (std::vector<Client *>::iterator it = this->clientsList.begin();
+	for (std::vector<Client>::iterator it = this->clientsList.begin();
 		it != this->clientsList.end(); ++it)
 	{
-		if ((*it)->getClientFd() == fd)
-			return (*it);
+		if (it->getClientFd() == fd)
+			return (&(*it));
 	}
 	return(NULL);
 }
@@ -165,14 +162,13 @@ pollfd	*Server::findPollEventByFD(int fd)
 
 void	Server::removeClientByFD(int fd)
 {
-	for (std::vector<Client *>::iterator it = clientsList.begin(); it != clientsList.end(); ++it)
-		if (fd == (*it)->getClientFd())
+	for (std::vector<Client>::iterator it = clientsList.begin(); it != clientsList.end(); ++it)
+		if (fd == it->getClientFd())
 		{
 			this->clientsList.erase(it);
-			close((*it)->getClientFd());
-			int	*fd = &findPollEventByFD((*it)->getClientFd())->fd;
+			close(it->getClientFd());
+			int	*fd = &findPollEventByFD(it->getClientFd())->fd;
 			*fd = -1;
-			delete findClientByFD((*it)->getClientFd());
 			return ;
 		}
 }
