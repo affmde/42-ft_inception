@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <algorithm>
+#include "../Message/Message.hpp"
 #include "Server.hpp"
 
 Server::Server(const char *port)
@@ -113,14 +113,14 @@ void Server::handleClientMessage(Client &client)
 	std::cout << buffer << std::endl;
 	if (client.readyToSend())
 	{
-		emit(client.getClientFd(), client.getBuffer().c_str());
+		emit(client.getClientFd(), client.getBuffer());
 		client.increaseTotalMessages();
 		client.resetBuffer();
 		std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
 	}
 }
 
-void Server::sendAllData(int client_fd, const char *msg)
+/*void Server::sendAllData(int client_fd, const char *msg)
 {
 	int	bytes_left = strlen(msg);
 	while (bytes_left > 0)
@@ -130,15 +130,16 @@ void Server::sendAllData(int client_fd, const char *msg)
 			throw SendFailed(std::string("Error: send: ") + strerror(errno));
 		bytes_left -= bytes_sent;
 	}
-}
+}*/
 
-void Server::emit(int client_fd, const char *msg)
+void Server::emit(int client_fd, std::string msg)
 {
+	Message message(msg);
 	for (std::vector<Client>::iterator it = this->clientsList.begin();
 		it != this->clientsList.end(); ++it)
 	{
 		if (it->getClientFd() != sockfd && it->getClientFd() != client_fd)
-			sendAllData(it->getClientFd(), msg);
+			message.sendData(it->getClientFd());
 	}
 }
 

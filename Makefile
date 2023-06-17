@@ -16,14 +16,15 @@ CORE_DIR = srcs/Core/
 SERVER_DIR = srcs/Server/
 CLIENT_DIR = srcs/Client/
 PARSER_DIR = srcs/Parser/
+MESSAGE_DIR = srcs/Message/
 
 CORE = main.cpp
 CLIENT = Client.cpp
 SERVER = Server.cpp
 PARSER = Parser.cpp
+MESSAGE = Message.cpp
 
-
-ALL_SRCS = $(CLIENT) $(SRC) $(CORE) $(SERVER) $(PARSER)
+ALL_SRCS = $(CLIENT) $(SRC) $(CORE) $(SERVER) $(PARSER) $(MESSAGE)
 OBJ_FILES = $(ALL_SRCS:.cpp=.o)
 OBJS = $(patsubst %, $(OBJS_DIR)%, $(ALL_SRCS:.cpp=.o))
 
@@ -50,6 +51,10 @@ $(OBJS_DIR)%.o: $(SERVER_DIR)%.cpp
 	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
 $(OBJS_DIR)%.o: $(PARSER_DIR)%.cpp
+	@cc $(FLAGS) -c $< -o $@
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
+
+$(OBJS_DIR)%.o: $(MESSAGE_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
 	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 

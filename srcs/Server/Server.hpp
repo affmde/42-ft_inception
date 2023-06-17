@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/17 07:45:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 09:11:38 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ public:
 	{
 		RecvFailed(const std::string &msg) : runtime_error(msg) {}
 	};
-	struct SendFailed : public std::runtime_error
-	{
-		SendFailed(const std::string &msg) : runtime_error(msg) {}
-	};
 
 	Server(const char *port);
 	~Server();
@@ -51,8 +47,8 @@ private:
 
 	void	registerNewUser();
 	void	handleClientMessage(Client &);
-	void	sendAllData(int client_fd, const char *msg);
-	void	emit(int client_fd, const char *msg);
+	//void	sendAllData(int client_fd, const char *msg);
+	void	emit(int client_fd, std::string msg);
 	Client	*findClientByFD(int);
 	pollfd	*findPollEventByFD(int);
 	void	removeClientByFD(int);
