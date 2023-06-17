@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/17 09:11:38 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 09:41:34 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <exception>
 #include <poll.h>
 #include "../Client/Client.hpp"
+#include "../Message/Message.hpp"
+#include "../Parser/Parser.hpp"
 
 class Server
 {
@@ -47,7 +49,6 @@ private:
 
 	void	registerNewUser();
 	void	handleClientMessage(Client &);
-	//void	sendAllData(int client_fd, const char *msg);
 	void	emit(int client_fd, std::string msg);
 	Client	*findClientByFD(int);
 	pollfd	*findPollEventByFD(int);

@@ -5,7 +5,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include "../Message/Message.hpp"
 #include "Server.hpp"
 
 Server::Server(const char *port)
@@ -92,7 +91,6 @@ void Server::registerNewUser()
 	pollfds.push_back(client_poll_fd);
 	Client newClient;
 	newClient.setClientFd(client_fd);
-	newClient.setConnected(true);
 	clientsList.push_back(newClient);
 }
 
@@ -109,28 +107,35 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	client.setBuffer(buffer);
 	std::cout << buffer << std::endl;
-	if (client.readyToSend())
+	if (!client.isConnected())
 	{
-		emit(client.getClientFd(), client.getBuffer());
-		client.increaseTotalMessages();
-		client.resetBuffer();
-		std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+		Parser parser;
+		parser.setInput(buffer);
+		try{
+			parser.parsePass();
+			client.setNickname(parser.parseNick());
+			client.setConnected(true);
+			std::cout << client.getNickname() << " connected" << std::endl;
+		} catch(Parser::NoPassException &e){
+			std::cerr << e.what() << std::endl;
+			removeClientByFD(client.getClientFd());
+		}catch(Parser::NoNickException &e){
+			std::cerr << e.what() << std::endl;
+		}
+	}
+	else
+	{
+		client.setBuffer(buffer);
+		if (client.readyToSend())
+		{
+			emit(client.getClientFd(), client.getBuffer());
+			client.increaseTotalMessages();
+			client.resetBuffer();
+			std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+		}
 	}
 }
-
-/*void Server::sendAllData(int client_fd, const char *msg)
-{
-	int	bytes_left = strlen(msg);
-	while (bytes_left > 0)
-	{
-		int bytes_sent = send(client_fd, msg, bytes_left, 0);
-		if (bytes_sent == -1)
-			throw SendFailed(std::string("Error: send: ") + strerror(errno));
-		bytes_left -= bytes_sent;
-	}
-}*/
 
 void Server::emit(int client_fd, std::string msg)
 {

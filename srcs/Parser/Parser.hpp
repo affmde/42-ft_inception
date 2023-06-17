@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 08:02:57 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 10:41:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define PARSER_HPP
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 class	Parser
 {
@@ -22,6 +24,20 @@ class	Parser
 		Parser(const Parser&);
 		Parser	&operator=(const Parser&);
 		~Parser(void);
+
+		//
+		class WrongInputException : std::exception{
+			public:
+				const char	*what()const throw();
+		};
+		class NoPassException : std::exception{
+			public:
+				const char	*what()const throw();
+		};
+		class NoNickException : std::exception{
+			public:
+				const char	*what()const throw();
+		};
 
 		//Member Functions
 		std::string	parsePass(void);
