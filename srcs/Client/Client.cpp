@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 07:51:55 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 08:49:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,26 @@ std::string	Client::getBuffer(void)
 void		Client::setBuffer(std::string str)
 {
 	this->buffer += str;
+}
+
+void		Client::resetBuffer(void)
+{
+	this->buffer = "";
+}
+
+bool		Client::readyToSend(void)
+{
+	size_t	pos;
+	//if ((pos = this->buffer.find("\r\n")) != std::string::npos)
+	//	std::cout << "\\r\\n Found. Ready to Send. Pos: " << pos << " Length: " << buffer.length() << std::endl;
+	//else
+	//	std::cout << "\\r\\n not found. Not ready to send" << std::endl;
+	if ((pos = this->buffer.find("\n")) != std::string::npos)
+		return (true);
+	else
+		return (false);
+	//if ((pos = this->buffer.find("\r")) != std::string::npos)
+	//	std::cout << "\\r Found. Ready to Send. Pos: " << pos << " Length: " << buffer.length() << std::endl;
+	//else
+	//	std::cout << "\\r not found. Not ready to send" << std::endl;
 }

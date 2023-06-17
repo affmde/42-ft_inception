@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 07:41:41 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/17 08:27:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ class	Client
 		void		setNickname(std::string);
 		void		setConnected(bool);
 		void		setBuffer(std::string);
+		void		resetBuffer(void);
+		bool		readyToSend(void);
 
 	private:
 		int			clientFd;

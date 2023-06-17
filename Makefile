@@ -1,6 +1,7 @@
 #Color scheme
 COLOUR_GREEN=\033[0;32m
 COLOUR_RED=\033[0;31m
+COLOUR_YELLOW=\033[0;33m
 COLOUR_BLUE=\033[0;34m
 COLOUR_END=\033[0m
 
@@ -30,7 +31,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS_DIR) $(OBJS)
 	@$(CC) -o $(NAME) $(COMPILE_FLAGS) $(OBJS)
-	@echo "$(COLOUR_GREEN)$@ created$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)✓	$@ created$(COLOUR_END)"
 
 $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)
@@ -38,19 +39,19 @@ $(OBJS_DIR):
 
 $(OBJS_DIR)%.o: $(CORE_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_BLUE)$@ created$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
 $(OBJS_DIR)%.o: $(CLIENT_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_BLUE)$@ created$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
 $(OBJS_DIR)%.o: $(SERVER_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_BLUE)$@ created$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
 $(OBJS_DIR)%.o: $(PARSER_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_BLUE)$@ created$(COLOUR_END)"
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
 clean:
 	@rm -f $(OBJS)

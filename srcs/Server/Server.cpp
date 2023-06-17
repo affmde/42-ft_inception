@@ -96,24 +96,28 @@ void Server::registerNewUser()
 	clientsList.push_back(newClient);
 }
 
-void Server::handleClientMessage(Client &c)
+void Server::handleClientMessage(Client &client)
 {
 	std::cout << "Client sent something!" << std::endl;
-	int bytes_read = recv(c.getClientFd(), buffer, sizeof(buffer) - 1, 0);
+	int bytes_read = recv(client.getClientFd(), buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
 	if (bytes_read == 0)
 	{
 		std::cout << "Client closed connection!" << std::endl;
-		removeClientByFD(c.getClientFd());
+		removeClientByFD(client.getClientFd());
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	std::cout << "message from : " << c.getClientFd() << std::endl;
+	client.setBuffer(buffer);
 	std::cout << buffer << std::endl;
-	emit(c.getClientFd(), buffer);
-	c.increaseTotalMessages();
-	std::cout << "User " << c.getClientFd() << " has sent " << c.getTotalMessages() << " messages" << std::endl;
+	if (client.readyToSend())
+	{
+		emit(client.getClientFd(), client.getBuffer().c_str());
+		client.increaseTotalMessages();
+		client.resetBuffer();
+		std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+	}
 }
 
 void Server::sendAllData(int client_fd, const char *msg)
