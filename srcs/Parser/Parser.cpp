@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 11:22:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 10:52:43 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,44 +57,38 @@ void		Parser::setInput(std::string str)
 	this->input = str;
 }
 
-std::string	Parser::parsePass(void)
+std::vector<std::string>	Parser::parseInput(void)
+{
+	if (this->input.empty())
+		throw(WrongInputException());
+	std::vector<std::string>	args;
+	size_t						pos;
+	std::string					arg;
+	while ((pos = this->input.find("\n")) != std::string::npos)
+	{
+		arg = this->input.substr(0, pos);
+		this->input.erase(0, pos + 1);
+		args.push_back(arg);
+	}
+	return (args);
+}
+
+void	Parser::parsePass(std::string input)
 {
 	if (this->input.empty())
 		throw(WrongInputException());
 	if (this->input.length() - std::string("Pass ").length() < 1)
 		throw(NoPassException());
-	std::string	tmp;
-	std::string	input = this->input;
-	size_t		pos;
-	while ((pos = this->input.find("\n")) != std::string::npos)
-	{
-		tmp = input.substr(0, pos);
-		input.erase(0, pos + 1);
-		if (tmp.find("PASS ") != std::string::npos)
-			break;
-	}
-	std::string	pass = tmp.substr(5, tmp.length() - 5);
-	std::cout << "Pass: " << pass << std::endl;
-	return pass;
+	std::string	pass = input.substr(5, input.length() - 5);
 }
 
-std::string	Parser::parseNick(void)
+std::string	Parser::parseNick(std::string input)
 {
 	if (this->input.empty())
 		throw(WrongInputException());
 	if (this->input.length() - std::string("NICK ").length() < 1)
 		throw(NoNickException());
-	std::string tmp;
-	size_t pos;
-	while ((pos = this->input.find("\n")) != std::string::npos)
-	{
-		tmp = this->input.substr(0, pos);
-		this->input.erase(0, pos + 1);
-		if (tmp.find("NICK ") != std::string::npos)
-			break;
-	}
-	std::string	nick = tmp.substr(5, tmp.length() - 5);
-	std::cout << "NICK: " << nick << std::endl;
+	std::string	nick = input.substr(5, input.length() - 5);
 	return nick;
 }
 

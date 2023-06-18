@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 08:27:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 10:36:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class	Client
 		std::string	getNickname(void);
 		bool		isConnected(void);
 		std::string	getBuffer(void);
+		bool		isLogged(void);
+		bool		isBanned(void);
 
 		void		setClientFd(int);
 		void		increaseTotalMessages(void);
@@ -39,6 +41,8 @@ class	Client
 		void		setBuffer(std::string);
 		void		resetBuffer(void);
 		bool		readyToSend(void);
+		void		setLogged(bool);
+		void		setBanned(bool);
 
 	private:
 		int			clientFd;
@@ -46,6 +50,8 @@ class	Client
 		std::string	nickname;
 		std::string	username;
 		bool		connected;
+		bool		logged;
+		bool		banned;
 		std::string	buffer;
 };
 

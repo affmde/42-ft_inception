@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 08:49:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 10:36:38 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ Client::Client(void)
 	this->totalMessages = 0;
 	this->buffer = "";
 	this->connected = false;
+	this->logged = false;
+	this->banned = false;
 }
 Client::Client(const Client &other){*this = other;}
 Client	&Client::operator=(const Client &other)
@@ -31,6 +33,8 @@ Client	&Client::operator=(const Client &other)
 	this->username = other.username;
 	this->nickname = other.username;
 	this->buffer = other.buffer;
+	this->logged = other.logged;
+	this->banned = other.banned;
 	return (*this);
 }
 Client::~Client(void){}
@@ -101,6 +105,26 @@ void		Client::setBuffer(std::string str)
 void		Client::resetBuffer(void)
 {
 	this->buffer = "";
+}
+
+bool		Client::isLogged(void)
+{
+	return (this->logged);
+}
+
+bool		Client::isBanned(void)
+{
+	return (this->banned);
+}
+
+void		Client::setLogged(bool logged)
+{
+	this->logged=logged;
+}
+
+void		Client::setBanned(bool banned)
+{
+	this->banned = banned;
 }
 
 bool		Client::readyToSend(void)

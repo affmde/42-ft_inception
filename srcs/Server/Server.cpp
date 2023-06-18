@@ -75,7 +75,7 @@ void Server::pollClientEvents()
 
 void Server::registerNewUser()
 {
-	std::cout << "New connection!" << std::endl;
+	std::cout << "New connection received!" << std::endl;
 	sockaddr_storage client_addr;
 	socklen_t client_addr_size = sizeof(client_addr);
 	int client_fd = accept(sockfd, (sockaddr *)&client_addr, &client_addr_size);
@@ -91,12 +91,12 @@ void Server::registerNewUser()
 	pollfds.push_back(client_poll_fd);
 	Client newClient;
 	newClient.setClientFd(client_fd);
+	newClient.setConnected(true);
 	clientsList.push_back(newClient);
 }
 
 void Server::handleClientMessage(Client &client)
 {
-	std::cout << "Client sent something!" << std::endl;
 	int bytes_read = recv(client.getClientFd(), buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvFailed(std::string("Error: recv: ") + strerror(errno));
@@ -107,33 +107,64 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	std::cout << buffer << std::endl;
-	if (!client.isConnected())
+	Parser parser;
+	parser.setInput(buffer);
+	std::vector<std::string>	args = parser.parseInput();
+	for(std::vector<std::string>::iterator it = args.begin();
+		it != args.end(); ++it)
 	{
-		Parser parser;
-		parser.setInput(buffer);
-		try{
-			parser.parsePass();
-			client.setNickname(parser.parseNick());
-			client.setConnected(true);
-			std::cout << client.getNickname() << " connected" << std::endl;
-		} catch(Parser::NoPassException &e){
-			std::cerr << e.what() << std::endl;
-			removeClientByFD(client.getClientFd());
-		}catch(Parser::NoNickException &e){
-			std::cerr << e.what() << std::endl;
-		}
-	}
-	else
-	{
-		client.setBuffer(buffer);
-		if (client.readyToSend())
+		if ((*it).find("PASS ") != std::string::npos && client.isConnected() && !client.isLogged())
 		{
-			emit(client.getClientFd(), client.getBuffer());
-			client.increaseTotalMessages();
-			client.resetBuffer();
-			std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+			try{
+				parser.parsePass(*it);
+				client.setLogged(true);
+			} catch (Parser::NoPassException &e){
+				Message msg("Incorrect password\r\n");
+				msg.sendData(client.getClientFd());
+				removeClientByFD(client.getClientFd());
+				std::cerr << e.what() << std::endl;
+			} catch (Parser::WrongInputException &e){
+				Message msg("Incorrect password\r\n");
+				msg.sendData(client.getClientFd());
+				removeClientByFD(client.getClientFd());
+				std::cerr << e.what() << std::endl;
+			}
 		}
+		else if ((*it).find("NICK ") != std::string::npos && client.isConnected() && client.isLogged())
+		{
+			try{
+				std::string	nick = parser.parseNick(*it);
+				if (nick.empty())
+				{
+					Message msg("Empty nickname\r\n");
+					msg.sendData(client.getClientFd());
+					return ;
+				}
+				//TODO -> Check for all Nickname rules in here!!!!
+				//TODO -> Check for duplicate Nickname in here!!!
+				client.setNickname(nick);
+			} catch(Parser::NoNickException &e){
+				Message msg(e.what());
+				msg.sendData(client.getClientFd());
+			}
+		}
+		else if ((*it).find("USER ") != std::string::npos && client.isConnected() && client.isLogged())
+		{
+			//TODO -> handle the USER!!!
+		}
+		else
+			client.setBuffer(buffer);
+
+	}
+
+	if (client.readyToSend())
+	{
+		std::cout << "Client sent something!" << std::endl;
+		std::cout << client.getBuffer() << std::endl;
+		emit(client.getClientFd(), client.getBuffer());
+		client.increaseTotalMessages();
+		client.resetBuffer();
+		std::cout << "User " << client.getClientFd() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
 	}
 }
 

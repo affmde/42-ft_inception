@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 10:41:10 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 10:49:00 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 class	Parser
 {
@@ -40,10 +41,11 @@ class	Parser
 		};
 
 		//Member Functions
-		std::string	parsePass(void);
-		std::string	parseNick(void);
-		std::string	getInput(void);
-		void		setInput(std::string);
+		void						parsePass(std::string);
+		std::string					parseNick(std::string);
+		std::string					getInput(void);
+		void						setInput(std::string);
+		std::vector<std::string>	parseInput(void);
 
 	private:
 		std::string	input;
