@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/18 10:52:43 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 18:05:05 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,15 @@ std::vector<std::string>	Parser::parseInput(void)
 	std::vector<std::string>	args;
 	size_t						pos;
 	std::string					arg;
-	while ((pos = this->input.find("\n")) != std::string::npos)
-	{
-		arg = this->input.substr(0, pos);
-		this->input.erase(0, pos + 1);
-		args.push_back(arg);
-	}
+	if ((this->input.find("\n")) == std::string::npos)
+		args.push_back(this->input);
+	else
+		while ((pos = this->input.find("\n")) != std::string::npos)
+		{
+			arg = this->input.substr(0, pos + 1);
+			this->input.erase(0, pos + 1);
+			args.push_back(arg);
+		}
 	return (args);
 }
 

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/18 10:36:38 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/18 18:01:13 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ std::string	Client::getBuffer(void)
 
 void		Client::setBuffer(std::string str)
 {
-	this->buffer += str;
+	this->buffer = str;
 }
 
 void		Client::resetBuffer(void)

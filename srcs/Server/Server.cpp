@@ -108,7 +108,8 @@ void Server::handleClientMessage(Client &client)
 	}
 	buffer[bytes_read] = '\0';
 	Parser parser;
-	parser.setInput(buffer);
+	parser.setInput(std::string(buffer));
+	std::cout << "bufer: " << buffer << std::endl;
 	std::vector<std::string>	args = parser.parseInput();
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it)
@@ -153,7 +154,9 @@ void Server::handleClientMessage(Client &client)
 			//TODO -> handle the USER!!!
 		}
 		else
-			client.setBuffer(buffer);
+		{
+			client.setBuffer( client.getBuffer() + *it);
+		}
 
 	}
 
