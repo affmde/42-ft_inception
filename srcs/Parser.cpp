@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:49:03 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:52:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Parser &Parser::operator=(const Parser &other)
 
 //Member Functions
 
-std::string Parser::getInput() { return input; }
+std::string Parser::getInput() const { return input; }
 
 void Parser::setInput(std::string str) { input = str; }
 
