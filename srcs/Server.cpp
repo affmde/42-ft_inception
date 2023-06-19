@@ -65,7 +65,7 @@ void Server::pollClientEvents()
 			if (it->fd == sockfd)
 				registerNewUser();
 			else
-				handleClientMessage(*it);
+				handleClientMessage(*findClientByFD(it->fd));
 		}
 		eraseDisconnectedUsers();
 	}
@@ -99,12 +99,11 @@ void Server::eraseDisconnectedUsers()
 	}
 }
 
-void Server::handleClientMessage(pollfd &client_pollfd)
+void Server::handleClientMessage(Client &client)
 {
-	int bytes_read = recv(client_pollfd.fd, buffer, sizeof(buffer) - 1, 0);
+	int bytes_read = recv(client.getClientFD(), buffer, sizeof(buffer) - 1, 0);
 	if (bytes_read == -1)
 		throw RecvException(std::string("Error: recv: ") + strerror(errno));
-	Client &client = *findClientByFD(client_pollfd.fd);
 	if (bytes_read == 0)
 	{
 		std::cout << "Client closed connection!" << std::endl;
