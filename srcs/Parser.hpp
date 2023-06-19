@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:23:23 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:35:33 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@ public:
 	};
 
 	Parser();
-	Parser(const Parser&);
+	Parser(const Parser &other);
 	~Parser();
-	Parser &operator=(const Parser&);
+	Parser &operator=(const Parser &other);
 
 	//Member Functions
-	void parsePass(std::string);
-	std::string parseNick(std::string);
-	std::string getInput();
-	void setInput(std::string);
+	void parsePass(std::string input);
+	std::string parseNick(std::string input);
+	std::string getInput() const;
+	void setInput(std::string str);
 	std::vector<std::string> parseInput();
 
 private:
