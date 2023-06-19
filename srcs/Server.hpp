@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/19 16:28:10 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:41:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ public:
 		UserRegistrationException(const std::string &msg) : runtime_error(msg) {}
 	};
 
-	Server(const char *port);
+	Server(const char *port, std::string pass);
 	~Server();
 
 	void pollClientEvents();
@@ -43,6 +43,7 @@ private:
 	static const int bufferSize = 1024;
 	char buffer[bufferSize];
 	int sockfd;
+	std::string pass;
 	std::vector<pollfd> pollfds;
 	std::vector<Client> clients;
 

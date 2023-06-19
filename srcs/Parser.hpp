@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:23:23 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:48:56 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ public:
 	Parser &operator=(const Parser&);
 
 	//Member Functions
-	void parsePass(std::string);
+	void parsePass(std::string input, std::string password);
 	std::string parseNick(std::string);
 	std::string getInput();
 	void setInput(std::string);

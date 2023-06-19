@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:01:47 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:49:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,15 @@ std::vector<std::string> Parser::parseInput()
 	return args;
 }
 
-void Parser::parsePass(std::string input)
+void Parser::parsePass(std::string input, std::string pass)
 {
 	if (input.empty())
 		throw WrongInputException("Wrong input");
 	if (input.length() - std::string("Pass ").length() < 1)
 		throw NoPassException("No pass");
-	std::string pass = input.substr(5, input.length() - 5);
-	// TODO(Andre): ??
+	std::string password = input.substr(5, input.length() - 5);
+	if (password.compare(pass) == 0)
+		throw NoPassException("Wrong pass");
 }
 
 std::string Parser::parseNick(std::string input)

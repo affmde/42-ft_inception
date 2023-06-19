@@ -10,8 +10,9 @@
 #include "Message.hpp"
 #include "Parser.hpp"
 
-Server::Server(const char *port)
+Server::Server(const char *port, std::string pass)
 {
+	this->pass = pass;
 	addrinfo hints;
 	bzero(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -121,7 +122,7 @@ void Server::handleClientMessage(Client &client)
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && !client.isLogged())
 		{
 			try{
-				parser.parsePass(*it);
+				parser.parsePass(*it, pass);
 				client.setLogged(true);
 			} catch (Parser::NoPassException &e){
 				Message msg("Incorrect password\r\n");
@@ -129,7 +130,7 @@ void Server::handleClientMessage(Client &client)
 				// TODO: removeClientByFD(client.getClientFD());
 				std::cerr << e.what() << std::endl;
 			} catch (Parser::WrongInputException &e){
-				Message msg("Incorrect password\r\n");
+				Message msg("Invalid input\r\n");
 				msg.sendData(client.getClientFD());
 				// TODO: removeClientByFD(client.getClientFD());
 				std::cerr << e.what() << std::endl;
