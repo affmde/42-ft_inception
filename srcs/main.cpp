@@ -1,4 +1,5 @@
 #include <iostream>
+#include <exception>
 
 #include "Server.hpp"
 
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
 		Server server(argv[1]);
 		server.pollClientEvents();
 	}
-	catch (const Server::InitException &e)
+	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
