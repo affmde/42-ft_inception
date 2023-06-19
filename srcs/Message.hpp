@@ -6,12 +6,12 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:56:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 15:55:54 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:23:30 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGE_HPP
-# define MESSAGE_HPP
+#define MESSAGE_HPP
 
 #include <exception>
 #include <string>
