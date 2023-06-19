@@ -126,9 +126,11 @@ void Server::handleClientMessage(Client &client)
 				client.setLogged(true);
 			} catch (Parser::NoPassException &e){
 				Message msg("Incorrect password\r\n");
+				
 				msg.sendData(client.getClientFD());
 				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
+				//SEND ERR_PASSWDMISMATCH (464) and then close the connection with ERROR.
 			} catch (Parser::WrongInputException &e){
 				Message msg("Invalid input\r\n");
 				msg.sendData(client.getClientFD());

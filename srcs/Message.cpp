@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:35:09 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 17:30:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <sys/socket.h>
 
 #include "Message.hpp"
+
+Message::Message(){}
 
 Message::Message(std::string msg)
 {
@@ -44,3 +46,10 @@ void Message::sendData(int clientFD)
 		bytes_left -= bytes_sent;
 	}
 }
+
+void	Message::setMessage(std::string message)
+{
+	this->message = message;
+}
+
+std::string Message::getMessage(void) { return message; }
