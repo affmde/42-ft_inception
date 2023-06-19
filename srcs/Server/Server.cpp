@@ -152,6 +152,8 @@ void Server::handleClientMessage(Client &client)
 		else if ((*it).find("USER ") != std::string::npos && client.isConnected() && client.isLogged())
 		{
 			//TODO -> handle the USER!!!
+			//create user
+			//check if the user is already registered
 		}
 		else
 		{

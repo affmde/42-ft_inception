@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/18 18:05:05 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 09:05:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,18 @@ std::vector<std::string>	Parser::parseInput(void)
 
 void	Parser::parsePass(std::string input)
 {
-	if (this->input.empty())
+	if (input.empty())
 		throw(WrongInputException());
-	if (this->input.length() - std::string("Pass ").length() < 1)
+	if (input.length() - std::string("Pass ").length() < 1)
 		throw(NoPassException());
 	std::string	pass = input.substr(5, input.length() - 5);
 }
 
 std::string	Parser::parseNick(std::string input)
 {
-	if (this->input.empty())
+	if (input.empty())
 		throw(WrongInputException());
-	if (this->input.length() - std::string("NICK ").length() < 1)
+	if (input.length() - std::string("NICK ").length() < 1)
 		throw(NoNickException());
 	std::string	nick = input.substr(5, input.length() - 5);
 	return nick;
