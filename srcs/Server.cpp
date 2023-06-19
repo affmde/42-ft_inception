@@ -189,20 +189,20 @@ void Server::emit(int client_fd, std::string msg)
 	}
 }
 
-std::vector<Client>::iterator Server::findClientByFD(int fd)
-{
-	for (std::vector<Client>::iterator it = clients.begin();
-		it != clients.end(); ++it)
-		if (it->getClientFD() == fd) return it;
-	return clients.end();
-}
-
 std::vector<pollfd>::iterator Server::findPollfdByFD(int fd)
 {
 	for (std::vector<pollfd>::iterator it = pollfds.begin();
 		it != pollfds.end(); ++it)
 		if (it->fd == fd) return it;
 	return pollfds.end();
+}
+
+std::vector<Client>::iterator Server::findClientByFD(int fd)
+{
+	for (std::vector<Client>::iterator it = clients.begin();
+		it != clients.end(); ++it)
+		if (it->getClientFD() == fd) return it;
+	return clients.end();
 }
 
 std::vector<Client>::iterator Server::eraseUserByFD(int fd)
