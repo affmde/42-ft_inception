@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/17 09:41:34 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 15:55:36 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,44 @@
 #define SERVER_HPP
 
 #include <string>
-#include <cstring>
-#include <cstdlib>
 #include <vector>
 #include <exception>
 #include <poll.h>
-#include "../Client/Client.hpp"
-#include "../Message/Message.hpp"
-#include "../Parser/Parser.hpp"
+
+#include "Client.hpp"
 
 class Server
 {
 public:
-	struct InitFailed : public std::runtime_error
-	{
-		InitFailed(const std::string &msg) : runtime_error(msg) {}
+	struct InitException : public std::runtime_error {
+		InitException(const std::string &msg) : runtime_error(msg) {}
 	};
-	struct RecvFailed : public std::runtime_error
-	{
-		RecvFailed(const std::string &msg) : runtime_error(msg) {}
+	struct RecvException : public std::runtime_error {
+		RecvException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct UserRegistrationException : public std::runtime_error {
+		UserRegistrationException(const std::string &msg) : runtime_error(msg) {}
 	};
 
 	Server(const char *port);
 	~Server();
 
-	void	pollClientEvents();
+	void pollClientEvents();
 private:
 	static const int listenTimeout = 10;
 	static const int bufferSize = 1024;
-	int sockfd;
 	char buffer[bufferSize];
+	int sockfd;
 	std::vector<pollfd> pollfds;
-	std::vector<Client> clientsList;
+	std::vector<Client> clients;
 
-	void	registerNewUser();
-	void	handleClientMessage(Client &);
-	void	emit(int client_fd, std::string msg);
-	Client	*findClientByFD(int);
-	pollfd	*findPollEventByFD(int);
-	void	removeClientByFD(int);
+	void registerNewUser();
+	void eraseDisconnectedUsers();
+	void handleClientMessage(pollfd &client_pollfd);
+	void emit(int client_fd, std::string msg);
+	std::vector<Client>::iterator findClientByFD(int fd);
+	std::vector<pollfd>::iterator findPollfdByFD(int fd);
+	std::vector<Client>::iterator eraseUserByFD(int fd);
 };
 
 #endif

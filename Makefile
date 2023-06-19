@@ -12,21 +12,12 @@ COMPILE_FLAGS = -std=c++98 -Wall -Wextra -Werror
 
 #Dirs
 OBJS_DIR = obj/
-CORE_DIR = srcs/Core/
-SERVER_DIR = srcs/Server/
-CLIENT_DIR = srcs/Client/
-PARSER_DIR = srcs/Parser/
-MESSAGE_DIR = srcs/Message/
+SRCS_DIR = srcs/
 
-CORE = main.cpp
-CLIENT = Client.cpp
-SERVER = Server.cpp
-PARSER = Parser.cpp
-MESSAGE = Message.cpp
+SRCS := main.cpp Client.cpp Server.cpp Parser.cpp Message.cpp
 
-ALL_SRCS = $(CLIENT) $(SRC) $(CORE) $(SERVER) $(PARSER) $(MESSAGE)
-OBJ_FILES = $(ALL_SRCS:.cpp=.o)
-OBJS = $(patsubst %, $(OBJS_DIR)%, $(ALL_SRCS:.cpp=.o))
+OBJ_FILES = $(SRCS:.cpp=.o)
+OBJS = $(patsubst %, $(OBJS_DIR)%, $(SRCS:.cpp=.o))
 
 all: $(NAME)
 
@@ -38,23 +29,7 @@ $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)
 	@echo "$(COLOUR_BLUE)object directory created$(COLOUR_END)"
 
-$(OBJS_DIR)%.o: $(CORE_DIR)%.cpp
-	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
-
-$(OBJS_DIR)%.o: $(CLIENT_DIR)%.cpp
-	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
-
-$(OBJS_DIR)%.o: $(SERVER_DIR)%.cpp
-	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
-
-$(OBJS_DIR)%.o: $(PARSER_DIR)%.cpp
-	@cc $(FLAGS) -c $< -o $@
-	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
-
-$(OBJS_DIR)%.o: $(MESSAGE_DIR)%.cpp
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
 	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 

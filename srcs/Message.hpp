@@ -3,37 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:56:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/17 09:10:26 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 15:55:54 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGE_HPP
 # define MESSAGE_HPP
 
-#include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <string.h>
+#include <exception>
+#include <string>
 
-class	Message
+class Message
 {
-	public:
-		Message(std::string);
-		Message(const Message&);
-		Message	&operator=(const Message&);
-		~Message(void);
+public:
+	struct SendFailed : public std::runtime_error {
+		SendFailed(const std::string &msg) : runtime_error(msg) {}
+	};
 
-		void	sendData(int client_fd);
+	Message(std::string);
+	Message(const Message& other);
+	~Message();
+	Message &operator=(const Message &other);
 
-		struct SendFailed : public std::runtime_error
-		{
-			SendFailed(const std::string &msg) : runtime_error(msg) {}
-		};
-	private:
-		std::string	message;
+	void sendData(int client_fd);
+
+private:
+	std::string message;
 };
 
 #endif
