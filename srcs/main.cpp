@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		Server server(argv[1]);
 		server.pollClientEvents();
 	}
-	catch (const Server::InitFailed &e)
+	catch (const Server::InitException &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}

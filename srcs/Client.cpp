@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:09:47 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:16:45 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ Client &Client::operator=(const Client &other)
 		clientFD = other.clientFD;
 		totalMessages = other.totalMessages;
 		connected = other.connected;
-		username = other.username;
-		nickname = other.username;
+		realname = other.realname;
+		nickname = other.nickname;
+		servername = other.servername;
+		hostname = other.hostname;
 		buffer = other.buffer;
 		logged = other.logged;
 		banned = other.banned;
@@ -53,8 +55,14 @@ Client &Client::operator=(const Client &other)
 int Client::getClientFD() const { return clientFD; }
 void Client::setClientFD(int fd) { clientFD = fd; }
 
-std::string Client::getUsername() const { return username; }
-void Client::setUsername(std::string username) { this->username = username; }
+std::string Client::getRealname() const { return realname; }
+void Client::setRealname(std::string realname) { this->realname = realname; }
+
+std::string Client::getHostname() const { return hostname; }
+void Client::setHostname(std::string hostname) { this->hostname = hostname; }
+
+std::string Client::getServername() const { return servername; }
+void Client::setServername(std::string servername) { this->servername = servername; }
 
 std::string Client::getNickname() const { return nickname; }
 void Client::setNickname(std::string nickname) { this->nickname = nickname; }

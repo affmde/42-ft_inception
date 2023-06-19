@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:04:51 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:14:30 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,14 @@ public:
 	int getClientFD() const;
 	void setClientFD(int fd);
 
-	std::string getUsername() const;
-	void setUsername(std::string username);
+	std::string getRealname() const;
+	void setRealname(std::string username);
+
+	std::string getHostname() const;
+	void setHostname(std::string username);
+
+	std::string getServername() const;
+	void setServername(std::string username);
 
 	std::string getNickname() const;
 	void setNickname(std::string nickname);
@@ -55,7 +61,9 @@ private:
 	int clientFD;
 	int totalMessages;
 	std::string nickname;
-	std::string username;
+	std::string realname;
+	std::string servername;
+	std::string hostname;
 	bool connected;
 	bool logged;
 	bool banned;
