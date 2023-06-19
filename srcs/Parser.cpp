@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:52:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:14:42 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ std::vector<std::string> Parser::parseInput()
 	return args;
 }
 
+#include <iostream>
 void Parser::parsePass(std::string input, std::string pass)
 {
 	if (input.empty())
@@ -63,7 +64,9 @@ void Parser::parsePass(std::string input, std::string pass)
 	if (input.length() - std::string("Pass ").length() < 1)
 		throw NoPassException("No pass");
 	std::string password = input.substr(5, input.length() - 5);
-	if (password.compare(pass) == 0)
+	if (password[0] == ':')
+		password.erase(0, 1);
+	if (password.compare(pass) != 0)
 		throw NoPassException("Wrong pass");
 }
 

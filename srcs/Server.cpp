@@ -12,7 +12,7 @@
 
 Server::Server(const char *port, std::string pass)
 {
-	this->pass = pass;
+	this->pass = pass + "\r\n";;
 	addrinfo hints;
 	bzero(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -127,12 +127,12 @@ void Server::handleClientMessage(Client &client)
 			} catch (Parser::NoPassException &e){
 				Message msg("Incorrect password\r\n");
 				msg.sendData(client.getClientFD());
-				// TODO: removeClientByFD(client.getClientFD());
+				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
 			} catch (Parser::WrongInputException &e){
 				Message msg("Invalid input\r\n");
 				msg.sendData(client.getClientFD());
-				// TODO: removeClientByFD(client.getClientFD());
+				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
 			}
 		}
