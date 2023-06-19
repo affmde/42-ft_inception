@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 09:05:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 10:12:30 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ std::string	Parser::parseNick(std::string input)
 	if (input.length() - std::string("NICK ").length() < 1)
 		throw(NoNickException());
 	std::string	nick = input.substr(5, input.length() - 5);
-	return nick;
+	return (nick);
 }
 
