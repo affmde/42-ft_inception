@@ -139,7 +139,7 @@ void Server::handleClientMessage(pollfd &client_pollfd)
 		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.isLogged())
 		{
 			try {
-				std::stringnick = parser.parseNick(*it);
+				std::string nick = parser.parseNick(*it);
 				if (nick.empty())
 				{
 					Message msg("Empty nickname\r\n");

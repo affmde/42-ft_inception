@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:05:05 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:09:47 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Client::Client()
 , banned(false)
 {}
 
-Client(int fd)
+Client::Client(int fd)
 : clientFD(fd)
 , totalMessages(0)
 , connected(true)
