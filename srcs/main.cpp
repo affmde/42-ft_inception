@@ -1,6 +1,7 @@
 #include <iostream>
+#include <exception>
 
-#include "../Server/Server.hpp"
+#include "Server.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -11,10 +12,10 @@ int main(int argc, char *argv[])
 	}
 
 	try {
-		Server server(argv[1]);
+		Server server(argv[1], argv[2]);
 		server.pollClientEvents();
 	}
-	catch (const Server::InitFailed &e)
+	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
