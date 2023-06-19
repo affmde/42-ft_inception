@@ -6,12 +6,12 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:01:45 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:23:23 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_HPP
-# define PARSER_HPP
+#define PARSER_HPP
 
 #include <string>
 #include <vector>

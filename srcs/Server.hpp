@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/19 16:17:56 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:24:01 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ public:
 	~Server();
 
 	void pollClientEvents();
+
 private:
 	static const int listenTimeout = 10;
 	static const int bufferSize = 1024;
