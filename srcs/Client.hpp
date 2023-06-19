@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:01:43 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:04:51 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ class Client
 {
 public:
 	Client();
+	Client(int fd);
 	Client(const Client &other);
 	~Client();
 	Client &operator=(const Client &other);

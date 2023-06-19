@@ -84,10 +84,7 @@ void Server::registerNewUser()
 	client_pollfd.fd = client_fd;
 	client_pollfd.events = POLLIN;
 	pollfds.push_back(client_pollfd);
-	Client client;
-	client.setClientFD(client_fd);
-	client.setConnected(true);
-	clients.push_back(client);
+	clients.push_back(Client(client_fd));
 }
 
 void Server::eraseDisconnectedUsers()
