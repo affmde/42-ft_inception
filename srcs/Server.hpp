@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/19 16:24:01 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:28:10 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ private:
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();
-	void handleClientMessage(pollfd &client_pollfd);
+	void handleClientMessage(Client &client);
 	void emit(int client_fd, std::string msg);
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);
 	std::vector<Client>::iterator findClientByFD(int fd);
