@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:56:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:23:30 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:35:03 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 		SendFailed(const std::string &msg) : runtime_error(msg) {}
 	};
 
-	Message(std::string);
+	Message(std::string msg);
 	Message(const Message& other);
 	~Message();
 	Message &operator=(const Message &other);

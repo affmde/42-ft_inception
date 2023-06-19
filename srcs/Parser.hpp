@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:48:56 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:51:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ public:
 	};
 
 	Parser();
-	Parser(const Parser&);
+	Parser(const Parser &other);
 	~Parser();
-	Parser &operator=(const Parser&);
+	Parser &operator=(const Parser &other);
 
 	//Member Functions
 	void parsePass(std::string input, std::string password);

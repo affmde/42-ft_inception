@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:01:48 by helneff          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:35:09 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Message::Message(std::string msg)
 
 Message::~Message() {}
 
-Message::Message(const Message & other) { *this = other; }
+Message::Message(const Message &other) { *this = other; }
 
 Message &Message::operator=(const Message &other)
 {
