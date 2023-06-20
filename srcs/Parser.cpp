@@ -6,9 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 14:23:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 20:54:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <iostream> //DELETE AFTER DEBUGGING!!!!!!!!!!!!!!!!
 
 #include "Parser.hpp"
 
@@ -62,29 +64,32 @@ void Parser::parsePass(std::string input, std::string pass)
 		throw WrongInputException("Wrong input");
 	if (input.length() - std::string("Pass ").length() < 1)
 		throw NoPassException("No pass");
+	if (input[input.length() - 1] == '\n')
+		input.erase(input.length() - 1, 1);
+	if (input[input.length() - 1] == '\r')
+		input.erase(input.length() - 1, 1);
 	std::string password = input.substr(5, input.length() - 5);
 	if (password[0] == ':')
 		password.erase(0, 1);
-	if (password[password.length() - 1] == '\n' && password[password.length() - 2] != '\r') //CHECK IF THIS STILL WORKS PROPERLY WITH ADIUM
-		password.insert(password.length() - 1, "\r");
+	for (int i = 0; i < password.length(); i++)
+		std::cout << (int)pass[i] << " " << (int)password[i] << std::endl;
 	if (password.compare(pass) != 0)
 		throw NoPassException("Wrong pass");
 }
-#include <iostream> //DELETE THIS!!!!
-std::string Parser::parseNick(std::string input)
+
+void Parser::parseNick(std::string input, std::string &nick)
 {
 	if (input.empty())
 		throw WrongInputException("Wrong input");
 	if (input.length() - std::string("NICK ").length() < 1)
 		throw NoNickException("No nick");
-	std::string nick = input.substr(5, input.length() - 5);
+	nick = input.substr(5, input.length() - 5);
 	if (nick[nick.length() - 1] == '\n')
 		nick.erase(nick.length() - 1, 1);
 	if (nick[nick.length() - 1] == '\r')
 		nick.erase(nick.length() - 1, 1);
 	if (std::isdigit(nick[0]) || nick[0] == '#' || nick[0] == ' ' || nick[0] == ':')
 		throw InvalidNickException("Invalid Nick");
-	return nick;
 }
 
 

@@ -12,7 +12,7 @@
 
 Server::Server(const char *port, std::string pass)
 {
-	this->pass = pass + "\r\n";;
+	this->pass = pass;
 	addrinfo hints;
 	bzero(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -119,11 +119,11 @@ void Server::handleClientMessage(Client &client)
 		it != args.end(); ++it, i++)
 	{
 		std::cout << "i: " << i << " fd: " << client.getClientFD() << " it: " << *it << std::endl;
-		if (it->find("PASS ") != std::string::npos && client.isConnected() && !client.isLogged())
+		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() != PASSED)
 		{
 			try{
 				parser.parsePass(*it, pass);
-				client.setLogged(true);
+				client.setActiveStatus(PASSED);
 			} catch (Parser::NoPassException &e){
 				Message msg("Incorrect password\r\n");
 				
@@ -139,11 +139,11 @@ void Server::handleClientMessage(Client &client)
 				return ;
 			}
 		}
-		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.isLogged())
+		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASSED)
 		{
 			std::string nick;
 			try {
-				nick = parser.parseNick(*it);
+				parser.parseNick(*it, nick);
 				if (nick.empty())
 				{
 					Message msg;
@@ -161,30 +161,24 @@ void Server::handleClientMessage(Client &client)
 				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, nick.c_str());
 				break;
 			} catch (Parser::InvalidNickException &e){
-				nick = (*it).substr(5, (*it).length() - 5);
-				if (nick[nick.length() - 1] == '\n')
-					nick.erase(nick.length() - 1, 1);
-				if (nick[nick.length() - 1] == '\r')
-					nick.erase(nick.length() - 1, 1);
-				std::cout << "temp nick: " << nick <<std::endl;
 				Message msg;
-				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, nick.c_str());
-				nick.insert(0, "~");
-				client.setNickname(nick);
+				for (char c : nick)
+					std::cout << (int)c << std::endl;
+				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, "*", nick.c_str());
 				break;
 			}
 		}
-		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.isLogged())
+		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASSED)
 		{
 			Message msg;
 			//msg.RPL_Welcome(client.getClientFD(), client.getNickname());
-			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str());
+			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
 			std::cout << "nickname: " << client.getNickname() << std::endl;
+			client.setActiveStatus(REGISTERED);
 			//TODO -> handle the USER!!!
 			//create user
 			//check if the user is already registered
 		}
-
 		else
 		{
 			client.setBuffer( client.getBuffer() + *it);

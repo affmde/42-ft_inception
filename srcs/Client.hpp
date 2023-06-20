@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:25:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 21:22:21 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 #define CLIENT_HPP
 
 #include <string>
+
+#define CONNECTED 0
+#define PASSED 1
+#define REGISTERED 2
+#define BANNED 3
 
 class Client
 {
@@ -28,10 +33,10 @@ public:
 	void setClientFD(int fd);
 
 	std::string getRealname() const;
-	void setRealname(std::string username);
+	void setRealname(std::string realName);
 
 	std::string getHostname() const;
-	void setHostname(std::string username);
+	void setHostname(std::string hostName);
 
 	std::string getServername() const;
 	void setServername(std::string username);
@@ -49,11 +54,9 @@ public:
 	void setBuffer(std::string str);
 	void resetBuffer();
 
-	bool isLogged() const;
-	void setLogged(bool logged);
-
-	bool isBanned() const;
-	void setBanned(bool banned);
+	int getActiveStatus() const;
+	void setActiveStatus(int status);
+	
 
 	bool isReadyToSend() const;
 
@@ -65,8 +68,7 @@ private:
 	std::string servername;
 	std::string hostname;
 	bool connected;
-	bool logged;
-	bool banned;
+	int activeStatus;
 	std::string buffer;
 };
 

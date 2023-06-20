@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 11:52:59 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 20:43:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ public:
 
 	//Member Functions
 	void parsePass(std::string input, std::string password);
-	std::string parseNick(std::string);
+	void parseNick(std::string inout, std::string &nick);
 	std::string getInput() const;
 	void setInput(std::string);
 	std::vector<std::string> parseInput();

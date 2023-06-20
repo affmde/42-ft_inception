@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 16:16:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 21:23:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,14 @@ Client::Client()
 : clientFD(0)
 , totalMessages(0)
 , connected(false)
-, logged(false)
-, banned(false)
+, activeStatus(0)
 {}
 
 Client::Client(int fd)
 : clientFD(fd)
 , totalMessages(0)
 , connected(true)
-, logged(false)
-, banned(false)
+, activeStatus(CONNECTED)
 {}
 
 Client::Client(const Client &other) { *this = other; }
@@ -44,8 +42,7 @@ Client &Client::operator=(const Client &other)
 		servername = other.servername;
 		hostname = other.hostname;
 		buffer = other.buffer;
-		logged = other.logged;
-		banned = other.banned;
+		activeStatus = other.activeStatus;
 	}
 	return (*this);
 }
@@ -77,11 +74,8 @@ std::string Client::getBuffer() const { return buffer; }
 void Client::setBuffer(std::string str) { buffer = str; }
 void Client::resetBuffer() { buffer = ""; }
 
-bool Client::isLogged() const { return logged; }
-void Client::setLogged(bool logged) { this->logged = logged; }
-
-bool Client::isBanned() const { return banned; }
-void Client::setBanned(bool banned) { this->banned = banned; }
+int Client::getActiveStatus() const { return activeStatus; }
+void Client::setActiveStatus(int status) { activeStatus = status; }
 
 bool Client::isReadyToSend() const
 {

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 13:39:03 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 20:33:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void Message::reply(Client *sender, Client &receiver, std::string code, int head
 	switch (header)
 	{
 		case SERVER:
-		head = ":localhost " + code + " " + receiver.getNickname() + " :";
+		head = ":127.0.0.1 " + code + " ";
 		break;
 		case CLIENT:
 		head = sender->getNickname() + "!" + sender->getNickname() + "@" + sender->getHostname() + " " + code + " " + receiver.getNickname() + " :";
