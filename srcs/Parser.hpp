@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 08:20:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:52:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ public:
 	};
 	struct NoNickException : public std::runtime_error {
 		NoNickException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct InvalidNickException : public std::runtime_error {
+		InvalidNickException(const std::string &msg) : runtime_error(msg) {}
 	};
 
 	Parser();

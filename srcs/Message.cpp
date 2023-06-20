@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 11:19:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 13:39:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <sys/socket.h>
 #include <stdarg.h>
 #include <sstream>
-
+#include <iostream> //DELETE AFTER DUBBIGING IS OVER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #include "Message.hpp"
 
 Message::Message(){}
@@ -73,7 +73,7 @@ void Message::reply(Client *sender, Client &receiver, std::string code, int head
 	switch (header)
 	{
 		case SERVER:
-		head = ":localhost " + std::string(" ") + code + " " + receiver.getNickname() + " :";
+		head = ":localhost " + code + " " + receiver.getNickname() + " :";
 		break;
 		case CLIENT:
 		head = sender->getNickname() + "!" + sender->getNickname() + "@" + sender->getHostname() + " " + code + " " + receiver.getNickname() + " :";

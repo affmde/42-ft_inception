@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 11:00:26 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 14:23:48 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void Parser::parsePass(std::string input, std::string pass)
 	if (password.compare(pass) != 0)
 		throw NoPassException("Wrong pass");
 }
-
+#include <iostream> //DELETE THIS!!!!
 std::string Parser::parseNick(std::string input)
 {
 	if (input.empty())
@@ -82,6 +82,10 @@ std::string Parser::parseNick(std::string input)
 		nick.erase(nick.length() - 1, 1);
 	if (nick[nick.length() - 1] == '\r')
 		nick.erase(nick.length() - 1, 1);
+	if (std::isdigit(nick[0]) || nick[0] == '#' || nick[0] == ' ' || nick[0] == ':')
+		throw InvalidNickException("Invalid Nick");
 	return nick;
 }
+
+
 

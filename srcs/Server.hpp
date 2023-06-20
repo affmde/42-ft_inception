@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/20 08:17:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:29:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ public:
 	struct UserRegistrationException : public std::runtime_error {
 		UserRegistrationException(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct DuplicateNickException : public std::runtime_error {
+		DuplicateNickException(const std::string &msg) : runtime_error(msg) {}
+	};
 
 	Server(const char *port, std::string pass);
 	~Server();
@@ -56,6 +59,7 @@ private:
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);
 	std::vector<Client>::iterator findClientByFD(int fd);
 	std::vector<Client>::iterator eraseUserByFD(int fd);
+	void checkDuplicateNick(std::string nick);
 };
 
 #endif

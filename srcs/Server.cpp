@@ -113,11 +113,12 @@ void Server::handleClientMessage(Client &client)
 	buffer[bytes_read] = '\0';
 	Parser parser;
 	parser.setInput(std::string(buffer));
-	std::cout << "buffer: " << buffer << std::endl;
 	std::vector<std::string>	args = parser.parseInput();
+	int i = 0;
 	for(std::vector<std::string>::iterator it = args.begin();
-		it != args.end(); ++it)
+		it != args.end(); ++it, i++)
 	{
+		std::cout << "i: " << i << " fd: " << client.getClientFD() << " it: " << *it << std::endl;
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && !client.isLogged())
 		{
 			try{
@@ -135,24 +136,42 @@ void Server::handleClientMessage(Client &client)
 				msg.sendData(client.getClientFD());
 				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
+				return ;
 			}
 		}
 		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.isLogged())
 		{
+			std::string nick;
 			try {
-				std::string nick = parser.parseNick(*it);
+				nick = parser.parseNick(*it);
 				if (nick.empty())
 				{
-					Message msg("Empty nickname\r\n");
-					msg.sendData(client.getClientFD());
-					return ;
+					Message msg;
+					msg.reply(NULL, client, ERR_NONICKNAMEGIVEN_CODE, SERVER, ERR_NONICKNAMEGIVEN);
+					break ;
 				}
+				checkDuplicateNick(nick);
 				//TODO -> Check for all Nickname rules in here!!!!
-				//TODO -> Check for duplicate Nickname in here!!!
 				client.setNickname(nick);
 			} catch (Parser::NoNickException &e){
 				Message msg(e.what());
 				msg.sendData(client.getClientFD());
+			} catch (DuplicateNickException &e){
+				Message msg;
+				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, nick.c_str());
+				break;
+			} catch (Parser::InvalidNickException &e){
+				nick = (*it).substr(5, (*it).length() - 5);
+				if (nick[nick.length() - 1] == '\n')
+					nick.erase(nick.length() - 1, 1);
+				if (nick[nick.length() - 1] == '\r')
+					nick.erase(nick.length() - 1, 1);
+				std::cout << "temp nick: " << nick <<std::endl;
+				Message msg;
+				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, nick.c_str());
+				nick.insert(0, "~");
+				client.setNickname(nick);
+				break;
 			}
 		}
 		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.isLogged())
@@ -160,6 +179,7 @@ void Server::handleClientMessage(Client &client)
 			Message msg;
 			//msg.RPL_Welcome(client.getClientFD(), client.getNickname());
 			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str());
+			std::cout << "nickname: " << client.getNickname() << std::endl;
 			//TODO -> handle the USER!!!
 			//create user
 			//check if the user is already registered
@@ -170,16 +190,15 @@ void Server::handleClientMessage(Client &client)
 			client.setBuffer( client.getBuffer() + *it);
 		}
 
-	}
-
-	if (client.isReadyToSend())
-	{
-		std::cout << "Client sent something!" << std::endl;
-		std::cout << client.getBuffer() << std::endl;
-		emit(client.getClientFD(), client.getBuffer());
-		client.increaseTotalMessages();
-		client.resetBuffer();
-		std::cout << "User " << client.getClientFD() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+		if (client.isReadyToSend())
+		{
+			std::cout << "Client sent something!" << std::endl;
+			std::cout << client.getBuffer() << std::endl;
+			emit(client.getClientFD(), client.getBuffer());
+			client.increaseTotalMessages();
+			client.resetBuffer();
+			std::cout << "User " << client.getClientFD() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
+		}
 	}
 }
 
@@ -221,4 +240,14 @@ std::vector<Client>::iterator Server::eraseUserByFD(int fd)
 	std::vector<Client>::iterator client = findClientByFD(fd);
 	if (client == clients.end()) return clients.end();
 	return clients.erase(client);
+}
+
+
+void Server::checkDuplicateNick(std::string nick)
+{
+	for(std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->getNickname() == nick)
+			throw DuplicateNickException("Duplicate nick");
+	}
 }
