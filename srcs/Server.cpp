@@ -23,7 +23,6 @@ Server::Server(const char *port, std::string pass)
 	int status = getaddrinfo(NULL, port, &hints, &servinfo);
 	if (status != 0)
 		throw InitException(std::string("Error: getaddrinfo: ") + gai_strerror(status));
-
 	sockfd = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol);
 	if (sockfd == -1)
 		throw InitException(std::string("Error: socket: ") + strerror(errno));
@@ -158,10 +157,14 @@ void Server::handleClientMessage(Client &client)
 		}
 		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.isLogged())
 		{
+			Message msg;
+			//msg.RPL_Welcome(client.getClientFD(), client.getNickname());
+			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str());
 			//TODO -> handle the USER!!!
 			//create user
 			//check if the user is already registered
 		}
+
 		else
 		{
 			client.setBuffer( client.getBuffer() + *it);

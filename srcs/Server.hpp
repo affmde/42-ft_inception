@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/19 16:41:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 08:17:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <vector>
 #include <exception>
 #include <poll.h>
+//Just to work on my wsl at home
+#include <string.h>
 
 #include "Client.hpp"
 

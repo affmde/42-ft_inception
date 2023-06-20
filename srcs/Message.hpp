@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:56:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 17:29:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 10:47:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,13 @@
 
 #include <exception>
 #include <string>
+//**Just to work home - DELETE LATER!!!!****
+#include <stdexcept>
+#include <string.h>
+//*******************************************
+
+#include "Client.hpp"
+#include "Numerics.hpp"
 
 class Message
 {
@@ -29,10 +36,14 @@ public:
 	Message &operator=(const Message &other);
 
 	void setMessage(std::string message);
-	std::string getMessage(void);
-	void sendData(int client_fd);
+	std::string getMessage(void) const ;
+	void sendData(int client_fd) const;
+	void RPL_Welcome(int client_fd, std::string nick) const;
+	void reply(Client *sender, Client &receiver, std::string code, int header, std::string format, ...);
 private:
 	std::string message;
+
+	std::string	toString(int number) const;
 };
 
 #endif

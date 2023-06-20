@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 17:14:42 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:00:26 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ std::vector<std::string> Parser::parseInput()
 	return args;
 }
 
-#include <iostream>
 void Parser::parsePass(std::string input, std::string pass)
 {
 	if (input.empty())
@@ -66,6 +65,8 @@ void Parser::parsePass(std::string input, std::string pass)
 	std::string password = input.substr(5, input.length() - 5);
 	if (password[0] == ':')
 		password.erase(0, 1);
+	if (password[password.length() - 1] == '\n' && password[password.length() - 2] != '\r') //CHECK IF THIS STILL WORKS PROPERLY WITH ADIUM
+		password.insert(password.length() - 1, "\r");
 	if (password.compare(pass) != 0)
 		throw NoPassException("Wrong pass");
 }
@@ -77,6 +78,10 @@ std::string Parser::parseNick(std::string input)
 	if (input.length() - std::string("NICK ").length() < 1)
 		throw NoNickException("No nick");
 	std::string nick = input.substr(5, input.length() - 5);
+	if (nick[nick.length() - 1] == '\n')
+		nick.erase(nick.length() - 1, 1);
+	if (nick[nick.length() - 1] == '\r')
+		nick.erase(nick.length() - 1, 1);
 	return nick;
 }
 

@@ -6,13 +6,15 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/19 17:30:23 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/20 11:19:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <stdarg.h>
+#include <sstream>
 
 #include "Message.hpp"
 
@@ -35,7 +37,7 @@ Message &Message::operator=(const Message &other)
 }
 
 //Member Functions
-void Message::sendData(int clientFD)
+void Message::sendData(int clientFD) const
 {
 	int bytes_left = message.length();
 	while (bytes_left > 0)
@@ -52,4 +54,37 @@ void	Message::setMessage(std::string message)
 	this->message = message;
 }
 
-std::string Message::getMessage(void) { return message; }
+std::string Message::getMessage(void) const { return message; }
+
+
+void Message::RPL_Welcome (int client_fd, std::string nick) const
+{
+	Message msg;
+	std::string message = nick + ": " + "Welcome to the Internet Relay Network, " + nick;
+	msg.setMessage(message);
+	msg.sendData(client_fd);
+}
+
+void Message::reply(Client *sender, Client &receiver, std::string code, int header, std::string format, ...)
+{
+	std::string message;
+	std::string head;
+
+	switch (header)
+	{
+		case SERVER:
+		head = ":localhost " + std::string(" ") + code + " " + receiver.getNickname() + " :";
+		break;
+		case CLIENT:
+		head = sender->getNickname() + "!" + sender->getNickname() + "@" + sender->getHostname() + " " + code + " " + receiver.getNickname() + " :";
+	}
+	va_list args;
+	va_start(args, format);
+	while (format.find("%s") != std::string::npos)
+		format.replace(format.find("%s"), 2, va_arg(args, char*));
+	va_end(args);
+	message = head + format + "\r\n";
+	setMessage(message);
+	sendData(receiver.getClientFD());
+}
+
