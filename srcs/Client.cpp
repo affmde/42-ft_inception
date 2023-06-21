@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 21:23:50 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 09:23:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Client::Client()
 : clientFD(0)
 , totalMessages(0)
 , connected(false)
-, activeStatus(0)
+, activeStatus(NOT_CONNECTED)
 {}
 
 Client::Client(int fd)

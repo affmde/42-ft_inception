@@ -119,11 +119,11 @@ void Server::handleClientMessage(Client &client)
 		it != args.end(); ++it, i++)
 	{
 		std::cout << "i: " << i << " fd: " << client.getClientFD() << " it: " << *it << std::endl;
-		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() != PASSED)
+		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
 			try{
 				parser.parsePass(*it, pass);
-				client.setActiveStatus(PASSED);
+				client.setActiveStatus(PASS_ACCEPTED);
 			} catch (Parser::NoPassException &e){
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "PASS");
@@ -137,7 +137,7 @@ void Server::handleClientMessage(Client &client)
 				break ;
 			}
 		}
-		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASSED)
+		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
 			std::string nick;
 			try {
@@ -166,10 +166,9 @@ void Server::handleClientMessage(Client &client)
 				break;
 			}
 		}
-		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASSED)
+		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
 			Message msg;
-			//msg.RPL_Welcome(client.getClientFD(), client.getNickname());
 			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
 			std::cout << "nickname: " << client.getNickname() << std::endl;
 			client.setActiveStatus(REGISTERED);
@@ -180,6 +179,8 @@ void Server::handleClientMessage(Client &client)
 		else
 		{
 			client.setBuffer( client.getBuffer() + *it);
+			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!! 
+			//ALSO MAKE SURE THAT ONLY IF THE ACTIVE STATATUS == REGISTERED WE PROCCEED IT!!!
 		}
 
 		if (client.isReadyToSend())

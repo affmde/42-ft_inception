@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 21:22:21 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 09:24:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 
 #include <string>
 
-#define CONNECTED 0
-#define PASSED 1
-#define REGISTERED 2
-#define BANNED 3
+#define NOT_CONNECTED 0
+#define CONNECTED 1
+#define PASS_ACCEPTED 2
+#define REGISTERED 3
+#define BANNED 4
 
 class Client
 {
