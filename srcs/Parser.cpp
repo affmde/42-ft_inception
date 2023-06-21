@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 20:54:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 09:02:07 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,19 @@ std::vector<std::string> Parser::parseInput()
 
 void Parser::parsePass(std::string input, std::string pass)
 {
-	if (input.empty())
-		throw WrongInputException("Wrong input");
-	if (input.length() - std::string("Pass ").length() < 1)
-		throw NoPassException("No pass");
 	if (input[input.length() - 1] == '\n')
 		input.erase(input.length() - 1, 1);
 	if (input[input.length() - 1] == '\r')
 		input.erase(input.length() - 1, 1);
+	if (input.empty() || input.length() - std::string("Pass ").length() < 1)
+		throw NoPassException("No pass");
 	std::string password = input.substr(5, input.length() - 5);
 	if (password[0] == ':')
 		password.erase(0, 1);
 	for (int i = 0; i < password.length(); i++)
 		std::cout << (int)pass[i] << " " << (int)password[i] << std::endl;
 	if (password.compare(pass) != 0)
-		throw NoPassException("Wrong pass");
+		throw WrongPassException("Wrong pass");
 }
 
 void Parser::parseNick(std::string input, std::string &nick)

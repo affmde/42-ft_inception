@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 20:43:59 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 08:28:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ public:
 	};
 	struct NoPassException : public std::runtime_error {
 		NoPassException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct WrongPassException : public std::runtime_error {
+		WrongPassException(const std::string &msg) : runtime_error(msg) {}
 	};
 	struct NoNickException : public std::runtime_error {
 		NoNickException(const std::string &msg) : runtime_error(msg) {}

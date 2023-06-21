@@ -125,18 +125,16 @@ void Server::handleClientMessage(Client &client)
 				parser.parsePass(*it, pass);
 				client.setActiveStatus(PASSED);
 			} catch (Parser::NoPassException &e){
-				Message msg("Incorrect password\r\n");
-				
-				msg.sendData(client.getClientFD());
+				Message msg;
+				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "PASS");
 				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
-				//SEND ERR_PASSWDMISMATCH (464) and then close the connection with ERROR.
-			} catch (Parser::WrongInputException &e){
-				Message msg("Invalid input\r\n");
-				msg.sendData(client.getClientFD());
+			} catch (Parser::WrongPassException &e){
+				Message msg;
+				msg.reply(NULL, client, ERR_PASSWDMISMATCH_CODE, SERVER, ERR_PASSWDMISMATCH, "*");
 				client.setConnected(false);
 				std::cerr << e.what() << std::endl;
-				return ;
+				break ;
 			}
 		}
 		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASSED)
