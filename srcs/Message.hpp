@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:56:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 12:59:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 08:22:38 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,12 @@ public:
 	Message &operator=(const Message &other);
 
 	void setMessage(std::string message);
-	std::string getMessage(void) const ;
+	std::string getMessage(void) const;
+	
 	void sendData(int client_fd) const;
-	void RPL_Welcome(int client_fd, std::string nick) const;
 	void reply(Client *sender, Client &receiver, std::string code, int header, std::string format, ...);
 private:
 	std::string message;
-
-	std::string	toString(int number) const;
 };
 
 #endif

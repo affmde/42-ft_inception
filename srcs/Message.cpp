@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/20 20:33:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 08:23:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdarg.h>
-#include <sstream>
+
 #include <iostream> //DELETE AFTER DUBBIGING IS OVER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #include "Message.hpp"
 
@@ -49,21 +49,9 @@ void Message::sendData(int clientFD) const
 	}
 }
 
-void	Message::setMessage(std::string message)
-{
-	this->message = message;
-}
+void Message::setMessage(std::string message) { this->message = message; }
 
 std::string Message::getMessage(void) const { return message; }
-
-
-void Message::RPL_Welcome (int client_fd, std::string nick) const
-{
-	Message msg;
-	std::string message = nick + ": " + "Welcome to the Internet Relay Network, " + nick;
-	msg.setMessage(message);
-	msg.sendData(client_fd);
-}
 
 void Message::reply(Client *sender, Client &receiver, std::string code, int header, std::string format, ...)
 {
