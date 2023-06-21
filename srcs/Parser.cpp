@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 09:02:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 12:08:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ void Parser::parsePass(std::string input, std::string pass)
 	std::string password = input.substr(5, input.length() - 5);
 	if (password[0] == ':')
 		password.erase(0, 1);
-	for (int i = 0; i < password.length(); i++)
-		std::cout << (int)pass[i] << " " << (int)password[i] << std::endl;
 	if (password.compare(pass) != 0)
 		throw WrongPassException("Wrong pass");
 }
@@ -90,5 +88,30 @@ void Parser::parseNick(std::string input, std::string &nick)
 		throw InvalidNickException("Invalid Nick");
 }
 
+void Parser::parseUser(std::string input, Client &client)
+{
+	if (input[input.length() - 1] == '\n')
+		input.erase(input.length() - 1, 1);
+	if (input[input.length() - 1] == '\r')
+		input.erase(input.length() - 1, 1);
+	std::vector<std::string> args;
+	size_t pos;
+	std::string arg;
+	while ((pos = input.find(" ")) != std::string::npos)
+	{
+		arg = input.substr(0, pos);
+		args.push_back(arg);
+		input.erase(0, pos + 1);
+	}
+	if (!input.length() < 1)
+		args.push_back(input);
+	std::string username = args[1];
+	if (username.empty())
+		throw EmptyUsernameException("Empty username");
+	if (username.length() > maxClientUsernameLength) // REMEMBER TO ADD THIS ON THE USERLEN PROPERTY ON PL_SUPPORT (005)
+		username = username.substr(0, maxClientUsernameLength);
+	std::cout << "username: " << username << std::endl;
+
+}
 
 

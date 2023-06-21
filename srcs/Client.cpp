@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 09:23:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 11:38:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ Client &Client::operator=(const Client &other)
 		totalMessages = other.totalMessages;
 		connected = other.connected;
 		realname = other.realname;
+		username = other.username;
 		nickname = other.nickname;
 		servername = other.servername;
 		hostname = other.hostname;
@@ -63,6 +64,9 @@ void Client::setServername(std::string servername) { this->servername = serverna
 
 std::string Client::getNickname() const { return nickname; }
 void Client::setNickname(std::string nickname) { this->nickname = nickname; }
+
+std::string Client::getUsername() const { return username; }
+void Client::setUsername(std::string username) { this->username = username; }
 
 bool Client::isConnected() const { return connected; }
 void Client::setConnected(bool connected) { this->connected = connected; }

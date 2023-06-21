@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 09:24:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 11:37:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ public:
 	std::string getNickname() const;
 	void setNickname(std::string nickname);
 
+	std::string getUsername() const;
+	void setUsername(std::string Username);
+
 	bool isConnected() const;
 	void setConnected(bool connected);
 
@@ -57,7 +60,7 @@ public:
 
 	int getActiveStatus() const;
 	void setActiveStatus(int status);
-	
+
 
 	bool isReadyToSend() const;
 
@@ -65,6 +68,7 @@ private:
 	int clientFD;
 	int totalMessages;
 	std::string nickname;
+	std::string username;
 	std::string realname;
 	std::string servername;
 	std::string hostname;

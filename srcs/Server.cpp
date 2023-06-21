@@ -111,6 +111,7 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
+	std::cout << "buffer: \n" << buffer << "\n-----------------" << std::endl;
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string>	args = parser.parseInput();
@@ -118,7 +119,6 @@ void Server::handleClientMessage(Client &client)
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it, i++)
 	{
-		std::cout << "i: " << i << " fd: " << client.getClientFD() << " it: " << *it << std::endl;
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
 			try{
@@ -149,7 +149,6 @@ void Server::handleClientMessage(Client &client)
 					break ;
 				}
 				checkDuplicateNick(nick);
-				//TODO -> Check for all Nickname rules in here!!!!
 				client.setNickname(nick);
 			} catch (Parser::NoNickException &e){
 				Message msg(e.what());
@@ -160,18 +159,21 @@ void Server::handleClientMessage(Client &client)
 				break;
 			} catch (Parser::InvalidNickException &e){
 				Message msg;
-				for (char c : nick)
-					std::cout << (int)c << std::endl;
 				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, "*", nick.c_str());
 				break;
 			}
 		}
 		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
-			Message msg;
-			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
-			std::cout << "nickname: " << client.getNickname() << std::endl;
-			client.setActiveStatus(REGISTERED);
+			try {
+				Parser parser;
+				parser.parseUser(*it, client);
+				Message msg;
+				msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
+				client.setActiveStatus(REGISTERED);
+			} catch (Parser::InvalidNickException &e /*change this!!!!*/) {
+
+			}
 			//TODO -> handle the USER!!!
 			//create user
 			//check if the user is already registered
@@ -179,7 +181,7 @@ void Server::handleClientMessage(Client &client)
 		else
 		{
 			client.setBuffer( client.getBuffer() + *it);
-			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!! 
+			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!!
 			//ALSO MAKE SURE THAT ONLY IF THE ACTIVE STATATUS == REGISTERED WE PROCCEED IT!!!
 		}
 

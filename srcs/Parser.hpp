@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 08:28:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/21 12:05:13 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <vector>
 //Just to work home - DELETE LATER!!!!!
 #include <stdexcept>
+
+#include "Client.hpp"
 
 class Parser
 {
@@ -36,6 +38,9 @@ public:
 	struct InvalidNickException : public std::runtime_error {
 		InvalidNickException(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct EmptyUsernameException : public std::runtime_error {
+		EmptyUsernameException(const std::string &msg) : runtime_error(msg) {}
+	};
 
 	Parser();
 	Parser(const Parser &other);
@@ -48,8 +53,10 @@ public:
 	std::string getInput() const;
 	void setInput(std::string);
 	std::vector<std::string> parseInput();
+	void parseUser(std::string input, Client &client);
 
 private:
+	static const int maxClientUsernameLength = 10;
 	std::string input;
 	std::string pass;
 	std::string nick;
