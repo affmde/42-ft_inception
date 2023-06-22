@@ -6,14 +6,18 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 15:49:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 17:24:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMAND_HPP
 # define COMMAND_HPP
 
+#include <stdexcept>
 #include <string>
+#include <vector>
+
+#include "Client.hpp"
 
 #define PASS 0
 #define NICK 1
@@ -32,16 +36,29 @@
 class Command
 {
 public:
-	Command();
+	struct AlreadyRegisteredException : public std::runtime_error {
+		AlreadyRegisteredException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct InvalidNickException : public std::runtime_error {
+		InvalidNickException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct DuplicateNickException : public std::runtime_error {
+		DuplicateNickException(const std::string &msg) : runtime_error(msg) {}
+	};
+	
+	Command(std::string &input, Client &client);
 	Command(const Command &other);
 	~Command();
 	Command &operator=(const Command &other);
 
-	void checkCommands(std::string &input);
-	int getCommandId(std::string &input);
+	void checkCommands(std::vector<Client> &clients);
 	
 private:
+	std::string &input;
+	Client &client;
 	
+	int getCommandId(std::string &input) const;
+	void execNICK(std::string &input, std::vector<Client> &clients);
 };
 
 #endif

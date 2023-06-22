@@ -6,14 +6,18 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 15:59:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 17:35:27 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Command.hpp"
+#include <iostream>
 
-Command::Command() {}
-Command::Command(const Command &other) { *this = other; }
+#include "Command.hpp"
+#include "Parser.hpp"
+#include "Message.hpp"
+
+Command::Command(std::string &input, Client &client) : input(input), client(client) {}
+Command::Command(const Command &other) : input(other.input), client(other.client) { *this = other; }
 Command::~Command() {}
 Command &Command::operator=(const Command &other)
 {
@@ -21,7 +25,7 @@ Command &Command::operator=(const Command &other)
 	return (*this);
 }
 
-void Command::checkCommands(std::string &input)
+void Command::checkCommands(std::vector<Client> &clients)
 {
 	size_t pos;
 	pos = input.find(" ");
@@ -31,10 +35,21 @@ void Command::checkCommands(std::string &input)
 	switch (commandId)
 	{
 		case PASS:
+			throw AlreadyRegisteredException("Already registered");
 			break;
 		case NICK:
+		{
+			try{
+				execNICK(input, clients);
+			} catch(InvalidNickException &e) {
+				std::cerr << client.getNickname() << " cant update NICK." << std::endl;
+			} catch(DuplicateNickException &e) {
+				std::cerr << client.getNickname() << " cant update NICK because already exists." << std::endl;
+			}
 			break;
+		}
 		case USER:
+			throw AlreadyRegisteredException("Already registered");
 			break;
 		case KICK:
 			break;
@@ -59,10 +74,9 @@ void Command::checkCommands(std::string &input)
 		default:
 			break;
 	}
-
 }
 
-int Command::getCommandId(std::string &input)
+int Command::getCommandId(std::string &input) const
 {
 	if (input == "PASS")
 		return PASS;
@@ -91,4 +105,35 @@ int Command::getCommandId(std::string &input)
 	else if (input == "NOTICE")
 		return NOTICE;
 	return (-1);
+}
+
+void Command::execNICK(std::string &input, std::vector<Client> &clients)
+{
+	if (input[input.length() - 1] == '\n')
+		input.erase(input.length() - 1, 1);
+	if (input[input.length() - 1] == '\r')
+		input.erase(input.length() - 1, 1);
+	std::string clientNick = input;
+	for (int i = 0; i < clientNick.length(); i++)
+		clientNick[i] = std::tolower(clientNick[i]);
+	std::string nickToCompare;
+	for(std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		nickToCompare = it->getNickname();
+		for (int i = 0; i < nickToCompare.length(); i++)
+			nickToCompare[i] = std::tolower(nickToCompare[i]);
+		if (nickToCompare == clientNick)
+		{
+			Message msg;
+			msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), input.c_str());
+			throw DuplicateNickException("Duplicate nick");
+		}
+	}
+	if (std::isdigit(input[0]) || input[0] == '#' || input[0] == ' ' || input[0] == ':')
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, client.getNickname().c_str(), input.c_str());
+		throw InvalidNickException("Invalid Nick");
+	}
+	client.setNickname(input);
 }

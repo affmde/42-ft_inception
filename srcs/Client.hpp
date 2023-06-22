@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 11:46:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 16:43:42 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #define PASS_ACCEPTED 2
 #define REGISTERED 3
 #define BANNED 4
+#define LOGGED 5
 
 class Client
 {

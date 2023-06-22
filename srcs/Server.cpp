@@ -9,6 +9,7 @@
 #include "Server.hpp"
 #include "Message.hpp"
 #include "Parser.hpp"
+#include "Command.hpp"
 
 Server::Server(const char *port, std::string pass)
 {
@@ -157,7 +158,7 @@ void Server::handleClientMessage(Client &client)
 				msg.sendData(client.getClientFD());
 			} catch (DuplicateNickException &e){
 				Message msg;
-				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, nick.c_str());
+				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), nick.c_str());
 				break;
 			} catch (Parser::InvalidNickException &e){
 				Message msg;
@@ -180,8 +181,14 @@ void Server::handleClientMessage(Client &client)
 		}
 		else
 		{
-			client.setBuffer( client.getBuffer() + *it);
-			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!!
+			//client.setBuffer( client.getBuffer() + *it);
+			try{
+				Command cmd(*it, client);
+				cmd.checkCommands(clients);
+			} catch(Command::AlreadyRegisteredException &e) {
+				Message msg;
+				msg.reply(NULL, client, ERR_ALREADYREGISTERED_CODE, SERVER, ERR_ALREADYREGISTERED, client.getNickname().c_str());
+			}
 		}
 		if (client.getActiveStatus() == REGISTERED)
 		{
@@ -194,8 +201,9 @@ void Server::handleClientMessage(Client &client)
 			msg.reply(NULL, client, RPL_MYINFO_CODE, SERVER, RPL_MYINFO, client.getNickname().c_str(), "IRCSERVER", "1.0.0");
 			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390";
 			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
+			client.setActiveStatus(LOGGED);
 		}
-		if (client.isReadyToSend())
+		else if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
 		{
 			std::cout << "Client sent something!" << std::endl;
 			std::cout << client.getBuffer() << std::endl;
