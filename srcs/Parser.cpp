@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 11:21:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 15:20:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,13 @@ void Parser::parsePass(std::string input, std::string pass)
 		input.erase(input.length() - 1, 1);
 	if (input.empty() || input.length() - std::string("Pass ").length() < 1)
 		throw NoPassException("No pass");
-	std::string password = input.substr(5, input.length() - 5);
-	if (password[0] == ':')
-		password.erase(0, 1);
-	if (password.compare(pass) != 0)
+	size_t pos;
+	std::string arg;
+	while ((pos = input.find(" ")) != std::string::npos)
+		input.erase(0, pos + 1);
+	if (input[0] == ':')
+		input.erase(0, 1);
+	if (input.compare(pass) != 0)
 		throw WrongPassException("Wrong pass");
 }
 
@@ -110,7 +113,7 @@ void Parser::parseUser(std::string input, Client &client)
 	std::string username = args[1];
 	if (username.empty())
 		throw EmptyUserException("Empty username");
-	if (username.length() > maxClientUsernameLength) // REMEMBER TO ADD THIS ON THE USERLEN PROPERTY ON PL_SUPPORT (005)
+	if (username.length() > maxClientUsernameLength)
 		username = username.substr(0, maxClientUsernameLength);
 	if (username[0] == ':')
 		username.erase(0, 1);

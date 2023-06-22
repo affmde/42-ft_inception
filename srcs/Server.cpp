@@ -192,7 +192,9 @@ void Server::handleClientMessage(Client &client)
 			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
 			std::string date = creationTime.getDateAsString();
 			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
-			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, "CASEMAPPING=ascii", client.getNickname().c_str());
+			msg.reply(NULL, client, RPL_MYINFO_CODE, SERVER, RPL_MYINFO, client.getNickname().c_str(), "IRCSERVER", "1.0.0");
+			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390";
+			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
 		}
 		if (client.isReadyToSend())
 		{
