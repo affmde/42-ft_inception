@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/22 15:35:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:21:55 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@
 #include <exception>
 #include <poll.h>
 //Just to work on my wsl at home
+#include <stdexcept>
 #include <string.h>
 
 #include "Client.hpp"
 #include "Time.hpp"
+#include "Channel.hpp"
 
 class Server
 {
@@ -52,7 +54,10 @@ private:
 	std::string pass;
 	std::vector<pollfd> pollfds;
 	std::vector<Client> clients;
+	std::vector<Channel> channels;
 	Time creationTime;
+	void addChannel(std::string name);
+	Channel *searchChannel(std::string name);
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();
@@ -62,8 +67,6 @@ private:
 	std::vector<Client>::iterator findClientByFD(int fd);
 	std::vector<Client>::iterator eraseUserByFD(int fd);
 	void checkDuplicateNick(std::string nick);
-	void checkCommands(std::string &input);
-	int getCommandId(std::string &input);
 
 };
 

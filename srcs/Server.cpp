@@ -271,3 +271,23 @@ void Server::checkDuplicateNick(std::string nick)
 			throw DuplicateNickException("Duplicate nick");
 	}
 }
+
+void Server::addChannel(std::string name)
+{
+	if (!searchChannel(name))
+	{
+		Channel newChannel;
+		newChannel.setName(name);
+		channels.push_back(newChannel);
+	}
+}
+
+Channel *Server::searchChannel(std::string name)
+{
+	for(std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it->getName() == name)
+			return (&(*it));
+	}
+	return (NULL);
+}

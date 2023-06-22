@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 17:24:12 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:35:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ public:
 	struct DuplicateNickException : public std::runtime_error {
 		DuplicateNickException(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct NeedMoreParamsException : public std::runtime_error {
+		NeedMoreParamsException(const std::string &msg) : runtime_error(msg) {}
+	};
 	
 	Command(std::string &input, Client &client);
 	Command(const Command &other);
@@ -59,6 +62,7 @@ private:
 	
 	int getCommandId(std::string &input) const;
 	void execNICK(std::string &input, std::vector<Client> &clients);
+	void execJOIN(std::string &input);
 };
 
 #endif

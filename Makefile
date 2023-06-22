@@ -14,7 +14,7 @@ COMPILE_FLAGS = -std=c++98 -Wall -Wextra -Werror
 OBJS_DIR = obj/
 SRCS_DIR = srcs/
 
-SRCS := main.cpp Client.cpp Server.cpp Parser.cpp Message.cpp Time.cpp Command.cpp
+SRCS := main.cpp Client.cpp Server.cpp Parser.cpp Message.cpp Time.cpp Command.cpp Channel.cpp
 
 OBJ_FILES = $(SRCS:.cpp=.o)
 OBJS = $(patsubst %, $(OBJS_DIR)%, $(SRCS:.cpp=.o))

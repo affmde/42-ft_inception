@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 17:35:27 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:35:26 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include "Parser.hpp"
 #include "Message.hpp"
 
-Command::Command(std::string &input, Client &client) : input(input), client(client) {}
+Command::Command(std::string &input, Client &client) : 
+input(input), 
+client(client) {}
 Command::Command(const Command &other) : input(other.input), client(other.client) { *this = other; }
 Command::~Command() {}
 Command &Command::operator=(const Command &other)
@@ -30,8 +32,13 @@ void Command::checkCommands(std::vector<Client> &clients)
 	size_t pos;
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
+	std::cout << "command: " << command << std::endl;
 	int commandId = getCommandId(command);
 	input.erase(0, pos + 1);
+	if (input[input.length() - 1] == '\n')
+		input.erase(input.length() - 1, 1);
+	if (input[input.length() - 1] == '\r')
+	std::cout << "input: " << input << std::endl;
 	switch (commandId)
 	{
 		case PASS:
@@ -64,6 +71,13 @@ void Command::checkCommands(std::vector<Client> &clients)
 		case QUIT:
 			break;
 		case JOIN:
+			try {
+				execJOIN(input);
+			} catch(NeedMoreParamsException &e) {
+				std::cerr << client.getNickname() << " need more Params to JOIN" << std::endl;
+				Message msg;
+				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
+			}
 			break;
 		case PART:
 			break;
@@ -109,10 +123,6 @@ int Command::getCommandId(std::string &input) const
 
 void Command::execNICK(std::string &input, std::vector<Client> &clients)
 {
-	if (input[input.length() - 1] == '\n')
-		input.erase(input.length() - 1, 1);
-	if (input[input.length() - 1] == '\r')
-		input.erase(input.length() - 1, 1);
 	std::string clientNick = input;
 	for (int i = 0; i < clientNick.length(); i++)
 		clientNick[i] = std::tolower(clientNick[i]);
@@ -136,4 +146,40 @@ void Command::execNICK(std::string &input, std::vector<Client> &clients)
 		throw InvalidNickException("Invalid Nick");
 	}
 	client.setNickname(input);
+}
+
+void Command::execJOIN(std::string &input)
+{
+	std::vector<std::string> channels, keys;
+	size_t pos;
+	std::string arg, list;
+	
+	pos = input.find(" ");
+	list = input.substr(0, pos);
+	input.erase(0, pos + 1);
+	while ((pos = list.find(",")) != std::string::npos)
+	{
+		arg = list.substr(0, pos);
+		channels.push_back(arg);
+		list.erase(0, pos + 1);
+	}
+	if (!list.empty())
+		channels.push_back(list);
+	while ((pos = input.find(",")) != std::string::npos)
+	{
+		arg = input.substr(0, pos);
+		keys.push_back(arg);
+		input.erase(0, pos + 1);
+	}
+	if (!input.empty())
+		keys.push_back(input);
+	if (channels.size() < 1)
+		throw NeedMoreParamsException("Need more params");
+	for (int i = 0; i < channels.size(); i++)
+	{
+		if (channels[i][0] != '#')
+		{
+			std::cout << "BAD Channel name" << std::endl; //CHANGE THIS FOR A PROPER ERROR!!!!!!
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 16:43:42 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:24:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ public:
 
 	int getActiveStatus() const;
 	void setActiveStatus(int status);
-
 
 	bool isReadyToSend() const;
 
