@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/21 12:04:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:44:43 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <string.h>
 
 #include "Client.hpp"
+#include "Time.hpp"
 
 class Server
 {
@@ -51,6 +52,7 @@ private:
 	std::string pass;
 	std::vector<pollfd> pollfds;
 	std::vector<Client> clients;
+	Time creationTime;
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();
@@ -60,6 +62,7 @@ private:
 	std::vector<Client>::iterator findClientByFD(int fd);
 	std::vector<Client>::iterator eraseUserByFD(int fd);
 	void checkDuplicateNick(std::string nick);
+
 };
 
 #endif

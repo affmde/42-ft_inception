@@ -150,6 +150,8 @@ void Server::handleClientMessage(Client &client)
 				}
 				checkDuplicateNick(nick);
 				client.setNickname(nick);
+				if (!client.getUsername().empty())
+					client.setActiveStatus(REGISTERED);
 			} catch (Parser::NoNickException &e){
 				Message msg(e.what());
 				msg.sendData(client.getClientFD());
@@ -168,12 +170,9 @@ void Server::handleClientMessage(Client &client)
 			try {
 				Parser parser;
 				parser.parseUser(*it, client);
-				Message msg;
-				std::cout << client.getNickname() << " registered successfuly." << std::endl;
-				msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
-				msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
-				client.setActiveStatus(REGISTERED);
-			} catch (Parser::EmptyUserException &e /*change this!!!!*/) {
+				if (!client.getNickname().empty())
+					client.setActiveStatus(REGISTERED);
+			} catch (Parser::EmptyUserException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "USER");
 				std::cerr << e.what() << std::endl;
@@ -185,7 +184,15 @@ void Server::handleClientMessage(Client &client)
 			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!!
 			//ALSO MAKE SURE THAT ONLY IF THE ACTIVE STATATUS == REGISTERED WE PROCCEED IT!!!
 		}
-
+		if (client.getActiveStatus() == REGISTERED)
+		{
+			Message msg;
+			std::cout << client.getNickname() << " registered successfuly." << std::endl;
+			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
+			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
+			std::string date = creationTime.getYear();
+			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
+		}
 		if (client.isReadyToSend())
 		{
 			std::cout << "Client sent something!" << std::endl;
