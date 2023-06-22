@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 12:00:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:07:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,11 @@ void Time::getDate(Date &date)
 std::string Time::getDateAsString() const
 {
 	std::string year = toString(date.year);
-	std::string month = toString(date)
+	std::string month = toString(date.month);
+	std::string day = toString(date.day);
+	std::string hour = toString(date.hour);
+	std::string min = toString(date.min);
+	std::string sec = toString(date.sec);
+	std::string date = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec + " " + getWeekday();
+	return (date);
 }
