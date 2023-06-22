@@ -182,7 +182,6 @@ void Server::handleClientMessage(Client &client)
 		{
 			client.setBuffer( client.getBuffer() + *it);
 			//CHANGE THIS TO SEND THE INPUT TO THE COMMAND ANALYZER IN THE FUTURE!!
-			//ALSO MAKE SURE THAT ONLY IF THE ACTIVE STATATUS == REGISTERED WE PROCCEED IT!!!
 		}
 		if (client.getActiveStatus() == REGISTERED)
 		{
