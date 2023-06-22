@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/22 21:21:55 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:04:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ private:
 	std::vector<Client>::iterator findClientByFD(int fd);
 	std::vector<Client>::iterator eraseUserByFD(int fd);
 	void checkDuplicateNick(std::string nick);
+	void logMessage(int fd, std::string msg, std::string nickname) const;
 
 };
 

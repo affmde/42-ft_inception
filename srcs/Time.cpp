@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 12:07:59 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:16:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ int Time::getMin() const { return date.min; }
 int Time::getSec() const { return date.sec; }
 std::string Time::getWeekday() const { return date.weekDay; }
 
+#include <iostream>
 void Time::getDate(Date &date)
 {
 	std::time_t time = std::time(0);
 	std::tm *now = std::localtime(&time);
-
+	
 	date.year = now->tm_year + 1900;
 	date.month = now->tm_mon + 1;
 	date.day = now->tm_mday;
@@ -53,25 +54,25 @@ void Time::getDate(Date &date)
 	switch (now->tm_wday)
 	{
 		case 0:
-			date.weekDay = "Sunday";
+			date.weekDay = "Sun";
 			break;
 		case 1:
-			date.weekDay = "Monday";
+			date.weekDay = "Mon";
 			break;
 		case 2:
-			date.weekDay = "Tuesday";
+			date.weekDay = "Tue";
 			break;
 		case 3:
-			date.weekDay = "Wednesday";
+			date.weekDay = "Wed";
 			break;
 		case 4:
-			date.weekDay = "Thursday";
+			date.weekDay = "Thu";
 			break;
 		case 5:
-			date.weekDay = "Friday";
+			date.weekDay = "Fri";
 			break;
 		case 6:
-			date.weekDay = "Sunday";
+			date.weekDay = "Sat";
 			break;
 		default:
 			date.weekDay = "Error: couldn't detect day of the week";
@@ -86,6 +87,14 @@ std::string Time::getDateAsString() const
 	std::string hour = toString(date.hour);
 	std::string min = toString(date.min);
 	std::string sec = toString(date.sec);
-	std::string date = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec + " " + getWeekday();
-	return (date);
+	std::string date = getWeekday() + " " + year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+	return date;
+}
+
+std::string Time::getYearMonthDayAsString() const{
+	std::string year = toString(date.year);
+	std::string month = toString(date.month);
+	std::string day = toString(date.day);
+	std::string date = year + "-" + month + "-" + day;
+	return date;
 }

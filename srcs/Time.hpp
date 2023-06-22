@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:51 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 11:57:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:56:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ public:
 	int getMin() const;
 	int getSec() const;
 	std::string getWeekday() const;
-	std::string getDateAsString(void) const;
+	std::string getDateAsString() const;
+	std::string getYearMonthDayAsString() const;
 private:
 	Date date;
 };

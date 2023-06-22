@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:35:26 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:45:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ Command::~Command() {}
 Command &Command::operator=(const Command &other)
 {
 	if (this == &other) return *this;
+	input = other.input;
+	client = other.client;
 	return (*this);
 }
 
@@ -177,6 +179,8 @@ void Command::execJOIN(std::string &input)
 		throw NeedMoreParamsException("Need more params");
 	for (int i = 0; i < channels.size(); i++)
 	{
+		//HERE WE LOOP THROUGH ALL CHANNELS TO CHECK IF WE CAN ADDED THEM!!
+		//A LOT TO DO STILL HERE!!!!
 		if (channels[i][0] != '#')
 		{
 			std::cout << "BAD Channel name" << std::endl; //CHANGE THIS FOR A PROPER ERROR!!!!!!

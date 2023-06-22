@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 11:51:12 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 12:18:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:55:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ std::string toString(T nbr)
 	ret = ss.str();
 	return (ret);
 }
-
 
 #endif

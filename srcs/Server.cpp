@@ -13,6 +13,7 @@
 
 Server::Server(const char *port, std::string pass)
 {
+	logMessage(1, "Server started", "");
 	this->pass = pass;
 	addrinfo hints;
 	bzero(&hints, sizeof(hints));
@@ -70,12 +71,12 @@ void Server::pollClientEvents()
 		}
 		eraseDisconnectedUsers();
 	}
-	std::cerr << "Error: poll: " << strerror(errno) << std::endl;
+	logMessage(2, "Error poll: " + std::string(strerror(errno)), "");
 }
 
 void Server::registerNewUser()
 {
-	std::cout << "New connection received!" << std::endl;
+	logMessage(1, "New connection received!", "");
 	sockaddr_storage client_addr;
 	socklen_t client_addr_size = sizeof(client_addr);
 	int client_fd = accept(sockfd, (sockaddr *)&client_addr, &client_addr_size);
@@ -107,12 +108,11 @@ void Server::handleClientMessage(Client &client)
 		throw RecvException(std::string("Error: recv: ") + strerror(errno));
 	if (bytes_read == 0)
 	{
-		std::cout << "Client closed connection!" << std::endl;
+		logMessage(1, "Client closed connection!", client.getNickname());
 		client.setConnected(false);
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	std::cout << "buffer: \n" << buffer << "\n-----------------" << std::endl;
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string>	args = parser.parseInput();
@@ -129,12 +129,12 @@ void Server::handleClientMessage(Client &client)
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "PASS");
 				client.setConnected(false);
-				std::cerr << e.what() << std::endl;
+				logMessage(2, e.what(), client.getNickname());
 			} catch (Parser::WrongPassException &e){
 				Message msg;
 				msg.reply(NULL, client, ERR_PASSWDMISMATCH_CODE, SERVER, ERR_PASSWDMISMATCH, "*");
 				client.setConnected(false);
-				std::cerr << e.what() << std::endl;
+				logMessage(2, e.what(), client.getNickname());
 				break ;
 			}
 		}
@@ -147,6 +147,7 @@ void Server::handleClientMessage(Client &client)
 				{
 					Message msg;
 					msg.reply(NULL, client, ERR_NONICKNAMEGIVEN_CODE, SERVER, ERR_NONICKNAMEGIVEN);
+					logMessage(2, "Emptu nickname", client.getNickname());
 					break ;
 				}
 				checkDuplicateNick(nick);
@@ -154,15 +155,18 @@ void Server::handleClientMessage(Client &client)
 				if (!client.getUsername().empty())
 					client.setActiveStatus(REGISTERED);
 			} catch (Parser::NoNickException &e){
-				Message msg(e.what());
-				msg.sendData(client.getClientFD());
+				Message msg;
+				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "NICK");
+				logMessage(2, e.what(), client.getNickname());
 			} catch (DuplicateNickException &e){
 				Message msg;
 				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), nick.c_str());
+				logMessage(2, e.what(), client.getNickname());
 				break;
 			} catch (Parser::InvalidNickException &e){
 				Message msg;
 				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, "*", nick.c_str());
+				logMessage(2, e.what(), client.getNickname());
 				break;
 			}
 		}
@@ -176,7 +180,7 @@ void Server::handleClientMessage(Client &client)
 			} catch (Parser::EmptyUserException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "USER");
-				std::cerr << e.what() << std::endl;
+				logMessage(2, e.what(), client.getNickname());
 			}
 		}
 		else
@@ -188,12 +192,13 @@ void Server::handleClientMessage(Client &client)
 			} catch(Command::AlreadyRegisteredException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_ALREADYREGISTERED_CODE, SERVER, ERR_ALREADYREGISTERED, client.getNickname().c_str());
+				logMessage(2, e.what(), client.getNickname());
 			}
 		}
 		if (client.getActiveStatus() == REGISTERED)
 		{
 			Message msg;
-			std::cout << client.getNickname() << " registered successfuly." << std::endl;
+			logMessage(1, "Registered successfuly", client.getNickname());
 			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
 			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
 			std::string date = creationTime.getDateAsString();
@@ -205,12 +210,10 @@ void Server::handleClientMessage(Client &client)
 		}
 		else if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
 		{
-			std::cout << "Client sent something!" << std::endl;
-			std::cout << client.getBuffer() << std::endl;
+			logMessage(1, "Client sent something", client.getUsername());
 			emit(client.getClientFD(), client.getBuffer());
 			client.increaseTotalMessages();
 			client.resetBuffer();
-			std::cout << "User " << client.getClientFD() << " has sent " << client.getTotalMessages() << " messages" << std::endl;
 		}
 	}
 }
@@ -290,4 +293,13 @@ Channel *Server::searchChannel(std::string name)
 			return (&(*it));
 	}
 	return (NULL);
+}
+
+void Server::logMessage(int fd, std::string msg, std::string nickname) const
+{
+	Time time;
+	if (fd == 2)
+		std::cerr << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
+	else if (fd == 1)
+		std::cout << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
 }
