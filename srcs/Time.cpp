@@ -6,13 +6,14 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 11:35:38 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:00:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ctime>
-#include <iostream> //DELTE THIS!!!!!
+
 #include "Time.hpp"
+#include "Utils.hpp"
 
 Time::Time() { getDate(date); }
 Time::Time(const Time &other) { *this = other; }
@@ -29,6 +30,14 @@ Time &Time::operator=(const Time &other)
 	date.weekDay = other.getWeekday();
 	return (*this);
 }
+
+int Time::getYear() const { return date.year; }
+int Time::getMonth() const { return date.month; }
+int Time::getDay() const { return date.day; }
+int Time::getHour() const { return date.hour; }
+int Time::getMin() const { return date.min; }
+int Time::getSec() const { return date.sec; }
+std::string Time::getWeekday() const { return date.weekDay; }
 
 void Time::getDate(Date &date)
 {
@@ -69,10 +78,8 @@ void Time::getDate(Date &date)
 	}
 }
 
-int Time::getYear() const { return date.year; }
-int Time::getMonth() const { return date.month; }
-int Time::getDay() const { return date.day; }
-int Time::getHour() const { return date.hour; }
-int Time::getMin() const { return date.min; }
-int Time::getSec() const { return date.sec; }
-std::string Time::getWeekday() const { return date.weekDay; }
+std::string Time::getDateAsString() const
+{
+	std::string year = toString(date.year);
+	std::string month = toString(date)
+}

@@ -190,7 +190,7 @@ void Server::handleClientMessage(Client &client)
 			std::cout << client.getNickname() << " registered successfuly." << std::endl;
 			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
 			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
-			std::string date = creationTime.getYear();
+			std::string date = creationTime.getDateAsString();
 			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
 		}
 		if (client.isReadyToSend())
