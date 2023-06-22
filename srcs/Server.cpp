@@ -169,14 +169,15 @@ void Server::handleClientMessage(Client &client)
 				Parser parser;
 				parser.parseUser(*it, client);
 				Message msg;
+				std::cout << client.getNickname() << " registered successfuly." << std::endl;
 				msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
+				msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
 				client.setActiveStatus(REGISTERED);
-			} catch (Parser::InvalidNickException &e /*change this!!!!*/) {
-
+			} catch (Parser::EmptyUserException &e /*change this!!!!*/) {
+				Message msg;
+				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "USER");
+				std::cerr << e.what() << std::endl;
 			}
-			//TODO -> handle the USER!!!
-			//create user
-			//check if the user is already registered
 		}
 		else
 		{

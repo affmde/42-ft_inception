@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 12:05:13 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 09:04:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ public:
 	struct InvalidNickException : public std::runtime_error {
 		InvalidNickException(const std::string &msg) : runtime_error(msg) {}
 	};
-	struct EmptyUsernameException : public std::runtime_error {
-		EmptyUsernameException(const std::string &msg) : runtime_error(msg) {}
+	struct EmptyUserException : public std::runtime_error {
+		EmptyUserException(const std::string &msg) : runtime_error(msg) {}
 	};
 
 	Parser();

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 12:08:23 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 09:08:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,18 @@ void Parser::parseUser(std::string input, Client &client)
 	}
 	if (!input.length() < 1)
 		args.push_back(input);
+	if (args.size() < 4)
+		throw EmptyUserException("No enough arguments on USER command");
 	std::string username = args[1];
 	if (username.empty())
-		throw EmptyUsernameException("Empty username");
+		throw EmptyUserException("Empty username");
 	if (username.length() > maxClientUsernameLength) // REMEMBER TO ADD THIS ON THE USERLEN PROPERTY ON PL_SUPPORT (005)
 		username = username.substr(0, maxClientUsernameLength);
-	std::cout << "username: " << username << std::endl;
-
+	client.setUsername(username);
+	std::string realName;
+	for(int i = 4; i < args.size(); i++)
+		realName += args[i] + " ";
+	client.setRealname(realName);
 }
 
 
