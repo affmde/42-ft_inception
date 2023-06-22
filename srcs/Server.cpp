@@ -192,6 +192,7 @@ void Server::handleClientMessage(Client &client)
 			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());
 			std::string date = creationTime.getDateAsString();
 			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
+			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, "CASEMAPPING=ascii", client.getNickname().c_str());
 		}
 		if (client.isReadyToSend())
 		{
@@ -248,9 +249,16 @@ std::vector<Client>::iterator Server::eraseUserByFD(int fd)
 
 void Server::checkDuplicateNick(std::string nick)
 {
+	std::string clientNick = nick;
+	for (int i = 0; i < clientNick.length(); i++)
+		clientNick[i] = std::tolower(clientNick[i]);
+	std::string nickToCompare;
 	for(std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (it->getNickname() == nick)
+		nickToCompare = it->getNickname();
+		for (int i = 0; i < nickToCompare.length(); i++)
+			nickToCompare[i] = std::tolower(nickToCompare[i]);
+		if (nickToCompare == clientNick)
 			throw DuplicateNickException("Duplicate nick");
 	}
 }

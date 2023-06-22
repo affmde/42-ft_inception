@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 10:58:41 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:24:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #define RPL_WELCOME_CODE "001"
 #define RPL_YOURHOST_CODE "002"
 #define RPL_CREATED_CODE "003"
+#define RPL_ISUPPORT_CODE "005"
 #define ERR_NONICKNAMEGIVEN_CODE "431"
 #define ERR_NICKNAMEINUSE_CODE "432"
 #define ERR_ERRONEUSNICKNAME_CODE "433"
@@ -28,6 +29,7 @@
 #define RPL_WELCOME "%s :Welcome to the IRCSERV Network, %s"			//001
 #define RPL_YOURHOST "%s :Your host is IRCSERV, running version 1.0.0"	//002
 #define RPL_CREATED "%s :This server was created %s"					//003
+#define RPL_ISUPPORT "%s %s :are supported by this server"				//005
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
 #define ERR_NICKNAMEINUSE "%s :Nickname is already in use"				//432
 #define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//433
