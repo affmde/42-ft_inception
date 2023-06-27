@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 11:44:41 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:16:20 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ public:
 	};
 	struct NeedMoreParamsException : public std::runtime_error {
 		NeedMoreParamsException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct NoSuchChannelException : public std::runtime_error {
+		NoSuchChannelException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
 	Command(std::string &input, Client &client, Server *server);

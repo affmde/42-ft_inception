@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 11:48:31 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:24:43 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Command.hpp"
 #include "Parser.hpp"
 #include "Message.hpp"
+#include "Channel.hpp"
 
 Command::Command(std::string &input, Client &client, Server *server) :
 input(input),
@@ -35,13 +36,12 @@ void Command::checkCommands(std::vector<Client> &clients)
 	size_t pos;
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
-	std::cout << "command: " << command << std::endl;
 	int commandId = getCommandId(command);
 	input.erase(0, pos + 1);
 	if (input[input.length() - 1] == '\n')
 		input.erase(input.length() - 1, 1);
 	if (input[input.length() - 1] == '\r')
-	std::cout << "input: " << input << std::endl;
+		input.erase(input.length() - 1, 1);
 	switch (commandId)
 	{
 		case PASS:
@@ -77,10 +77,12 @@ void Command::checkCommands(std::vector<Client> &clients)
 			try {
 				execJOIN(input);
 			} catch(NeedMoreParamsException &e) {
-				std::cerr << client.getNickname() << " need more Params to JOIN" << std::endl;
+				server->logMessage(2, "JOIN: Need more params", client.getNickname());
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
-			}
+			} catch(NoSuchChannelException &e) {
+				server->logMessage(2, "JOIN: No such channel", client.getNickname());
+			} 
 			break;
 		case PART:
 			break;
@@ -186,11 +188,28 @@ void Command::execJOIN(std::string &input)
 		if (parser.parseChannelName(channels[i]) == -1)
 		{
 			server->logMessage(2, "Bad channel name", client.getNickname());
+			Message msg;
+			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channels[i].c_str());
+			throw NoSuchChannelException("No such channel");
+		}
+		Channel *channel = server->searchChannel(channels[i]);
+		if (!channel)
+			channel = server->createChannel(channels[i], "", keys[i], client);
+		try {
+			channel->addUser(client);
+		} catch (Channel::AlreadyUserException &e) {
 			break ;
 		}
-		if (server->searchChannel(channels[i]))
-			//JOIN USER TO THE CHANNEL!!!!
+		//TODO: SEND MESSAGE TO EVERYONE TO INFORM THAT USER JOINED!!!
+		//TODO: SET USER AS OPERATOR!!!!!!!!
+		Message msg;
+		if (channel->getTopic().length() < 1)
+			msg.reply(NULL, client, RPL_NOTOPIC_CODE, SERVER, RPL_NOTOPIC, client.getNickname().c_str(), channel->getName().c_str());
 		else
-			//CREATE CHANNEL!!!
+			msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), channel->getName().c_str(), channel->getTopic().c_str());
+		//IT IS SEGFAULTING HERE WHEN JOINING TWO USERS TO SAME CHANNEL!! PROBLEM ON GET THE STRING OF USERS
+		msg.reply(NULL, client, RPL_NAMREPLY_CODE, SERVER, RPL_NAMREPLY, client.getNickname().c_str(), "=", channel->getName().c_str(), channel->getListClientsNicknames().c_str());
+		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
+		server->logMessage(1, "joined channel " + channel->getName(), client.getNickname());
 	}
 }

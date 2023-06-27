@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 20:34:40 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 15:15:42 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@
 #define RPL_CREATED_CODE "003"
 #define RPL_MYINFO_CODE "004"
 #define RPL_ISUPPORT_CODE "005"
+#define RPL_NOTOPIC_CODE "331"
+#define RPL_TOPIC_CODE "332"
+#define RPL_NAMREPLY_CODE "353"
+#define RPL_ENDOFNAMES_CODE "366"
+#define ERR_NOSUCHCHANNEL_CODE "403"
 #define ERR_NONICKNAMEGIVEN_CODE "431"
 #define ERR_NICKNAMEINUSE_CODE "432"
 #define ERR_ERRONEUSNICKNAME_CODE "433"
@@ -33,6 +38,11 @@
 #define RPL_CREATED "%s :This server was created %s"					//003
 #define RPL_MYINFO "%s %s %s"											//004
 #define RPL_ISUPPORT "%s %s :are supported by this server"				//005
+#define RPL_NOTOPIC "%s %s :No topic is set"							//331
+#define RPL_TOPIC "%s %s :%s"											//332
+#define RPL_NAMREPLY "%s %s %s :%s"										//353
+#define RPL_ENDOFNAMES "%s %s :End of /NAMES list"						//366
+#define ERR_NOSUCHCHANNEL "%s %s :No such channel"						//403
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
 #define ERR_NICKNAMEINUSE "%s %s :Nickname is already in use"			//432
 #define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//433

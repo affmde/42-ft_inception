@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 11:17:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:01:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 class Channel
 {
 public:
+	struct AlreadyUserException : public std::runtime_error {
+		AlreadyUserException(const std::string &msg) : runtime_error(msg) {}
+	};
+	
 	Channel();
 	Channel(const Channel &other);
 	~Channel();
@@ -37,7 +41,9 @@ public:
 
 	std::vector<Client*> getClients() const;
 	std::vector<Client*> getOperators() const;
-	
+
+	void addUser(Client &client);
+	std::string getListClientsNicknames() const;
 private:
 	std::string name;
 	std::vector<Client*> clients;

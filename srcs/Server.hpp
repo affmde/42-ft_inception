@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/27 11:47:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 14:20:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ public:
 	void pollClientEvents();
 	void logMessage(int fd, std::string msg, std::string nickname) const;
 	Channel *searchChannel(std::string name);
+	void addChannel(Channel channel, Client &client);
+	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
 
 private:
 	static const int listenTimeout = 10;
@@ -58,7 +60,6 @@ private:
 	std::vector<Client> clients;
 	std::vector<Channel> channels;
 	Time creationTime;
-	void addChannel(std::string name);
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();

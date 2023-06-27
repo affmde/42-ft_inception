@@ -6,9 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 11:22:22 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 17:28:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <iostream> //JUST NEEDED FOR DEBUG! DELETE THIS!!!
 
 #include "Channel.hpp"
 
@@ -35,3 +37,25 @@ void Channel::setPass(std::string pass) { this->pass = pass; }
 
 std::vector<Client*> Channel::getClients() const { return clients; }
 std::vector<Client*> Channel::getOperators() const { return operators; }
+
+void Channel::addUser(Client &client)
+{
+	for (int i = 0; i < clients.size(); i++)
+	{
+		if (client.getNickname() == clients[i]->getNickname())
+			throw AlreadyUserException("Already USer");
+	}
+	clients.push_back(&client);
+}
+
+std::string Channel::getListClientsNicknames() const
+{
+	std::string list;
+	for (int i = 0; i < clients.size(); i++)
+	{
+		if (i == 0)
+			list += "@"; //Change this to check for OPER instead of being the first one!!!!!!!
+		list += clients[i]->getNickname() + " ";
+	}
+	return (list);
+}

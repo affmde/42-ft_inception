@@ -10,6 +10,7 @@
 #include "Message.hpp"
 #include "Parser.hpp"
 #include "Command.hpp"
+#include "Utils.hpp"
 
 Server::Server(const char *port, std::string pass)
 {
@@ -113,6 +114,7 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
+	std::cout << "buffer: "<< buffer << std::endl;
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string>	args = parser.parseInput();
@@ -275,14 +277,11 @@ void Server::checkDuplicateNick(std::string nick)
 	}
 }
 
-void Server::addChannel(std::string name)
+void Server::addChannel(Channel channel, Client &client)
 {
-	if (!searchChannel(name))
-	{
-		Channel newChannel;
-		newChannel.setName(name);
-		channels.push_back(newChannel);
-	}
+	channels.push_back(channel);
+	std::string message = channel.getName() + " was created. Now we have total of " + toString(channels.size()) + " channels active";
+	logMessage(1, message, client.getNickname());
 }
 
 Channel *Server::searchChannel(std::string name)
@@ -293,6 +292,16 @@ Channel *Server::searchChannel(std::string name)
 			return (&(*it));
 	}
 	return (NULL);
+}
+
+Channel *Server::createChannel(std::string name, std::string topic, std::string pass, Client &client)
+{
+	Channel newChannel;
+	newChannel.setName(name);
+	newChannel.setPass(pass);
+	newChannel.setTopic(topic);
+	addChannel(newChannel, client);
+	return (searchChannel(name));
 }
 
 void Server::logMessage(int fd, std::string msg, std::string nickname) const
