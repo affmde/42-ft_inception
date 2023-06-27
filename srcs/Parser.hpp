@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 16:34:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:40:32 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ public:
 	void setInput(std::string);
 	std::vector<std::string> parseInput();
 	void parseUser(std::string input, Client &client);
+	int parseChannelName(std::string name);
 
 private:
 	static const int maxClientUsernameLength = 10;

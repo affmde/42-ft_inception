@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:10:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:17:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ public:
 	std::string getTopic() const;
 	void setTopic(std::string topic);
 
+	std::string getPass() const;
+	void setPass(std::string pass);
+
 	std::vector<Client*> getClients() const;
 	std::vector<Client*> getOperators() const;
 	
@@ -41,6 +44,7 @@ private:
 	std::vector<Client*> operators;
 	//CHECK BEST WAY TO ADD THE MODES!!!!!
 	std::string topic;
+	std::string pass;
 };
 
 

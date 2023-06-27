@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 16:33:55 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:41:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,10 @@ void Parser::parseUser(std::string input, Client &client)
 	client.setRealname(realName);
 }
 
-
+int Parser::parseChannelName(std::string name)
+{
+	if (name[0] != '#')
+		return -1;
+	if (name.find(" ") != std::string::npos || name.find(",") != std::string::npos || name.find("^G") != std::string::npos)
+		return -1;
+}

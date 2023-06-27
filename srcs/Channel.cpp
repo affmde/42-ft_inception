@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:10:27 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:22:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ Channel::~Channel() {}
 Channel &Channel::operator=(const Channel &other)
 {
 	if (this == &other) return *this;
+	pass = other.pass;
+	name = other.name;
+	topic = other.topic;
 	return (*this);
 }
 
@@ -26,6 +29,9 @@ void Channel::setName(std::string name) { this->name = name; }
 
 std::string Channel::getTopic() const { return topic; }
 void Channel::setTopic(std::string topic) { this->topic = topic; }
+
+std::string Channel::getPass() const { return pass; }
+void Channel::setPass(std::string pass) { this->pass = pass; }
 
 std::vector<Client*> Channel::getClients() const { return clients; }
 std::vector<Client*> Channel::getOperators() const { return operators; }

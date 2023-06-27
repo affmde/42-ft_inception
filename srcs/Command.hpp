@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:35:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:44:41 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 #define PRIVMSG 11
 #define NOTICE 12
 
+class Server;
+
 class Command
 {
 public:
@@ -49,7 +51,7 @@ public:
 		NeedMoreParamsException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
-	Command(std::string &input, Client &client);
+	Command(std::string &input, Client &client, Server *server);
 	Command(const Command &other);
 	~Command();
 	Command &operator=(const Command &other);
@@ -59,10 +61,13 @@ public:
 private:
 	std::string &input;
 	Client &client;
+	Server *server;
 	
 	int getCommandId(std::string &input) const;
 	void execNICK(std::string &input, std::vector<Client> &clients);
 	void execJOIN(std::string &input);
 };
+
+#include "Server.hpp"
 
 #endif

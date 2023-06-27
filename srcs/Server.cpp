@@ -187,7 +187,7 @@ void Server::handleClientMessage(Client &client)
 		{
 			//client.setBuffer( client.getBuffer() + *it);
 			try{
-				Command cmd(*it, client);
+				Command cmd(*it, client, this);
 				cmd.checkCommands(clients);
 			} catch(Command::AlreadyRegisteredException &e) {
 				Message msg;

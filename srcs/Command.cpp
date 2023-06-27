@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:45:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:48:31 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 #include "Parser.hpp"
 #include "Message.hpp"
 
-Command::Command(std::string &input, Client &client) : 
-input(input), 
-client(client) {}
+Command::Command(std::string &input, Client &client, Server *server) :
+input(input),
+client(client),
+server(server) {}
 Command::Command(const Command &other) : input(other.input), client(other.client) { *this = other; }
 Command::~Command() {}
 Command &Command::operator=(const Command &other)
@@ -181,9 +182,15 @@ void Command::execJOIN(std::string &input)
 	{
 		//HERE WE LOOP THROUGH ALL CHANNELS TO CHECK IF WE CAN ADDED THEM!!
 		//A LOT TO DO STILL HERE!!!!
-		if (channels[i][0] != '#')
+		Parser parser;
+		if (parser.parseChannelName(channels[i]) == -1)
 		{
-			std::cout << "BAD Channel name" << std::endl; //CHANGE THIS FOR A PROPER ERROR!!!!!!
+			server->logMessage(2, "Bad channel name", client.getNickname());
+			break ;
 		}
+		if (server->searchChannel(channels[i]))
+			//JOIN USER TO THE CHANNEL!!!!
+		else
+			//CREATE CHANNEL!!!
 	}
 }
