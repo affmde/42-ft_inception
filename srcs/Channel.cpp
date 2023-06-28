@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 10:31:58 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 12:06:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ std::vector<Client*> Channel::getOperators() const { return operators; }
 
 void Channel::addUser(Client *client)
 {
-	std::cout << "size: " << clients.size() << std::endl;
 	for (int i = 0; i < clients.size(); i++)
 	{
 		if (client == clients[i])
@@ -62,12 +61,19 @@ std::string Channel::getListClientsNicknames() const
 	return (list);
 }
 
-Client *Channel::findClientByNick(std::string nick)
+std::vector<Client*>::iterator Channel::findClientByNick(std::string nick)
 {
 	for(std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if ((*it)->getNickname() == nick)
-			return (*it);
+			return it;
 	}
-	return (NULL);
+	return (clients.end());
+}
+
+void Channel::eraseClient(std::string nick)
+{
+	std::vector<Client*>::iterator it = findClientByNick(nick);
+	if (it != clients.end())
+		clients.erase(it);
 }

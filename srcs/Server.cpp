@@ -101,6 +101,10 @@ void Server::eraseDisconnectedUsers()
 		if ((*it)->isConnected() == false)
 		{
 			it = eraseUserByFD((*it)->getClientFD());
+			for(std::vector<Channel*>::iterator ch = channels.begin(); ch != channels.end(); ++ch)
+			{
+				(*ch)->eraseClient((*it)->getNickname()); // REMOVE THE USERS FROM THE CHANNELS THEY WERE IN!! STILL CHECK THIS!
+			}
 			delete *it;
 		}
 		else
