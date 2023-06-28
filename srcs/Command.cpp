@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 21:20:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 10:20:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Command &Command::operator=(const Command &other)
 	return (*this);
 }
 
-void Command::checkCommands(std::vector<Client> &clients)
+void Command::checkCommands(std::vector<Client*> *clients)
 {
 	size_t pos;
 	pos = input.find(" ");
@@ -50,7 +50,7 @@ void Command::checkCommands(std::vector<Client> &clients)
 		case NICK:
 		{
 			try{
-				execNICK(input, clients);
+				execNICK(input, *clients);
 			} catch(InvalidNickException &e) {
 				std::cerr << client.getNickname() << " cant update NICK." << std::endl;
 			} catch(DuplicateNickException &e) {
@@ -126,15 +126,15 @@ int Command::getCommandId(std::string &input) const
 	return (-1);
 }
 
-void Command::execNICK(std::string &input, std::vector<Client> &clients)
+void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 {
 	std::string clientNick = input;
 	for (int i = 0; i < clientNick.length(); i++)
 		clientNick[i] = std::tolower(clientNick[i]);
 	std::string nickToCompare;
-	for(std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		nickToCompare = it->getNickname();
+		nickToCompare = (*(*it)).getNickname();
 		for (int i = 0; i < nickToCompare.length(); i++)
 			nickToCompare[i] = std::tolower(nickToCompare[i]);
 		if (nickToCompare == clientNick)
@@ -196,7 +196,7 @@ void Command::execJOIN(std::string &input)
 		if (!channel)
 			channel = server.createChannel(channels[i], "", keys[i], client);
 		try {
-			channel->addUser(client);
+			channel->addUser(&client);
 		} catch (Channel::AlreadyUserException &e) {
 			break ;
 		}

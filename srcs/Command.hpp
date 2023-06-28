@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 21:19:22 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 10:18:31 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ public:
 	~Command();
 	Command &operator=(const Command &other);
 
-	void checkCommands(std::vector<Client> &clients);
+	void checkCommands(std::vector<Client*> *clients);
 	
 private:
 	std::string &input;
@@ -67,7 +67,7 @@ private:
 	Server &server;
 	
 	int getCommandId(std::string &input) const;
-	void execNICK(std::string &input, std::vector<Client> &clients);
+	void execNICK(std::string &input, std::vector<Client*> &clients);
 	void execJOIN(std::string &input);
 };
 

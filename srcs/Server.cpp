@@ -68,7 +68,10 @@ void Server::pollClientEvents()
 			if (it->fd == sockfd)
 				registerNewUser();
 			else
-				handleClientMessage(*findClientByFD(it->fd));
+			{
+				Client *c = *findClientByFD(it->fd);
+				handleClientMessage(*c);
+			}
 		}
 		eraseDisconnectedUsers();
 	}
@@ -87,16 +90,19 @@ void Server::registerNewUser()
 	client_pollfd.fd = client_fd;
 	client_pollfd.events = POLLIN;
 	pollfds.push_back(client_pollfd);
-	clients.push_back(Client(client_fd));
+	clients.push_back(new Client(client_fd));
 }
 
 void Server::eraseDisconnectedUsers()
 {
-	std::vector<Client>::iterator it = clients.begin();
+	std::vector<Client*>::iterator it = clients.begin();
 	while (it != clients.end())
 	{
-		if (it->isConnected() == false)
-			it = eraseUserByFD(it->getClientFD());
+		if ((*it)->isConnected() == false)
+		{
+			it = eraseUserByFD((*it)->getClientFD());
+			delete *it;
+		}
 		else
 			it++;
 	}
@@ -189,7 +195,7 @@ void Server::handleClientMessage(Client &client)
 			//client.setBuffer( client.getBuffer() + *it);
 			try{
 				Command cmd(*it, client, *this);
-				cmd.checkCommands(clients);
+				cmd.checkCommands(&clients);
 			} catch(Command::AlreadyRegisteredException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_ALREADYREGISTERED_CODE, SERVER, ERR_ALREADYREGISTERED, client.getNickname().c_str());
@@ -222,11 +228,11 @@ void Server::handleClientMessage(Client &client)
 void Server::emit(int client_fd, std::string msg)
 {
 	Message message(msg);
-	for (std::vector<Client>::iterator it = clients.begin();
+	for (std::vector<Client*>::iterator it = clients.begin();
 		it != clients.end(); ++it)
 	{
-		if (it->getClientFD() != sockfd && it->getClientFD() != client_fd)
-			message.sendData(it->getClientFD());
+		if ((*it)->getClientFD() != sockfd && (*it)->getClientFD() != client_fd)
+			message.sendData((*it)->getClientFD());
 	}
 }
 
@@ -238,15 +244,15 @@ std::vector<pollfd>::iterator Server::findPollfdByFD(int fd)
 	return pollfds.end();
 }
 
-std::vector<Client>::iterator Server::findClientByFD(int fd)
+std::vector<Client*>::iterator Server::findClientByFD(int fd)
 {
-	for (std::vector<Client>::iterator it = clients.begin();
+	for (std::vector<Client*>::iterator it = clients.begin();
 		it != clients.end(); ++it)
-		if (it->getClientFD() == fd) return it;
+		if ((*it)->getClientFD() == fd) return it;
 	return clients.end();
 }
 
-std::vector<Client>::iterator Server::eraseUserByFD(int fd)
+std::vector<Client*>::iterator Server::eraseUserByFD(int fd)
 {
 	close(fd);
 
@@ -254,7 +260,7 @@ std::vector<Client>::iterator Server::eraseUserByFD(int fd)
 	if (poll_fd == pollfds.end()) return clients.end();
 	pollfds.erase(poll_fd);
 
-	std::vector<Client>::iterator client = findClientByFD(fd);
+	std::vector<Client*>::iterator client = findClientByFD(fd);
 	if (client == clients.end()) return clients.end();
 	return clients.erase(client);
 }
@@ -266,9 +272,9 @@ void Server::checkDuplicateNick(std::string nick)
 	for (int i = 0; i < clientNick.length(); i++)
 		clientNick[i] = std::tolower(clientNick[i]);
 	std::string nickToCompare;
-	for(std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		nickToCompare = it->getNickname();
+		nickToCompare = (*it)->getNickname();
 		for (int i = 0; i < nickToCompare.length(); i++)
 			nickToCompare[i] = std::tolower(nickToCompare[i]);
 		if (nickToCompare == clientNick)
@@ -276,31 +282,31 @@ void Server::checkDuplicateNick(std::string nick)
 	}
 }
 
-void Server::addChannel(Channel channel, Client &client)
-{
-	channels.push_back(channel);
-	std::string message = channel.getName() + " was created. Now we have total of " + toString(channels.size()) + " channels active";
-	logMessage(1, message, client.getNickname());
-}
-
 Channel *Server::searchChannel(std::string name)
 {
-	for(std::vector<Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if (it->getName() == name)
-			return (&(*it));
+		if ((*it)->getName() == name)
+			return (*it);
 	}
 	return (NULL);
 }
 
+void Server::addChannel(Channel *channel, Client &client)
+{
+	channels.push_back(channel);
+	std::string message = channel->getName() + " was created. Now we have total of " + toString(channels.size()) + " channels active";
+	logMessage(1, message, client.getNickname());
+}
+
 Channel *Server::createChannel(std::string name, std::string topic, std::string pass, Client &client)
 {
-	Channel newChannel;
-	newChannel.setName(name);
-	newChannel.setPass(pass);
-	newChannel.setTopic(topic);
+	Channel *newChannel = new Channel;
+	newChannel->setName(name);
+	newChannel->setPass(pass);
+	newChannel->setTopic(topic);
 	addChannel(newChannel, client);
-	return (searchChannel(name));
+	return (newChannel);
 }
 
 void Server::logMessage(int fd, std::string msg, std::string nickname) const

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/27 14:20:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 10:09:32 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ public:
 	void pollClientEvents();
 	void logMessage(int fd, std::string msg, std::string nickname) const;
 	Channel *searchChannel(std::string name);
-	void addChannel(Channel channel, Client &client);
+	void addChannel(Channel *channel, Client &client);
 	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
 
 private:
@@ -57,8 +57,8 @@ private:
 	int sockfd;
 	std::string pass;
 	std::vector<pollfd> pollfds;
-	std::vector<Client> clients;
-	std::vector<Channel> channels;
+	std::vector<Client*> clients;
+	std::vector<Channel*> channels;
 	Time creationTime;
 
 	void registerNewUser();
@@ -66,8 +66,8 @@ private:
 	void handleClientMessage(Client &client);
 	void emit(int client_fd, std::string msg);
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);
-	std::vector<Client>::iterator findClientByFD(int fd);
-	std::vector<Client>::iterator eraseUserByFD(int fd);
+	std::vector<Client*>::iterator findClientByFD(int fd);
+	std::vector<Client*>::iterator eraseUserByFD(int fd);
 	void checkDuplicateNick(std::string nick);
 
 };
