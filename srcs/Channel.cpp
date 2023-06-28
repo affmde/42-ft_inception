@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 12:06:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 17:43:14 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,12 @@ void Channel::eraseClient(std::string nick)
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it != clients.end())
 		clients.erase(it);
+}
+
+void Channel::messageAll(Client *send, std::string message)
+{
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		//INFORM AEVERY SINGLE CLIENT!!!
+	}
 }

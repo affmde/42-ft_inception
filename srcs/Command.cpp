@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 10:20:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 17:39:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,11 +203,11 @@ void Command::execJOIN(std::string &input)
 		//TODO: SEND MESSAGE TO EVERYONE TO INFORM THAT USER JOINED!!!
 		//TODO: SET USER AS OPERATOR!!!!!!!!
 		Message msg;
-		if (channel->getTopic().length() < 1)
+		//TODO: SEND MESSAGE TO ALL CLIENTS IN THE CHANNEL TO INFORM THAT CLIENT JOINED
+		if (channel->getTopic().empty())
 			msg.reply(NULL, client, RPL_NOTOPIC_CODE, SERVER, RPL_NOTOPIC, client.getNickname().c_str(), channel->getName().c_str());
 		else
 			msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), channel->getName().c_str(), channel->getTopic().c_str());
-		//IT IS SEGFAULTING HERE WHEN JOINING TWO USERS TO SAME CHANNEL!! PROBLEM ON GET THE STRING OF USERS
 		msg.reply(NULL, client, RPL_NAMREPLY_CODE, SERVER, RPL_NAMREPLY, client.getNickname().c_str(), "=", channel->getName().c_str(), channel->getListClientsNicknames().c_str());
 		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
 		server.logMessage(1, "joined channel " + channel->getName(), client.getNickname());

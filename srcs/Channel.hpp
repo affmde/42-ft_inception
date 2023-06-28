@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 11:46:38 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/28 17:41:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ public:
 
 	std::vector<Client*>::iterator findClientByNick(std::string nick);
 	void eraseClient(std::string nick); ///IMPLEMENT THIS NEXT!!!!! NEED TO ERSE CLIENT FROM THE CHANNELS WHEN THEY DISCONNET
+	void messageAll(Client *sender, std::string message);
 private:
 	std::string name;
 	std::vector<Client*> clients;
