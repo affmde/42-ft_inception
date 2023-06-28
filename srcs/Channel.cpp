@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 17:28:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/27 20:51:13 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void Channel::addUser(Client &client)
 	{
 		if (client.getNickname() == clients[i]->getNickname())
 			throw AlreadyUserException("Already USer");
+		std::cout << "TEST" << std::endl;
 	}
 	clients.push_back(&client);
 }
@@ -51,8 +52,11 @@ void Channel::addUser(Client &client)
 std::string Channel::getListClientsNicknames() const
 {
 	std::string list;
+	std::cout << "HERE" << std::endl;
+	std::cout << "size: " << clients.size() << std::endl;
 	for (int i = 0; i < clients.size(); i++)
 	{
+		std::cout << clients[i] << std::endl;
 		if (i == 0)
 			list += "@"; //Change this to check for OPER instead of being the first one!!!!!!!
 		list += clients[i]->getNickname() + " ";

@@ -114,7 +114,6 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	std::cout << "buffer: "<< buffer << std::endl;
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string>	args = parser.parseInput();
@@ -189,7 +188,7 @@ void Server::handleClientMessage(Client &client)
 		{
 			//client.setBuffer( client.getBuffer() + *it);
 			try{
-				Command cmd(*it, client, this);
+				Command cmd(*it, client, *this);
 				cmd.checkCommands(clients);
 			} catch(Command::AlreadyRegisteredException &e) {
 				Message msg;
