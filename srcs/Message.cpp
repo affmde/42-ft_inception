@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/21 08:23:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 11:39:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,12 @@ void Message::reply(Client *sender, Client &receiver, std::string code, int head
 		head = ":127.0.0.1 " + code + " ";
 		break;
 		case CLIENT:
-		head = sender->getNickname() + "!" + sender->getNickname() + "@" + sender->getHostname() + " " + code + " " + receiver.getNickname() + " :";
+		{
+			std::string code_str = " ";
+			if (code != "0")
+				code_str = " " + code + " ";
+			head = ":" + sender->getNickname() + "!" + sender->getNickname() + "@" + sender->getHostname() + code_str;
+		}
 	}
 	va_list args;
 	va_start(args, format);

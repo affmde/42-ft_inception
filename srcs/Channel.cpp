@@ -6,13 +6,14 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 17:43:14 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 11:50:27 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream> //JUST NEEDED FOR DEBUG! DELETE THIS!!!
 
 #include "Channel.hpp"
+#include "Message.hpp"
 
 Channel::Channel() {}
 Channel::Channel(const Channel & other) { *this = other; }
@@ -78,10 +79,12 @@ void Channel::eraseClient(std::string nick)
 		clients.erase(it);
 }
 
-void Channel::messageAll(Client *send, std::string message)
+void Channel::messageAll(Client *sender, std::string message)
 {
+	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM AEVERY SINGLE CLIENT!!!
+		msg.reply(sender, **it, "0", CLIENT, "%s %s", message.c_str(), getName().c_str());
 	}
 }

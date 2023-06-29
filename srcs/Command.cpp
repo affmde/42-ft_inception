@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 17:39:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 11:50:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ void Command::execJOIN(std::string &input)
 		//TODO: SET USER AS OPERATOR!!!!!!!!
 		Message msg;
 		//TODO: SEND MESSAGE TO ALL CLIENTS IN THE CHANNEL TO INFORM THAT CLIENT JOINED
+		channel->messageAll(&client, "JOIN");
 		if (channel->getTopic().empty())
 			msg.reply(NULL, client, RPL_NOTOPIC_CODE, SERVER, RPL_NOTOPIC, client.getNickname().c_str(), channel->getName().c_str());
 		else
