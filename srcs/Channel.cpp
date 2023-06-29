@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:07:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:53:00 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void Channel::eraseClient(std::string nick)
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it == clients.end()) return;
 	messageAll(*it, "PART");
+	server.logMessage(1, "left channel " + getName(), nick);
 	clients.erase(it);
 	if (clients.size() <= 0)
 		server.removeChannel(getName());
@@ -100,6 +101,17 @@ void Channel::messageAll(Client *sender, std::string message)
 	{
 		//INFORM AEVERY SINGLE CLIENT!!!
 		msg.reply(sender, **it, "0", CLIENT, "%s %s", message.c_str(), getName().c_str());
+	}
+}
+
+void Channel::sendPRIVMSG(Client * client, std::string message)
+{
+	Message msg;
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		//INFORM AEVERY SINGLE CLIENT!!!
+		if ((*it)->getNickname() != client->getNickname())
+			msg.reply(client, **it, "0", CLIENT, "PRIVMSG " + getName() + " :" + "%s", message.c_str());
 	}
 }
 

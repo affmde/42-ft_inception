@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 14:37:10 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:53:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,18 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		case PART:
 		{
-			execPART(input);
+			try {
+				execPART(input);
+			} catch (NeedMoreParamsException &e) {
+				server.logMessage(2, "PART: Need more params.", client.getNickname());
+			}
 			break;
 		}
 		case PRIVMSG:
+		{
+			execPRIVMSG(input);
 			break;
+		}
 		case NOTICE:
 			break;
 		default:
@@ -219,7 +226,6 @@ void Command::execJOIN(std::string &input)
 void Command::execPART(std::string &input)
 {
 	std::vector<std::string> channels;
-	std::cout << "part input: " << input << std::endl;
 	size_t pos;
 	std::string tmp;
 	while ((pos = input.find(",")) != std::string::npos)
@@ -251,5 +257,31 @@ void Command::execPART(std::string &input)
 		}
 		c->eraseClient(client.getNickname());
 	}
-	
+}
+
+void Command::execPRIVMSG(std::string &input)
+{
+	std::cout << "PRIVMSG input: " << input << std::endl;
+	std::vector<std::string> targets;
+	size_t pos;
+	std::string tmp;
+	pos = input.find(" ");
+	if (pos == std::string::npos)
+		return ;
+	std::string targets_list = input.substr(0, pos);
+	input.erase(0, pos + 1);
+	while ((pos = targets_list.find(",")) != std::string::npos)
+	{
+		tmp = targets_list.substr(0, pos);
+		targets.push_back(tmp);
+		targets_list.erase(0, pos + 1);
+	}
+	if (!targets_list.empty())
+		targets.push_back(targets_list);
+	for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
+	{
+		Channel *c = server.searchChannel(*it);
+		if (!c) continue;
+		c->sendPRIVMSG(&client, input);
+	}
 }

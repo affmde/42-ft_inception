@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:00:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:49:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ public:
 	void addOper(Client *client);
 	bool isOper(std::string nick);
 	bool isClientInChannel(std::string nick);
+	void sendPRIVMSG(Client * client, std::string message);
 private:
 	std::string name;
 	std::vector<Client*> clients;

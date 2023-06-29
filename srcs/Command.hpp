@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 12:40:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:24:25 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ private:
 	void execNICK(std::string &input, std::vector<Client*> &clients);
 	void execJOIN(std::string &input);
 	void execPART(std::string &input);
+	void execPRIVMSG(std::string &input);
 };
 
 #include "Server.hpp"
