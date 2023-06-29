@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 15:15:42 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:45:01 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #define ERR_NONICKNAMEGIVEN_CODE "431"
 #define ERR_NICKNAMEINUSE_CODE "432"
 #define ERR_ERRONEUSNICKNAME_CODE "433"
+#define ERR_NOTONCHANNEL_CODE "442"
 #define ERR_NEEDMOREPARAMS_CODE "461"
 #define ERR_ALREADYREGISTERED_CODE "462"
 #define ERR_PASSWDMISMATCH_CODE "464"
@@ -46,6 +47,7 @@
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
 #define ERR_NICKNAMEINUSE "%s %s :Nickname is already in use"			//432
 #define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//433
+#define ERR_NOTONCHANNEL "%s %s :You're not on that channel"			//442
 #define ERR_NEEDMOREPARAMS "%s %s :Not enough parameters"				//461
 #define ERR_ALREADYREGISTERED "%s :You may not reregister"				//462
 #define ERR_PASSWDMISMATCH "%s :Password incorrect"						//464

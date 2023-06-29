@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 12:35:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:54:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			} 
 			break;
 		case PART:
+		{
+			execPART(input);
 			break;
+		}
 		case PRIVMSG:
 			break;
 		case NOTICE:
@@ -182,8 +185,6 @@ void Command::execJOIN(std::string &input)
 		throw NeedMoreParamsException("Need more params");
 	for (int i = 0; i < channels.size(); i++)
 	{
-		//HERE WE LOOP THROUGH ALL CHANNELS TO CHECK IF WE CAN ADDED THEM!!
-		//A LOT TO DO STILL HERE!!!!
 		Parser parser;
 		if (parser.parseChannelName(channels[i]) == -1)
 		{
@@ -213,4 +214,43 @@ void Command::execJOIN(std::string &input)
 		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
 		server.logMessage(1, "joined channel " + channel->getName(), client.getNickname());
 	}
+}
+
+void Command::execPART(std::string &input)
+{
+	std::vector<std::string> channels;
+	std::cout << "part input: " << input << std::endl;
+	size_t pos;
+	std::string tmp;
+	while ((pos = input.find(",")) != std::string::npos)
+	{
+		tmp = input.substr(0, pos);
+		channels.push_back(tmp);
+		input.erase(0, pos + 1);
+	}
+	if (!input.empty())
+		channels.push_back(input);
+	if (channels.size() < 1)
+		throw NeedMoreParamsException("Need more params");
+	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
+		Message msg;
+		Channel *c = server.searchChannel(*it);
+		std::cout << "it: " << *it << std::endl;
+		if (!c)
+		{
+			Message msg;
+			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).c_str());
+			continue;
+		}
+		if (!c->isClientInChannel(client.getNickname()))
+		{
+			Message msg;
+			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).c_str());
+			continue;
+		}
+		c->eraseClient(client.getNickname());
+	}
+	
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 12:34:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:43:16 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ std::string Channel::getListClientsNicknames()
 	{
 		std::string nick = clients[i]->getNickname();
 		if (isOper(nick))
-			list += "@"; //Change this to check for OPER instead of being the first one!!!!!!!
+			list += "@";
 		list += clients[i]->getNickname() + " ";
 	}
 	return (list);
@@ -75,8 +75,9 @@ std::vector<Client*>::iterator Channel::findClientByNick(std::string nick)
 void Channel::eraseClient(std::string nick)
 {
 	std::vector<Client*>::iterator it = findClientByNick(nick);
-	if (it != clients.end())
-		clients.erase(it);
+	if (it == clients.end()) return;
+	messageAll(*it, "PART");
+	clients.erase(it);
 }
 
 void Channel::addOper(Client *client)
@@ -102,6 +103,16 @@ void Channel::messageAll(Client *sender, std::string message)
 bool Channel::isOper(std::string nick)
 {
 	for (std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (true);
+	}
+	return (false);
+}
+
+bool Channel::isClientInChannel(std::string nick)
+{
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if ((*it)->getNickname() == nick)
 			return (true);
