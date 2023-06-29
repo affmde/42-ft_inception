@@ -199,12 +199,8 @@ void Server::handleClientMessage(Client &client)
 			//client.setBuffer( client.getBuffer() + *it);
 			try{
 				client.setBuffer(client.getBuffer() + *it);
-				std::cout << "current buffer: " << client.getBuffer() << " - BUFFER will be reseted" << std::endl;
 				if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
 				{
-					for(int i = 0; i < client.getBuffer().size(); i++)
-						std::cout << (int)client.getBuffer()[i] << " ";
-						std::cout << std::endl;
 					std::string input = client.getBuffer();
 					Command cmd(input, client, *this);
 					cmd.checkCommands(&clients);

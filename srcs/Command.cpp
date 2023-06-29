@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:53:23 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:20:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,23 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case INVITE:
 			break;
 		case TOPIC:
+		{
+			try {
+				execTOPIC(input);
+				server.logMessage(1, "Topic changed", client.getNickname());
+			} catch (NeedMoreParamsException &e) {
+				Message msg;
+				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "TOPIC");
+				server.logMessage(2, "TOPIC: need more params", client.getNickname());
+			} catch (NoSuchChannelException &e) {
+				server.logMessage(2, "TOPIC: no such channel", client.getNickname());
+			} catch (NotOnChannelException &e) {
+				server.logMessage(2, "TOPIC: not on channel", client.getNickname());
+			} catch (NoPrivilegesException &e) {
+				server.logMessage(2, "TOPIC: no priviledges", client.getNickname());
+			}
 			break;
+		}
 		case MODE:
 			break;
 		case OPER:
@@ -212,7 +228,7 @@ void Command::execJOIN(std::string &input)
 			break ;
 		}
 		Message msg;
-		channel->messageAll(&client, "JOIN");
+		channel->messageAll(&client, "%s %s", "JOIN", channel->getName().c_str());
 		if (channel->getTopic().empty())
 			msg.reply(NULL, client, RPL_NOTOPIC_CODE, SERVER, RPL_NOTOPIC, client.getNickname().c_str(), channel->getName().c_str());
 		else
@@ -261,7 +277,6 @@ void Command::execPART(std::string &input)
 
 void Command::execPRIVMSG(std::string &input)
 {
-	std::cout << "PRIVMSG input: " << input << std::endl;
 	std::vector<std::string> targets;
 	size_t pos;
 	std::string tmp;
@@ -270,6 +285,8 @@ void Command::execPRIVMSG(std::string &input)
 		return ;
 	std::string targets_list = input.substr(0, pos);
 	input.erase(0, pos + 1);
+	if (input[0] == ':')
+		input.erase(0, 1);
 	while ((pos = targets_list.find(",")) != std::string::npos)
 	{
 		tmp = targets_list.substr(0, pos);
@@ -283,5 +300,47 @@ void Command::execPRIVMSG(std::string &input)
 		Channel *c = server.searchChannel(*it);
 		if (!c) continue;
 		c->sendPRIVMSG(&client, input);
+		server.logMessage(1, "PRIVMSG " + c->getName() + ": " + input, client.getNickname());
 	}
+}
+
+void Command::execTOPIC(std::string &input)
+{
+	size_t pos;
+	pos = input.find(" ");
+	std::string target = input.substr(0, pos);
+	if (target.empty())
+		throw NeedMoreParamsException("Need more params");
+	input.erase(0, pos + 1);
+	Channel *c = server.searchChannel(target);
+	if (!c)
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
+		throw NoSuchChannelException("No such channel");
+	}
+	if (!c->isClientInChannel(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NOTONCHANNEL, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), c->getName().c_str());
+		throw NotOnChannelException("Not on channel");
+	}
+	if (!c->isOper(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());
+		throw NoPrivilegesException("No privileges");
+	}
+	if (input[0] == ':')
+	{
+		input.erase(0, 1);
+		c->setTopic(input);
+		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
+	}
+	else
+	{
+		Message msg;
+		msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), c->getName().c_str(), c->getTopic().c_str());
+	}
+	
 }

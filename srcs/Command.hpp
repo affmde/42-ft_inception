@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:24:25 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:13:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ public:
 	struct NoSuchChannelException : public std::runtime_error {
 		NoSuchChannelException(const std::string &msg) : runtime_error(msg) {}
 	};
+	struct NotOnChannelException : public std::runtime_error {
+		NotOnChannelException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct NoPrivilegesException : public std::runtime_error {
+		NoPrivilegesException(const std::string &msg) : runtime_error(msg) {}
+	};
 	
 	Command(std::string &input, Client &client, Server &server);
 	Command(const Command &other);
@@ -71,6 +77,7 @@ private:
 	void execJOIN(std::string &input);
 	void execPART(std::string &input);
 	void execPRIVMSG(std::string &input);
+	void execTOPIC(std::string &input);
 };
 
 #include "Server.hpp"

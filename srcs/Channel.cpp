@@ -6,11 +6,12 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:59:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:18:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream> //JUST NEEDED FOR DEBUG! DELETE THIS!!!
+#include <stdarg.h>
 
 #include "Channel.hpp"
 #include "Message.hpp"
@@ -77,7 +78,7 @@ void Channel::eraseClient(std::string nick)
 {
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it == clients.end()) return;
-	messageAll(*it, "PART");
+	messageAll(*it, "%s %s", "PART", getName().c_str());
 	server.logMessage(1, "left channel " + getName(), nick);
 	clients.erase(it);
 	if (clients.size() <= 0)
@@ -94,13 +95,18 @@ void Channel::addOper(Client *client)
 	operators.push_back(client);
 }
 
-void Channel::messageAll(Client *sender, std::string message)
+void Channel::messageAll(Client *sender, std::string format, ...)
 {
+	va_list args;
+	va_start(args, format);
+	while (format.find("%s") != std::string::npos)
+		format.replace(format.find("%s"), 2, va_arg(args, char*));
+	va_end(args);
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT!!!
-		msg.reply(sender, **it, "0", CLIENT, "%s %s", message.c_str(), getName().c_str());
+		msg.reply(sender, **it, "0", CLIENT, format);
 	}
 }
 
