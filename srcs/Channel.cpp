@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 11:50:27 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 12:34:11 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ void Channel::addUser(Client *client)
 	clients.push_back(client);
 }
 
-std::string Channel::getListClientsNicknames() const
+std::string Channel::getListClientsNicknames()
 {
 	std::string list;
 	for (int i = 0; i < clients.size(); i++)
 	{
-		std::cout << "client " << i << ": " << clients[i] << std::endl;
-		if (i == 0)
+		std::string nick = clients[i]->getNickname();
+		if (isOper(nick))
 			list += "@"; //Change this to check for OPER instead of being the first one!!!!!!!
 		list += clients[i]->getNickname() + " ";
 	}
@@ -79,6 +79,16 @@ void Channel::eraseClient(std::string nick)
 		clients.erase(it);
 }
 
+void Channel::addOper(Client *client)
+{
+	for(std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
+	{
+		if ((*it)->getNickname() == client->getNickname())
+			return;
+	}
+	operators.push_back(client);
+}
+
 void Channel::messageAll(Client *sender, std::string message)
 {
 	Message msg;
@@ -87,4 +97,14 @@ void Channel::messageAll(Client *sender, std::string message)
 		//INFORM AEVERY SINGLE CLIENT!!!
 		msg.reply(sender, **it, "0", CLIENT, "%s %s", message.c_str(), getName().c_str());
 	}
+}
+
+bool Channel::isOper(std::string nick)
+{
+	for (std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (true);
+	}
+	return (false);
 }

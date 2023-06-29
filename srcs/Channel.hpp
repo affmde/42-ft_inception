@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 11:49:14 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 12:29:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ public:
 	std::vector<Client*> getOperators() const;
 
 	void addUser(Client *client);
-	std::string getListClientsNicknames() const;
+	std::string getListClientsNicknames();
 
 	std::vector<Client*>::iterator findClientByNick(std::string nick);
 	void eraseClient(std::string nick); ///IMPLEMENT THIS NEXT!!!!! NEED TO ERSE CLIENT FROM THE CHANNELS WHEN THEY DISCONNET
 	void messageAll(Client *sender, std::string message);
+	void addOper(Client *client);
+	bool isOper(std::string nick);
 private:
 	std::string name;
 	std::vector<Client*> clients;
