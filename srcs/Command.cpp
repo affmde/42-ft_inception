@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 13:54:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:37:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,6 @@ void Command::execPART(std::string &input)
 		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
 		Message msg;
 		Channel *c = server.searchChannel(*it);
-		std::cout << "it: " << *it << std::endl;
 		if (!c)
 		{
 			Message msg;

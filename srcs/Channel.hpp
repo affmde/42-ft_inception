@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 13:43:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:00:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 #include "Client.hpp"
 
+class Server;
+
 class Channel
 {
 public:
@@ -25,7 +27,7 @@ public:
 		AlreadyUserException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
-	Channel();
+	Channel(Server &server);
 	Channel(const Channel &other);
 	~Channel();
 	Channel &operator=(const Channel &other);
@@ -58,7 +60,9 @@ private:
 	//CHECK BEST WAY TO ADD THE MODES!!!!!
 	std::string topic;
 	std::string pass;
+	Server &server;
 };
 
+#include "Server.hpp"
 
 #endif

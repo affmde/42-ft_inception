@@ -305,7 +305,7 @@ void Server::addChannel(Channel *channel, Client &client)
 
 Channel *Server::createChannel(std::string name, std::string topic, std::string pass, Client &client)
 {
-	Channel *newChannel = new Channel;
+	Channel *newChannel = new Channel(*this);
 	newChannel->setName(name);
 	newChannel->setPass(pass);
 	newChannel->setTopic(topic);
@@ -320,4 +320,17 @@ void Server::logMessage(int fd, std::string msg, std::string nickname) const
 		std::cerr << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
 	else if (fd == 1)
 		std::cout << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
+}
+
+void Server::removeChannel(std::string name)
+{
+	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if ((*it)->getName() == name)
+		{
+			channels.erase(it);
+			delete *it;
+			return;
+		}
+	}
 }

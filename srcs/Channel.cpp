@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 13:43:16 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:07:08 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include "Channel.hpp"
 #include "Message.hpp"
 
-Channel::Channel() {}
-Channel::Channel(const Channel & other) { *this = other; }
+Channel::Channel(Server &server) :server(server) {}
+Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
 Channel::~Channel() {}
 Channel &Channel::operator=(const Channel &other)
 {
@@ -24,6 +24,7 @@ Channel &Channel::operator=(const Channel &other)
 	pass = other.pass;
 	name = other.name;
 	topic = other.topic;
+	server = other.server;
 	return (*this);
 }
 
@@ -78,6 +79,8 @@ void Channel::eraseClient(std::string nick)
 	if (it == clients.end()) return;
 	messageAll(*it, "PART");
 	clients.erase(it);
+	if (clients.size() <= 0)
+		server.removeChannel(getName());
 }
 
 void Channel::addOper(Client *client)
