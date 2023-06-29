@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 11:13:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 12:02:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,9 @@ void Parser::parseNick(std::string input, std::string &nick)
 		nick.erase(nick.length() - 1, 1);
 	if (nick[nick.length() - 1] == '\r')
 		nick.erase(nick.length() - 1, 1);
-	if (std::isdigit(nick[0]) || nick[0] == '#' || nick[0] == ' ' || nick[0] == ':')
+	if (std::isdigit(nick[0]) || nick[0] == '#' || nick[0] == ' ' || nick[0] == ':' || nick[0] == '&')
+		throw InvalidNickException("Invalid Nick");
+	if (nick.find(" ") != std::string::npos)
 		throw InvalidNickException("Invalid Nick");
 }
 
