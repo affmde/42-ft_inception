@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/28 08:58:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 16:54:15 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,8 @@ void Client::setActiveStatus(int status) { activeStatus = status; }
 bool Client::isReadyToSend() const
 {
 	size_t pos;
-	//if ((pos = buffer.find("\r\n")) != std::string::npos)
-	//	std::cout << "\\r\\n Found. Ready to Send. Pos: " << pos << " Length: " << buffer.length() << std::endl;
-	//else
-	//	std::cout << "\\r\\n not found. Not ready to send" << std::endl;
-	if ((pos = buffer.find("\n")) != std::string::npos)
+	if ((pos = buffer.find("\n")) != std::string::npos) //STILL CHECK THIS TO DECIDE ABOUT ACCEPT \n or \r\n!!!!!!
 		return true;
 	else
 		return false;
-	//if ((pos = buffer.find("\r")) != std::string::npos)
-	//	std::cout << "\\r Found. Ready to Send. Pos: " << pos << " Length: " << buffer.length() << std::endl;
-	//else
-	//	std::cout << "\\r not found. Not ready to send" << std::endl;
 }

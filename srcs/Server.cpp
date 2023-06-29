@@ -198,8 +198,18 @@ void Server::handleClientMessage(Client &client)
 		{
 			//client.setBuffer( client.getBuffer() + *it);
 			try{
-				Command cmd(*it, client, *this);
-				cmd.checkCommands(&clients);
+				client.setBuffer(client.getBuffer() + *it);
+				std::cout << "current buffer: " << client.getBuffer() << " - BUFFER will be reseted" << std::endl;
+				if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
+				{
+					for(int i = 0; i < client.getBuffer().size(); i++)
+						std::cout << (int)client.getBuffer()[i] << " ";
+						std::cout << std::endl;
+					std::string input = client.getBuffer();
+					Command cmd(input, client, *this);
+					cmd.checkCommands(&clients);
+					client.resetBuffer();
+				}
 			} catch(Command::AlreadyRegisteredException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_ALREADYREGISTERED_CODE, SERVER, ERR_ALREADYREGISTERED, client.getNickname().c_str());
@@ -218,13 +228,6 @@ void Server::handleClientMessage(Client &client)
 			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390";
 			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
 			client.setActiveStatus(LOGGED);
-		}
-		else if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
-		{
-			logMessage(1, "Client sent something", client.getUsername());
-			emit(client.getClientFD(), client.getBuffer());
-			client.increaseTotalMessages();
-			client.resetBuffer();
 		}
 	}
 }

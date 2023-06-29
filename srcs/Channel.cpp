@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 15:53:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 15:59:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Channel::messageAll(Client *sender, std::string message)
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		//INFORM AEVERY SINGLE CLIENT!!!
+		//INFORM EVERY SINGLE CLIENT!!!
 		msg.reply(sender, **it, "0", CLIENT, "%s %s", message.c_str(), getName().c_str());
 	}
 }
@@ -109,7 +109,7 @@ void Channel::sendPRIVMSG(Client * client, std::string message)
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		//INFORM AEVERY SINGLE CLIENT!!!
+		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
 		if ((*it)->getNickname() != client->getNickname())
 			msg.reply(client, **it, "0", CLIENT, "PRIVMSG " + getName() + " :" + "%s", message.c_str());
 	}
