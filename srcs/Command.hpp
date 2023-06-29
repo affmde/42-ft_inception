@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:13:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:43:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ private:
 	void execPART(std::string &input);
 	void execPRIVMSG(std::string &input);
 	void execTOPIC(std::string &input);
+	void execQUIT(std::string &input);
 };
 
 #include "Server.hpp"

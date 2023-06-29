@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 18:28:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:50:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,10 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case OPER:
 			break;
 		case QUIT:
+		{
+			execQUIT(input);
 			break;
+		}
 		case JOIN:
 			try {
 				execJOIN(input);
@@ -348,5 +351,13 @@ void Command::execTOPIC(std::string &input)
 		Message msg;
 		msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), c->getName().c_str(), c->getTopic().c_str());
 	}
-	
+}
+
+void Command::execQUIT(std::string &input)
+{
+	if (input.empty()) return;
+	if (input[0] == ':')
+		input.erase(0, 1);
+	std::cout << "reason: " << input << std::endl;
+	client.setConnected(false);
 }
