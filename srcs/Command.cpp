@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 18:20:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:28:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,7 @@ void Command::execPRIVMSG(std::string &input)
 
 void Command::execTOPIC(std::string &input)
 {
+	std::cout << input << std::endl;
 	size_t pos;
 	pos = input.find(" ");
 	std::string target = input.substr(0, pos);
@@ -331,10 +332,15 @@ void Command::execTOPIC(std::string &input)
 		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());
 		throw NoPrivilegesException("No privileges");
 	}
-	if (input[0] == ':')
+	if (input[0] == ':' && input.length() > 1)
 	{
 		input.erase(0, 1);
 		c->setTopic(input);
+		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
+	}
+	else if (input[0] == ':' && input.length() <= 1)
+	{
+		c->setTopic("");
 		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
 	}
 	else
