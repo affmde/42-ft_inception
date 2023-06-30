@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 18:24:33 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 18:48:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,8 +259,6 @@ void Command::execPART(std::string &input)
 	}
 	if (!channels_list.empty())
 		channels.push_back(channels_list);
-	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
-		std::cout << "channel: " << *it << std::endl;
 	if (channels.size() < 1)
 		throw NeedMoreParamsException("Need more params");
 	std::vector<std::string> reasons;
@@ -333,7 +331,6 @@ void Command::execPRIVMSG(std::string &input)
 
 void Command::execTOPIC(std::string &input)
 {
-	std::cout << input << std::endl;
 	size_t pos;
 	pos = input.find(" ");
 	std::string target = input.substr(0, pos);
@@ -382,16 +379,17 @@ void Command::execQUIT(std::string &input)
 	if (input.empty()) return;
 	if (input[0] == ':')
 		input.erase(0, 1);
-	//CHECK WHAT CHANNELS THE CLIENT WAS AND INFORM THE OTHER CLIENT ON THAT CHANNEL
+	Message msg;
+	msg.reply(NULL, client, "0", SERVER, "ERROR: %s", input.c_str());
 	for(std::vector<Channel*>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); ++it)
 	{
 		if ((*it)->isClientInChannel(client.getNickname()))
 		{
-			(*it)->messageAll(&client,"QUIT :Quit: %s", input.c_str());
+			(*it)->messageAllOthers(&client,"QUIT :Quit: %s", input.c_str());
 		}
 	}
 	//TODO: HANDLE QUIT ON DISCONNECTION WITHOUT QUIT COMMAND (EX: CNTL_C). MAYBE SHOULD USE PING FOR THIS?
 	client.setConnected(false);
 	client.setActiveStatus(NOT_CONNECTED);
-	server.logMessage(1, "disconnected ( " + input + ")", client.getNickname());
+	server.logMessage(1, "disconnected (" + input + ")", client.getNickname());
 }

@@ -115,8 +115,7 @@ void Server::eraseDisconnectedUsers()
 			{
 				(*ch)->eraseClient((*it)->getNickname(), ""); // REMOVE THE USERS FROM THE CHANNELS THEY WERE IN!! STILL CHECK THIS!
 			}
-			int fd = (*it)->getClientFD();
-			it = eraseUserByFD(fd);
+			it = eraseUserByFD((*it)->getClientFD());
 		}
 		else
 			it++;
