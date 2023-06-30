@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 16:54:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:25:31 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,7 @@ void Command::execPRIVMSG(std::string &input)
 	{
 		Channel *c = server.searchChannel(*it);
 		if (!c) continue;
-		c->sendPRIVMSG(&client, input);
+		c->messageAllOthers(&client, "PRIVMSG %s :%s", c->getName().c_str(), input.c_str());
 		server.logMessage(1, "PRIVMSG " + c->getName() + ": " + input, client.getNickname());
 	}
 }
@@ -392,4 +392,5 @@ void Command::execQUIT(std::string &input)
 	}
 	//TODO: AFTER QUIT UNEXPECTADLY (CTRL-C) USERNAME IS STILL IN USE! CHECK THIS!!!!
 	client.setConnected(false);
+	server.logMessage(1, "disconnected ( " + input + ")", client.getNickname());
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 16:51:41 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 17:03:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,19 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	}
 }
 
-void Channel::sendPRIVMSG(Client * client, std::string message)
+void Channel::messageAllOthers(Client * client, std::string format, ...)
 {
+	va_list args;
+	va_start(args, format);
+	while (format.find("%s") != std::string::npos)
+		format.replace(format.find("%s"), 2, va_arg(args, char*));
+	va_end(args);
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
 		if ((*it)->getNickname() != client->getNickname())
-			msg.reply(client, **it, "0", CLIENT, "PRIVMSG " + getName() + " :" + "%s", message.c_str());
+			msg.reply(client, **it, "0", CLIENT, format);
 	}
 }
 

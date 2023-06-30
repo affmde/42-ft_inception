@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 16:49:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:58:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ public:
 	std::vector<Client*>::iterator findClientByNick(std::string nick);
 	void eraseClient(std::string nick, std::string reason);
 	void messageAll(Client *sender, std::string format, ...);
+	void messageAllOthers(Client * client, std::string format, ...);
 	void addOper(Client *client);
 	bool isOper(std::string nick);
 	bool isClientInChannel(std::string nick);
-	void sendPRIVMSG(Client * client, std::string message);
 	int totalClients() const;
 private:
 	std::string name;
