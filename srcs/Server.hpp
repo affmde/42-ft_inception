@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/30 11:47:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:28:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ public:
 	Channel *searchChannel(std::string name);
 	void addChannel(Channel *channel, Client &client);
 	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
-	std::vector<Channel*>::iterator removeChannel(std::string name);
 	int totalChannels() const;
 
 private:
@@ -65,6 +64,7 @@ private:
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();
+	void eraseEmptyChannels();
 	void handleClientMessage(Client &client);
 	void emit(int client_fd, std::string msg);
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);

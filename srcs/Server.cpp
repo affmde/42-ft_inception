@@ -86,18 +86,7 @@ void Server::pollClientEvents()
 			}
 		}
 		eraseDisconnectedUsers();
-		std::vector<Channel*>::iterator it = channels.begin();
-		while(it != channels.end())
-		{
-			if ((*it)->totalClients() <= 0)
-			{
-				std::cout << "removing " << (*it)->getName() << std::endl;
-				delete *it;
-				it = channels.erase(it);
-			}
-			else
-				it++;
-		}
+		eraseEmptyChannels();
 	}
 	logMessage(2, "Error poll: " + std::string(strerror(errno)), "");
 }
@@ -131,6 +120,22 @@ void Server::eraseDisconnectedUsers()
 			int fd = (*it)->getClientFD();
 			delete *it;
 			it = eraseUserByFD(fd);
+		}
+		else
+			it++;
+	}
+}
+
+void Server::eraseEmptyChannels()
+{
+	std::vector<Channel*>::iterator it = channels.begin();
+	while(it != channels.end())
+	{
+		if ((*it)->totalClients() <= 0)
+		{
+			logMessage(1, "channel erased", (*it)->getName());
+			delete *it;
+			it = channels.erase(it);
 		}
 		else
 			it++;
@@ -348,17 +353,4 @@ void Server::logMessage(int fd, std::string msg, std::string nickname) const
 		std::cerr << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
 	else if (fd == 1)
 		std::cout << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
-}
-
-std::vector<Channel*>::iterator Server::removeChannel(std::string name)
-{
-	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
-	{
-		if ((*it)->getName() == name)
-		{
-			logMessage(1, "channel removed", (*it)->getName());
-			return channels.erase(it);
-		}
-	}
-	return (channels.end());
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 12:01:12 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:31:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ void Channel::eraseClient(std::string nick)
 	messageAll(*it, "%s %s", "PART", getName().c_str());
 	server.logMessage(1, "left channel " + getName(), nick);
 	clients.erase(it);
-	//if (clients.size() <= 0)
-		//server.removeChannel(getName());//
 }
 
 void Channel::addOper(Client *client)
