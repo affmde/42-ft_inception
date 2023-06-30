@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 19:10:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:16:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,10 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		}
 		case NOTICE:
 			break;
+		case PING:
+			break;
+		case PONG:
+			break;
 		default:
 			break;
 	}
@@ -155,6 +159,10 @@ int Command::getCommandId(std::string &input) const
 		return PRIVMSG;
 	else if (input == "NOTICE")
 		return NOTICE;
+	else if (input == "PING")
+		return PING;
+	else if (input == "PONG")
+		return PONG;
 	return (-1);
 }
 
@@ -403,4 +411,9 @@ void Command::execQUIT(std::string &input)
 	client.setConnected(false);
 	client.setActiveStatus(NOT_CONNECTED);
 	server.logMessage(1, "disconnected (" + input + ")", client.getNickname());
+}
+
+void Command::execPING(std::string &input)
+{
+	std::cout << "Ping input: " << std::endl;
 }
