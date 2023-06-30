@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 08:57:50 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 11:39:12 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 09:13:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,10 @@ void Message::reply(Client *sender, Client &receiver, std::string code, int head
 	va_end(args);
 	message = head + format + "\r\n";
 	setMessage(message);
-	sendData(receiver.getClientFD());
+	try{
+		sendData(receiver.getClientFD());
+	} catch(SendFailed &e) {
+		std::cerr << "Send failed" << std::endl;
+	}
 }
 

@@ -228,6 +228,11 @@ void Server::handleClientMessage(Client &client)
 	}
 }
 
+int Server::totalChannels() const
+{
+	return channels.size();
+}
+
 void Server::emit(int client_fd, std::string msg)
 {
 	Message message(msg);
@@ -327,6 +332,7 @@ void Server::removeChannel(std::string name)
 	{
 		if ((*it)->getName() == name)
 		{
+			logMessage(1, "channel removed", (*it)->getName());
 			channels.erase(it);
 			delete *it;
 			return;
