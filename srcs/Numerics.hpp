@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 17:15:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:03:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #define ERR_NEEDMOREPARAMS_CODE "461"
 #define ERR_ALREADYREGISTERED_CODE "462"
 #define ERR_PASSWDMISMATCH_CODE "464"
+#define ERR_BADCHANNELKEY_CODE "475"
 #define ERR_CHANOPRIVSNEEDED_CODE "482"
 
 #define RPL_WELCOME "%s :Welcome to the IRCSERV Network, %s"			//001
@@ -54,6 +55,7 @@
 #define ERR_NEEDMOREPARAMS "%s %s :Not enough parameters"				//461
 #define ERR_ALREADYREGISTERED "%s :You may not reregister"				//462
 #define ERR_PASSWDMISMATCH "%s :Password incorrect"						//464
+#define ERR_BADCHANNELKEY "%s %s :Cannot join channel (+k)"				//475
 #define ERR_CHANOPRIVSNEEDED "%s %s :You're not channel operator" 		//482
 
 #endif

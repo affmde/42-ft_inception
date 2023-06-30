@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 18:48:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:10:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,9 @@ void Command::checkCommands(std::vector<Client*> *clients)
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
 			} catch(NoSuchChannelException &e) {
 				server.logMessage(2, "JOIN: No such channel", client.getNickname());
-			} 
+			} catch(BadChannelKeyException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
 			break;
 		case PART:
 		{
@@ -225,6 +227,15 @@ void Command::execJOIN(std::string &input)
 		{
 			channel = server.createChannel(channels[i], "", keys[i], client);
 			channel->addOper(&client);
+		}
+		else
+		{
+			if (keys[i] != channel->getPass())
+			{
+				Message msg;
+				msg.reply(NULL, client, ERR_BADCHANNELKEY_CODE, SERVER, ERR_BADCHANNELKEY, client.getNickname().c_str(), channel->getName().c_str());
+				throw BadChannelKeyException("Invalid key to join channel " + channel->getName());
+			}
 		}
 		try {
 			channel->addUser(&client);

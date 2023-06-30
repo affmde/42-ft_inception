@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 18:43:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 19:03:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ public:
 	};
 	struct NoPrivilegesException : public std::runtime_error {
 		NoPrivilegesException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct BadChannelKeyException : public std::runtime_error {
+		BadChannelKeyException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
 	Command(std::string &input, Client &client, Server &server);
