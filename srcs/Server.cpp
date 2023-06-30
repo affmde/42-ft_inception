@@ -71,7 +71,6 @@ void Server::pollClientEvents()
 					registerNewUser();
 				} catch (UserRegistrationException &e) {
 					logMessage(2, e.what(), "");
-					continue;
 				}
 			}
 			else
@@ -81,7 +80,6 @@ void Server::pollClientEvents()
 					handleClientMessage(*c);
 				} catch(RecvException &e) {
 					logMessage(2, e.what(), "");
-					continue;
 				}
 			}
 		}
@@ -119,7 +117,6 @@ void Server::eraseDisconnectedUsers()
 			}
 			int fd = (*it)->getClientFD();
 			it = eraseUserByFD(fd);
-			delete *it;
 		}
 		else
 			it++;
@@ -299,6 +296,7 @@ std::vector<Client*>::iterator Server::eraseUserByFD(int fd)
 
 	std::vector<Client*>::iterator client = findClientByFD(fd);
 	if (client == clients.end()) return clients.end();
+	delete *client;
 	return clients.erase(client);
 }
 

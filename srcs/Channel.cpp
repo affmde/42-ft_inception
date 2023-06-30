@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 17:03:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 18:26:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT!!!
-		msg.reply(sender, **it, "0", CLIENT, format);
+		if ((*it)->getActiveStatus() == LOGGED)
+			msg.reply(sender, **it, "0", CLIENT, format);
 	}
 }
 
@@ -119,7 +120,7 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
-		if ((*it)->getNickname() != client->getNickname())
+		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
 			msg.reply(client, **it, "0", CLIENT, format);
 	}
 }

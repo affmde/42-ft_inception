@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 17:25:31 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 18:24:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,7 +390,8 @@ void Command::execQUIT(std::string &input)
 			(*it)->messageAll(&client,"QUIT :Quit: %s", input.c_str());
 		}
 	}
-	//TODO: AFTER QUIT UNEXPECTADLY (CTRL-C) USERNAME IS STILL IN USE! CHECK THIS!!!!
+	//TODO: HANDLE QUIT ON DISCONNECTION WITHOUT QUIT COMMAND (EX: CNTL_C). MAYBE SHOULD USE PING FOR THIS?
 	client.setConnected(false);
+	client.setActiveStatus(NOT_CONNECTED);
 	server.logMessage(1, "disconnected ( " + input + ")", client.getNickname());
 }
