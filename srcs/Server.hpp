@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/30 11:00:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 11:47:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ public:
 	Channel *searchChannel(std::string name);
 	void addChannel(Channel *channel, Client &client);
 	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
-	void removeChannel(std::string name);
+	std::vector<Channel*>::iterator removeChannel(std::string name);
 	int totalChannels() const;
 
 private:
