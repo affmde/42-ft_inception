@@ -319,6 +319,11 @@ void Server::checkDuplicateNick(std::string nick)
 	}
 }
 
+std::vector<Channel*> &Server::getChannels()
+{
+	return channels;
+}
+
 Channel *Server::searchChannel(std::string name)
 {
 	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)

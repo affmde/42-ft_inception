@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 11:33:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:58:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,6 +358,13 @@ void Command::execQUIT(std::string &input)
 	if (input.empty()) return;
 	if (input[0] == ':')
 		input.erase(0, 1);
-	std::cout << "reason: " << input << std::endl;
+	//CHECK WHAT CHANNELS THE CLIENT WAS AND INFORM THE OTHER CLIENT ON THAT CHANNEL
+	for(std::vector<Channel*>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); ++it)
+	{
+		if ((*it)->isClientInChannel(client.getNickname()))
+		{
+			(*it)->messageAll(&client,"QUIT :Quit: %s", input.c_str());
+		}
+	}
 	client.setConnected(false);
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/06/30 13:28:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:47:04 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ public:
 	void addChannel(Channel *channel, Client &client);
 	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
 	int totalChannels() const;
+	std::vector<Channel*> &getChannels();
 
 private:
 	static const int listenTimeout = 10;
