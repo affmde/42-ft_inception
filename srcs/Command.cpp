@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 11:03:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 11:33:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,6 @@ void Command::execJOIN(std::string &input)
 		Channel *channel = server.searchChannel(channels[i]);
 		if (!channel)
 		{
-			std::cout << "HERE" << std::endl;
 			channel = server.createChannel(channels[i], "", keys[i], client);
 			channel->addOper(&client);
 		}
@@ -240,7 +239,6 @@ void Command::execJOIN(std::string &input)
 		msg.reply(NULL, client, RPL_NAMREPLY_CODE, SERVER, RPL_NAMREPLY, client.getNickname().c_str(), "=", channel->getName().c_str(), channel->getListClientsNicknames().c_str());
 		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
 		server.logMessage(1, "joined channel " + channel->getName(), client.getNickname());
-		std::cout << "total channels: " << server.totalChannels() << std::endl;
 	}
 }
 

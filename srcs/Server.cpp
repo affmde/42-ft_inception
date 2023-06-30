@@ -66,11 +66,23 @@ void Server::pollClientEvents()
 				continue;
 			event_count--;
 			if (it->fd == sockfd)
-				registerNewUser();
+			{
+				try {
+					registerNewUser();
+				} catch (UserRegistrationException &e) {
+					logMessage(2, e.what(), "");
+					continue;
+				}
+			}
 			else
 			{
-				Client *c = *findClientByFD(it->fd);
-				handleClientMessage(*c);
+				try{
+					Client *c = *findClientByFD(it->fd);
+					handleClientMessage(*c);
+				} catch(RecvException &e) {
+					logMessage(2, e.what(), "");
+					continue;
+				}
 			}
 		}
 		eraseDisconnectedUsers();
