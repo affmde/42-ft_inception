@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 11:01:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 11:03:20 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ void Command::execJOIN(std::string &input)
 		Channel *channel = server.searchChannel(channels[i]);
 		if (!channel)
 		{
+			std::cout << "HERE" << std::endl;
 			channel = server.createChannel(channels[i], "", keys[i], client);
 			channel->addOper(&client);
 		}
