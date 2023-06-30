@@ -6,11 +6,12 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 13:58:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:54:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <map>
 
 #include "Command.hpp"
 #include "Parser.hpp"
@@ -245,36 +246,59 @@ void Command::execJOIN(std::string &input)
 void Command::execPART(std::string &input)
 {
 	std::vector<std::string> channels;
-	size_t pos;
+	size_t pos = input.find(" ");
+	std::string channels_list = input.substr(0, pos);
+	input.erase(0, pos +1);
+	std::map<std::string, std::string> list;
 	std::string tmp;
+	while ((pos = channels_list.find(",")) != std::string::npos)
+	{
+		tmp = channels_list.substr(0, pos);
+		channels.push_back(tmp);
+		channels_list.erase(0, pos + 1);
+	}
+	if (!channels_list.empty())
+		channels.push_back(channels_list);
+	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
+		std::cout << "channel: " << *it << std::endl;
+	if (channels.size() < 1)
+		throw NeedMoreParamsException("Need more params");
+	std::vector<std::string> reasons;
+	if (!input.empty() && input[0] == ':')
+		input.erase(0, 1);
 	while ((pos = input.find(",")) != std::string::npos)
 	{
 		tmp = input.substr(0, pos);
-		channels.push_back(tmp);
+		reasons.push_back(tmp);
 		input.erase(0, pos + 1);
 	}
 	if (!input.empty())
-		channels.push_back(input);
-	if (channels.size() < 1)
-		throw NeedMoreParamsException("Need more params");
-	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
+		reasons.push_back(input);
+	for(int i = 0; i < channels.size(); i++)
+	{
+		if(i < reasons.size())
+			list.insert({channels[i], reasons[i]});
+		else
+			list.insert({channels[i], ""});
+	}
+	for(std::map<std::string, std::string>::iterator it = list.begin(); it != list.end(); ++it)
 	{
 		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
 		Message msg;
-		Channel *c = server.searchChannel(*it);
+		Channel *c = server.searchChannel(it->first);
 		if (!c)
 		{
 			Message msg;
-			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).c_str());
+			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).first.c_str());
 			continue;
 		}
 		if (!c->isClientInChannel(client.getNickname()))
 		{
 			Message msg;
-			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).c_str());
+			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).first.c_str());
 			continue;
 		}
-		c->eraseClient(client.getNickname());
+		c->eraseClient(client.getNickname(), it->second);
 	}
 }
 
@@ -366,5 +390,6 @@ void Command::execQUIT(std::string &input)
 			(*it)->messageAll(&client,"QUIT :Quit: %s", input.c_str());
 		}
 	}
+	//TODO: AFTER QUIT UNEXPECTADLY (CTRL-C) USERNAME IS STILL IN USE! CHECK THIS!!!!
 	client.setConnected(false);
 }

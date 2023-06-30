@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 13:31:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:51:41 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@ std::vector<Client*>::iterator Channel::findClientByNick(std::string nick)
 	return (clients.end());
 }
 
-void Channel::eraseClient(std::string nick)
+void Channel::eraseClient(std::string nick, std::string reason)
 {
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it == clients.end()) return;
-	messageAll(*it, "%s %s", "PART", getName().c_str());
+	messageAll(*it, "%s %s :%s", "PART", getName().c_str(), reason.c_str());
 	server.logMessage(1, "left channel " + getName(), nick);
 	clients.erase(it);
 }
