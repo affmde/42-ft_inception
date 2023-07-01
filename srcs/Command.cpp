@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 19:16:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/01 19:49:42 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -416,4 +416,10 @@ void Command::execQUIT(std::string &input)
 void Command::execPING(std::string &input)
 {
 	std::cout << "Ping input: " << std::endl;
+	if (input.empty())
+		return ;
+	Message msg;
+	msg.reply(NULL, client, "0", SERVER, "PONG :%s %s", "IRCSERVER", input);
+	server.logMessage(1, "PONG: " + input, "");
 }
+
