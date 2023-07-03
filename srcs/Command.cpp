@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 12:37:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:41:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			execPING(input);
 			break;
 		}
-			
+
 		case PONG:
 			break;
 		default:
@@ -215,7 +215,7 @@ void Command::execJOIN(std::string &input)
 	std::vector<std::string> channels, keys;
 	size_t pos;
 	std::string arg, list;
-	
+
 	pos = input.find(" ");
 	list = input.substr(0, pos);
 	input.erase(0, pos + 1);
@@ -435,7 +435,7 @@ void Command::execPING(std::string &input)
 	if (input.empty())
 		return ;
 	Message msg;
-	msg.reply(NULL, client, "0", SERVER, "PONG :%s %s", "IRCSERVER", input);
+	msg.reply(NULL, client, "0", SERVER, "PONG :%s %s", "IRCSERVER", input.c_str());
 	server.logMessage(1, "PONG: " + input, "");
 }
 
@@ -477,11 +477,11 @@ void Command::execKICK(std::string &input)
 	if (!c->isClientInChannel(client.getNickname()))
 	{
 		Message msg;
-		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname(), channelName);
+		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), channelName.c_str());
 		throw NotOnChannelException("Not on channel");
 	}
 	std::map<std::string, std::string> usersToKick;
-	
+
 	for (int i = 0; i < users.size(); i++)
 	{
 		if (i < comments.size())
