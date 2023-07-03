@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 08:45:56 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:02:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ public:
 
 	int totalClients() const;
 	std::vector<Client*>::iterator findClientByNick(std::string nick);
-	void eraseClient(std::string nick, std::string reason);
+	void eraseClient(std::string nick, std::string reason, int code);
 	void messageAll(Client *sender, std::string format, ...);
 	void messageAllOthers(Client * client, std::string format, ...);
 	void addOper(Client *client);

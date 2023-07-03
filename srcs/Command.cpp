@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 09:28:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:08:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "Parser.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
-#include "Utils.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -65,7 +64,17 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		case KICK:
 		{
-			execKICK(input);
+			try {
+				execKICK(input);
+			} catch (NoSuchChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NeedMoreParamsException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NoPrivilegesException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NotOnChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
 			break;
 		}
 		case INVITE:
@@ -323,7 +332,7 @@ void Command::execPART(std::string &input)
 			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).first.c_str());
 			continue;
 		}
-		c->eraseClient(client.getNickname(), it->second);
+		c->eraseClient(client.getNickname(), it->second, 0);
 	}
 }
 
@@ -432,7 +441,12 @@ void Command::execPING(std::string &input)
 
 void Command::execKICK(std::string &input)
 {
-	std::cout << "KICK input: " << input << std::endl;
+	if (input.empty())
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "KICK");
+		throw NeedMoreParamsException ("KICK: Need more params");
+	}
 	size_t pos = input.find(" ");
 	std::string channelName = input.substr(0, pos);
 	input.erase(0, pos + 1);
@@ -447,5 +461,59 @@ void Command::execKICK(std::string &input)
 	std::vector<std::string> comments = split(input, ",");
 	for(std::vector<std::string>::iterator it = comments.begin(); it != comments.end(); ++it)
 		std::cout << "Comment: " << *it << std::endl;
-	//std::vector<std::string> comments = split()
+	Channel *c = server.searchChannel(channelName);
+	if (!c)
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channelName.c_str());
+		throw NoSuchChannelException("No such channel " + channelName);
+	}
+	if (!c->isOper(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), channelName.c_str());
+		throw NoPrivilegesException("No privileges: Not oper.");
+	}
+	if (!c->isClientInChannel(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname(), channelName);
+		throw NotOnChannelException("Not on channel");
+	}
+	std::map<std::string, std::string> usersToKick;
+	
+	for (int i = 0; i < users.size(); i++)
+	{
+		if (i < comments.size())
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], comments[i]));
+		else
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + channelName));
+	}
+	for(std::map<std::string, std::string>::iterator it = usersToKick.begin(); it != usersToKick.end(); ++it)
+	{
+		if (!c->isClientInChannel(it->first))
+		{
+			Message msg;
+			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), channelName.c_str());
+			server.logMessage(2, "User not in channel", client.getNickname());
+			continue;
+		}
+		c->eraseClient(it->first, it->second, 1);
+	}
+}
+
+std::vector<std::string> Command::split(std::string str, std::string del)
+{
+	std::vector<std::string> vec;
+	size_t pos;
+	std::string tmp;
+	while ((pos = str.find(del)) != std::string::npos)
+	{
+		tmp = str.substr(0, pos);
+		vec.push_back(tmp);
+		str.erase(0, pos + 1);
+	}
+	if (!str.empty())
+		vec.push_back(str);
+	return (vec);
 }

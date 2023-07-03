@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 09:01:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:33:08 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,22 @@ std::vector<Client*>::iterator Channel::findClientByNick(std::string nick)
 	return (clients.end());
 }
 
-void Channel::eraseClient(std::string nick, std::string reason)
+void Channel::eraseClient(std::string nick, std::string reason, int code)
 {
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it == clients.end()) return;
-	messageAll(*it, "%s %s :%s", "PART", getName().c_str(), reason.c_str());
-	server.logMessage(1, "left channel " + getName(), nick);
+	if (code == 0)
+	{
+		messageAll(*it, "%s %s :%s", "PART", getName().c_str(), reason.c_str());
+		server.logMessage(1, "left channel " + getName(), nick);
+	}
+	else if (code == 1)
+	{
+		Message msg;
+		msg.reply(NULL, **it, "0", SERVER, "KICK %s %s :%s", getName().c_str(), nick.c_str(), reason.c_str());
+		messageAllOthers(*it, "KICK %s %s :%s", getName().c_str(), nick.c_str(), reason.c_str());
+		server.logMessage(1, "KICK from channel " + getName(), nick);
+	}
 	clients.erase(it);
 }
 

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 08:55:30 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 11:05:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ private:
 	Server &server;
 	
 	int getCommandId(std::string &input) const;
+	std::vector<std::string> split(std::string str, std::string del);
 	void execNICK(std::string &input, std::vector<Client*> &clients);
 	void execJOIN(std::string &input);
 	void execPART(std::string &input);
