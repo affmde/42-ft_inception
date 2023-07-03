@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:51 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/22 21:56:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:26:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 struct Date
 {
+	unsigned long timestamp;
 	int year;
 	int month;
 	int day;
@@ -41,6 +42,7 @@ public:
 	int getHour() const;
 	int getMin() const;
 	int getSec() const;
+	unsigned long getTimestamp() const;
 	std::string getWeekday() const;
 	std::string getDateAsString() const;
 	std::string getYearMonthDayAsString() const;

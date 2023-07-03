@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 11:17:26 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:04:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #define RPL_CREATED_CODE "003"
 #define RPL_MYINFO_CODE "004"
 #define RPL_ISUPPORT_CODE "005"
+#define RPL_CHANNELMODEIS_CODE "324"
+#define RPL_CREATIONTIME_CODE "329"
 #define RPL_NOTOPIC_CODE "331"
 #define RPL_TOPIC_CODE "332"
 #define RPL_NAMREPLY_CODE "353"
@@ -43,6 +45,8 @@
 #define RPL_CREATED "%s :This server was created %s"					//003
 #define RPL_MYINFO "%s %s %s"											//004
 #define RPL_ISUPPORT "%s %s :are supported by this server"				//005
+#define RPL_CHANNELMODEIS "%s %s %s"									//324
+#define RPL_CREATIONTIME "%s %s %s"										//329
 #define RPL_NOTOPIC "%s %s :No topic is set"							//331
 #define RPL_TOPIC "%s %s :%s"											//332
 #define RPL_NAMREPLY "%s %s %s :%s"										//353

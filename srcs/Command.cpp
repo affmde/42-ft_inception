@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 14:42:33 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:05:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,11 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		}
 		case MODE:
 		{
-			execMODE(input);
+			try {
+				execMODE(input);
+			} catch (NoSuchChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
 			break;
 		}
 		case OPER:
@@ -514,13 +518,41 @@ void Command::execKICK(std::string &input)
 
 void Command::execMODE(std::string &input)
 {
-	std::cout << "MODE input: " << input << std::endl;
 	if (input.empty())
+		return ;
+	size_t pos = input.find(" ");
+	std::string modesString;
+	std::string target;
+	if (pos == std::string::npos)
 	{
-		
+		target = input;
+		modesString = "";
 	}
-	size_t pos = input.find()
-	std::string target = 
+	else
+	{
+		target = input.substr(0, pos);
+		input.erase(0, pos + 1);
+		modesString = input;
+	}
+	if (target[0] == '#') // TARGET IS A CHANNEL!
+	{
+		Channel *c = server.searchChannel(target);
+		if (!c)
+		{
+			Message msg;
+			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
+			throw NoSuchChannelException("No such channel");
+		}
+	}
+	if (modesString.empty())
+	{
+		std::string modes; //GET THE MODES STRING HERE!
+		Message msg;
+		modes = "HAD SOMETHING HERE STILL";
+		msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
+		msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), server.getCreationTimestampAsString().c_str());
+		server.logMessage(1, "Channel modes", client.getNickname());
+	}
 }
 
 void Command::execOper(std::string &input)

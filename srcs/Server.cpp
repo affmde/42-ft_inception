@@ -356,3 +356,10 @@ void Server::logMessage(int fd, std::string msg, std::string nickname) const
 	else if (fd == 1)
 		std::cout << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
 }
+
+std::string Server::getCreationTimeAsString() const
+{
+	return creationTime.getDateAsString();
+}
+
+std::string Server::getCreationTimestampAsString() const { return toString(creationTime.getTimestamp()); }

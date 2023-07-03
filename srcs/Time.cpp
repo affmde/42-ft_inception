@@ -6,11 +6,12 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 10:53:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:27:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ctime>
+#include <iostream> // JUST FOR DEBUGGING! DELETE THIS!!!!!
 
 #include "Time.hpp"
 #include "Utils.hpp"
@@ -21,6 +22,7 @@ Time::~Time() {}
 Time &Time::operator=(const Time &other)
 {
 	if (this == & other) return *this;
+	date.timestamp = other.date.timestamp;
 	date.year = other.getYear();
 	date.month = other.getMonth();
 	date.day = other.getDay();
@@ -31,6 +33,7 @@ Time &Time::operator=(const Time &other)
 	return (*this);
 }
 
+unsigned long Time::getTimestamp() const { return date.timestamp; }
 int Time::getYear() const { return date.year; }
 int Time::getMonth() const { return date.month; }
 int Time::getDay() const { return date.day; }
@@ -39,12 +42,12 @@ int Time::getMin() const { return date.min; }
 int Time::getSec() const { return date.sec; }
 std::string Time::getWeekday() const { return date.weekDay; }
 
-#include <iostream>
 void Time::getDate(Date &date)
 {
 	std::time_t time = std::time(0);
 	std::tm *now = std::localtime(&time);
 	
+	date.timestamp = time;
 	date.year = now->tm_year + 1900;
 	date.month = now->tm_mon + 1;
 	date.day = now->tm_mday;
