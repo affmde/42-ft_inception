@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 16:05:58 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 20:32:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			} catch(NoSuchChannelException &e) {
 				server.logMessage(2, "JOIN: No such channel", client.getNickname());
 			} catch(BadChannelKeyException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch(InviteOnlyException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -269,6 +271,12 @@ void Command::execJOIN(std::string &input)
 		}
 		else
 		{
+			if (channel->getModesInvite())
+			{
+				Message msg;
+				msg.reply(NULL, client, ERR_INVITEONLYCHAN_CODE, SERVER, ERR_INVITEONLYCHAN, client.getNickname().c_str(), channels[i].c_str());
+				throw InviteOnlyException("Invite only channel");
+			}
 			if (keys[i] != channel->getPass())
 			{
 				Message msg;
@@ -543,15 +551,43 @@ void Command::execMODE(std::string &input)
 			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
 			throw NoSuchChannelException("No such channel");
 		}
-	}
-	if (modesString.empty())
-	{
-		std::string modes; //GET THE MODES STRING HERE!
+		if (modesString.empty())
+		{
+			server.logMessage(1, "Channel modes", client.getNickname());
+		}
+		else if (modesString[0] == '+')
+		{
+			std::cout << "PLUS" << std::endl;
+			modesString.erase(0, 1);
+			int i = 0;
+			while (modesString[i])
+			{
+				if (modesString[i] == 'i')
+					c->setModesInvite(true);
+				else if(modesString[i] == 't')
+					c->setModesTopic(true);
+				i++;
+			}
+		}
+		else if (modesString[0] == '-')
+		{
+			std::cout << "MINUS" << std::endl;
+			modesString.erase(0, 1);
+			int i = 0;
+			while (modesString[i])
+			{
+				if (modesString[i] == 'i')
+					c->setModesInvite(false);
+				else if(modesString[i] == 't')
+					c->setModesTopic(false);
+				i++;
+			}
+		}
+		std::string modes = c->getChannelModes(); //GET THE MODES STRING HERE!
+		std::cout << "modes: " << modes << std::endl;
 		Message msg;
-		modes = "HAD SOMETHING HERE STILL";
 		msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
 		msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), server.getCreationTimestampAsString().c_str());
-		server.logMessage(1, "Channel modes", client.getNickname());
 	}
 }
 

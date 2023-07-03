@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 12:02:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:53:39 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ public:
 	bool isOper(std::string nick);
 	bool isClientInChannel(std::string nick);
 	bool isClientBanned(std::string nick);
+	std::string getChannelModes() const;
 private:
 	std::string name;
 	std::vector<Client*> clients;

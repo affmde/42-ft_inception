@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 12:33:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 19:56:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,4 +185,14 @@ bool Channel::isClientBanned(std::string nick)
 			return (true);
 	}
 	return (false);
+}
+
+std::string Channel::getChannelModes() const
+{
+	std::string ret;
+	if (modes.invite)
+		ret += "i";
+	if (modes.topic)
+		ret += "t";
+	return ret;
 }

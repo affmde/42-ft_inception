@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 13:26:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 20:31:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,9 @@ public:
 	};
 	struct BadChannelKeyException : public std::runtime_error {
 		BadChannelKeyException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct InviteOnlyException : public std::runtime_error {
+		InviteOnlyException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
 	Command(std::string &input, Client &client, Server &server);
