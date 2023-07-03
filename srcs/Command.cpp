@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 12:08:10 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 12:37:45 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,9 +311,9 @@ void Command::execPART(std::string &input)
 	for(int i = 0; i < channels.size(); i++)
 	{
 		if(i < reasons.size())
-			list.insert({channels[i], reasons[i]});
+			list.insert(std::pair<std::string, std::string>(channels[i], reasons[i]));
 		else
-			list.insert({channels[i], ""});
+			list.insert(std::pair<std::string, std::string>(channels[i], ""));
 	}
 	for(std::map<std::string, std::string>::iterator it = list.begin(); it != list.end(); ++it)
 	{
