@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 08:48:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 09:01:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ std::vector<Client*> Channel::getOperators() const { return operators; }
 bool Channel::getModesInvite() const { return modes.invite; }
 void Channel::setModesInvite(bool invite) { modes.invite = invite; }
 
-bool Channel::getModesInvite() const { return modes.topic; }
+bool Channel::getModesTopic() const { return modes.topic; }
 void Channel::setModesTopic(bool topic) { modes.topic = topic; }
 
 int Channel::getModesLimit() const { return modes.limit; }
@@ -121,7 +121,7 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT!!!
-		if ((*it)->getActiveStatus() == LOGGED && !isClientBanned((*it)->getNickname()))
+		if ((*it)->getActiveStatus() == LOGGED)
 			msg.reply(sender, **it, "0", CLIENT, format);
 	}
 }
@@ -137,7 +137,7 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
-		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED && !isClientBanned((*it)->getNickname()))
+		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
 			msg.reply(client, **it, "0", CLIENT, format);
 	}
 }

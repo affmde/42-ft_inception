@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 08:36:21 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 09:28:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "Parser.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
+#include "Utils.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -63,7 +64,10 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			throw AlreadyRegisteredException("Already registered");
 			break;
 		case KICK:
+		{
+			execKICK(input);
 			break;
+		}
 		case INVITE:
 			break;
 		case TOPIC:
@@ -123,7 +127,11 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case NOTICE:
 			break;
 		case PING:
+		{
+			execPING(input);
 			break;
+		}
+			
 		case PONG:
 			break;
 		default:
@@ -415,7 +423,6 @@ void Command::execQUIT(std::string &input)
 
 void Command::execPING(std::string &input)
 {
-	std::cout << "Ping input: " << std::endl;
 	if (input.empty())
 		return ;
 	Message msg;
@@ -423,3 +430,22 @@ void Command::execPING(std::string &input)
 	server.logMessage(1, "PONG: " + input, "");
 }
 
+void Command::execKICK(std::string &input)
+{
+	std::cout << "KICK input: " << input << std::endl;
+	size_t pos = input.find(" ");
+	std::string channelName = input.substr(0, pos);
+	input.erase(0, pos + 1);
+	pos = input.find(" ");
+	std::string usersString = input.substr(0, pos);
+	input.erase(0 , pos + 1);
+	std::vector<std::string> users = split(usersString, ",");
+	for(std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
+		std::cout << "User: " << *it << std::endl;
+	if (input[0] == ':')
+		input.erase(0, 1);
+	std::vector<std::string> comments = split(input, ",");
+	for(std::vector<std::string>::iterator it = comments.begin(); it != comments.end(); ++it)
+		std::cout << "Comment: " << *it << std::endl;
+	//std::vector<std::string> comments = split()
+}

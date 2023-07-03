@@ -334,7 +334,7 @@ Channel *Server::searchChannel(std::string name)
 void Server::addChannel(Channel *channel, Client &client)
 {
 	channels.push_back(channel);
-	std::string message = channel->getName() + " was created. Now we have total of " + toString(channels.size()) + " channels active";
+	std::string message = channel->getName() + " was created.";
 	logMessage(1, message, client.getNickname());
 }
 
