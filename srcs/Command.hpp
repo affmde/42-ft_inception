@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 11:05:50 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 13:26:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ private:
 	void execQUIT(std::string &input);
 	void execPING(std::string &input);
 	void execKICK(std::string &input);
+	void execOper(std::string &input);
+	void execMODE(std::string &input);
 };
 
 #include "Server.hpp"

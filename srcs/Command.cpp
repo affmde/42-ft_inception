@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 12:41:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:42:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,19 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case MODE:
+		{
+			execMODE(input);
 			break;
+		}
 		case OPER:
+		{
+			try {
+				execOper(input);
+			} catch (NeedMoreParamsException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
 			break;
+		}
 		case QUIT:
 		{
 			execQUIT(input);
@@ -500,6 +510,33 @@ void Command::execKICK(std::string &input)
 		}
 		c->eraseClient(it->first, it->second, 1);
 	}
+}
+
+void Command::execMODE(std::string &input)
+{
+	std::cout << "MODE input: " << input << std::endl;
+	if (input.empty())
+	{
+		
+	}
+	size_t pos = input.find()
+	std::string target = 
+}
+
+void Command::execOper(std::string &input)
+{
+	std::cout << "OPER input: " << input << std::endl;
+	if (input.empty())
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "OPER");
+		throw NeedMoreParamsException("Need more params");
+	}
+	size_t pos = input.find(" ");
+	std::string name = input.substr(0, pos);
+	input.erase(0, pos + 1);
+	//TODO: ->CONTINUE FROM HERE ON!!!!!!!!
+	
 }
 
 std::vector<std::string> Command::split(std::string str, std::string del)
