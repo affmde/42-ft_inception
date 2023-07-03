@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/01 19:49:42 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 08:36:21 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,7 +369,7 @@ void Command::execTOPIC(std::string &input)
 		msg.reply(NULL, client, ERR_NOTONCHANNEL, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), c->getName().c_str());
 		throw NotOnChannelException("Not on channel");
 	}
-	if (!c->isOper(client.getNickname()))
+	if (!c->isOper(client.getNickname()) && c->getModesTopic())
 	{
 		Message msg;
 		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());

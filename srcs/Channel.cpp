@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 18:26:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/03 08:48:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@
 #include "Channel.hpp"
 #include "Message.hpp"
 
-Channel::Channel(Server &server) :server(server) {}
+Channel::Channel(Server &server) :server(server)
+{
+	modes.invite = false;
+	modes.limit = 2147483647;
+	modes.topic = true;
+}
 Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
 Channel::~Channel() {}
 Channel &Channel::operator=(const Channel &other)
@@ -26,6 +31,9 @@ Channel &Channel::operator=(const Channel &other)
 	name = other.name;
 	topic = other.topic;
 	server = other.server;
+	modes.invite = other.modes.invite;
+	modes.limit = other.modes.limit;
+	modes.topic = other.modes.topic;
 	return (*this);
 }
 
@@ -40,6 +48,15 @@ void Channel::setPass(std::string pass) { this->pass = pass; }
 
 std::vector<Client*> Channel::getClients() const { return clients; }
 std::vector<Client*> Channel::getOperators() const { return operators; }
+
+bool Channel::getModesInvite() const { return modes.invite; }
+void Channel::setModesInvite(bool invite) { modes.invite = invite; }
+
+bool Channel::getModesInvite() const { return modes.topic; }
+void Channel::setModesTopic(bool topic) { modes.topic = topic; }
+
+int Channel::getModesLimit() const { return modes.limit; }
+void Channel:: setModesLimit(int limit) { modes.limit = limit; }
 
 void Channel::addUser(Client *client)
 {
@@ -104,7 +121,7 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT!!!
-		if ((*it)->getActiveStatus() == LOGGED)
+		if ((*it)->getActiveStatus() == LOGGED && !isClientBanned((*it)->getNickname()))
 			msg.reply(sender, **it, "0", CLIENT, format);
 	}
 }
@@ -120,7 +137,7 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
-		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
+		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED && !isClientBanned((*it)->getNickname()))
 			msg.reply(client, **it, "0", CLIENT, format);
 	}
 }
@@ -148,4 +165,14 @@ bool Channel::isClientInChannel(std::string nick)
 int Channel::totalClients() const
 {
 	return clients.size();
+}
+
+bool Channel::isClientBanned(std::string nick)
+{
+	for(std::vector<Client*>::iterator it = bannedList.begin(); it != bannedList.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (true);
+	}
+	return (false);
 }
