@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 11:33:59 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 12:02:45 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <map>
 
 #include "Command.hpp"
-#include "../Parser.hpp"
-#include "../Message.hpp"
-#include "../Channel.hpp"
+#include "Parser.hpp"
+#include "Message.hpp"
+#include "Channel.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
