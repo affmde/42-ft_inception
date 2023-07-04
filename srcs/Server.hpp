@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/03 16:29:58 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 19:30:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ public:
 	std::vector<Channel*> &getChannels();
 	std::string getCreationTimeAsString() const;
 	std::string getCreationTimestampAsString() const;
+	Client *findClientByNick(std::string nick);
 
 private:
 	static const int listenTimeout = 10;

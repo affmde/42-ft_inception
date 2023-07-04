@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 18:30:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 19:32:45 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,21 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case INVITE:
+		{
+			try {
+				execINVITE(input);
+			} catch (NeedMoreParamsException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NoSuchChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NotOnChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NoPrivilegesException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (UserOnChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
+		}
 			break;
 		case TOPIC:
 		{
@@ -104,15 +119,6 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			} catch (NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (NoPrivilegesException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
-			break;
-		}
-		case OPER:
-		{
-			try {
-				execOper(input);
-			} catch (NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -184,8 +190,6 @@ int Command::getCommandId(std::string &input) const
 		return TOPIC;
 	else if (input == "MODE")
 		return MODE;
-	else if (input == "OPER")
-		return OPER;
 	else if (input == "QUIT")
 		return QUIT;
 	else if (input == "JOIN")
@@ -724,20 +728,49 @@ void Command::execMODE(std::string &input)
 	}
 }
 
-void Command::execOper(std::string &input)
+void Command::execINVITE(std::string &input)
 {
-	std::cout << "OPER input: " << input << std::endl;
 	if (input.empty())
+		throw NeedMoreParamsException("Need more params");
+	size_t pos = input.find(" ");
+	if (pos == std::string::npos)
+		throw NeedMoreParamsException("Need more params");
+	std::string targetClient = input.substr(0, pos);
+	input.erase(0, pos + 1);
+	std::string targetChannel = input;
+	if (targetClient.empty() || targetChannel.empty())
+		throw NeedMoreParamsException("Need more params");
+	Channel *c = server.searchChannel(targetChannel);
+	if (!c)
 	{
 		Message msg;
-		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "OPER");
-		throw NeedMoreParamsException("Need more params");
+		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), targetChannel.c_str());
+		throw NoSuchChannelException("No such channel: " + targetChannel);
 	}
-	size_t pos = input.find(" ");
-	std::string name = input.substr(0, pos);
-	input.erase(0, pos + 1);
-	//TODO: ->CONTINUE FROM HERE ON!!!!!!!!
-	
+	if (!c->isClientInChannel(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), targetChannel.c_str());
+		throw NotOnChannelException("Not on channel " + targetChannel);
+	}
+	if (c->getModesInvite() && !c->isOper(client.getNickname()))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), targetChannel.c_str());
+		throw NoPrivilegesException("No privileges on channel " + targetChannel);
+	}
+	if (c->isClientInChannel(targetClient))
+	{
+		Message msg;
+		msg.reply(NULL, client, ERR_USERONCHANNEL_CODE, SERVER, ERR_USERONCHANNEL, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
+		throw UserOnChannelException(targetClient + " already on channel " + targetChannel);
+	}
+	Client *clientToSend = server.findClientByNick(targetClient);
+	if (!clientToSend)
+		return;
+	Message msg;
+	msg.reply(NULL, client, RPL_INVITING_CODE, SERVER, RPL_INVITING, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
+	msg.reply(&client, *clientToSend, "0", CLIENT, "INVITE %s %s", targetChannel.c_str(), targetChannel.c_str());
 }
 
 std::vector<std::string> Command::split(std::string str, std::string del)

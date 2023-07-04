@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 18:22:33 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 19:20:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #define RPL_CREATIONTIME_CODE "329"
 #define RPL_NOTOPIC_CODE "331"
 #define RPL_TOPIC_CODE "332"
+#define RPL_INVITING_CODE "341"
 #define RPL_NAMREPLY_CODE "353"
 #define RPL_ENDOFNAMES_CODE "366"
 #define ERR_NOSUCHCHANNEL_CODE "403"
@@ -34,6 +35,7 @@
 #define ERR_ERRONEUSNICKNAME_CODE "433"
 #define ERR_USERNOTINCHANNEL_CODE "441"
 #define ERR_NOTONCHANNEL_CODE "442"
+#define ERR_USERONCHANNEL_CODE "443"
 #define ERR_NEEDMOREPARAMS_CODE "461"
 #define ERR_ALREADYREGISTERED_CODE "462"
 #define ERR_PASSWDMISMATCH_CODE "464"
@@ -51,6 +53,7 @@
 #define RPL_CREATIONTIME "%s %s %s"										//329
 #define RPL_NOTOPIC "%s %s :No topic is set"							//331
 #define RPL_TOPIC "%s %s :%s"											//332
+#define RPL_INVITING "%s %s %s"											//341
 #define RPL_NAMREPLY "%s %s %s :%s"										//353
 #define RPL_ENDOFNAMES "%s %s :End of /NAMES list"						//366
 #define ERR_NOSUCHCHANNEL "%s %s :No such channel"						//403
@@ -60,6 +63,7 @@
 #define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//433
 #define ERR_USERNOTINCHANNEL "%s %s %s :They aren't on channel"			//441
 #define ERR_NOTONCHANNEL "%s %s :You're not on that channel"			//442
+#define ERR_USERONCHANNEL "%s %s %s :is already on channel"				//443
 #define ERR_NEEDMOREPARAMS "%s %s :Not enough parameters"				//461
 #define ERR_ALREADYREGISTERED "%s :You may not reregister"				//462
 #define ERR_PASSWDMISMATCH "%s :Password incorrect"						//464

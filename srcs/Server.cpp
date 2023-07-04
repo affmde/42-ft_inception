@@ -285,6 +285,17 @@ std::vector<Client*>::iterator Server::findClientByFD(int fd)
 	return clients.end();
 }
 
+Client *Server::findClientByNick(std::string nick)
+{
+	Client *c;
+	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return (*it);
+	}
+	return (NULL);
+}
+
 std::vector<Client*>::iterator Server::eraseUserByFD(int fd)
 {
 	close(fd);
