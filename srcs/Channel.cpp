@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 09:22:59 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 09:52:07 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	while (format.find("%s") != std::string::npos)
 		format.replace(format.find("%s"), 2, va_arg(args, char*));
 	va_end(args);
+	std::cout << "Format: " << format << std::endl;
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{

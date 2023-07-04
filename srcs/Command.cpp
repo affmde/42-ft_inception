@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 09:40:14 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 10:19:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,7 +581,7 @@ void Command::execMODE(std::string &input)
 				i++;
 			}
 			modes = c->getChannelModes();
-			c->messageAll(&client, "MODE %s :%s", client.getNickname().c_str(), modes.c_str());
+			c->messageAll(&client, "MODE %s :%s", target.c_str(), modes.c_str());
 		}
 		else if (modesString[0] == '-')
 		{
@@ -591,7 +591,6 @@ void Command::execMODE(std::string &input)
 				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
 				throw NoPrivilegesException("No privileges on channel " + target);
 			}
-			std::cout << "MINUS" << std::endl;
 			modesString.erase(0, 1);
 			int i = 0;
 			while (modesString[i])
@@ -602,8 +601,8 @@ void Command::execMODE(std::string &input)
 					c->setModesTopic(false);
 				i++;
 			}
-			modes = c->getChannelModes(); 
-			c->messageAllFromServer(RPL_CHANNELMODEIS_CODE, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
+			modes = c->getChannelModes();
+			c->messageAll(&client, "MODE %s %s", target.c_str(), modes.c_str());
 		}
 	}
 }
