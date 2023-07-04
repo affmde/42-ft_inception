@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 15:01:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:01:14 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ Channel::Channel(Server &server) :server(server)
 	modes.invite = false;
 	modes.limit = 2147483647;
 	modes.topic = true;
+	modes.limitRequired = false;
+	modes.passRequired = false;
+	modes.op = 0;
+	
 	
 }
 Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
@@ -36,6 +40,9 @@ Channel &Channel::operator=(const Channel &other)
 	modes.invite = other.modes.invite;
 	modes.limit = other.modes.limit;
 	modes.topic = other.modes.topic;
+	modes.limitRequired = other.modes.limitRequired;
+	modes.passRequired = other.modes.passRequired;
+	modes.op = other.modes.op;
 	return (*this);
 }
 
@@ -65,6 +72,9 @@ void Channel::setModesLimitRequired(bool req) { modes.limitRequired = req; }
 
 bool Channel::getModesPassRequired() const { return modes.passRequired; }
 void Channel::setModesPassRequired(bool req) { modes.passRequired = req; }
+
+int Channel::getModesOp() const { return modes.op; }
+void Channel::setModesOp(int op) { modes.op = op; }
 
 std::string Channel::getCreationTimestampAsString() const { return toString(creationTime.getTimestamp()); }
 
@@ -128,6 +138,16 @@ void Channel::addOper(Client *client)
 			return;
 	}
 	operators.push_back(client);
+}
+
+std::vector<Client*>::iterator Channel::removeOper(std::string nick)
+{
+	for(std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return operators.erase(it);
+	}
+	return operators.end();
 }
 
 void Channel::messageAll(Client *sender, std::string format, ...)

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 12:31:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 16:55:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ struct Modes
 	bool limitRequired;
 	int limit;
 	bool passRequired;
+	int op;
 };
 
 class Channel
@@ -72,6 +73,9 @@ public:
 	void setModesPassRequired(bool req);
 	bool getModesPassRequired() const;
 
+	void setModesOp(int op);
+	int getModesOp() const;
+
 	std::string getCreationTimestampAsString() const;
 
 	int totalClients() const;
@@ -81,6 +85,7 @@ public:
 	void messageAllOthers(Client * client, std::string format, ...);
 	void messageAllFromServer(std::string code, std::string format, ...);
 	void addOper(Client *client);
+	std::vector<Client*>::iterator removeOper(std::string nick);
 	bool isOper(std::string nick);
 	bool isClientInChannel(std::string nick);
 	bool isClientBanned(std::string nick);

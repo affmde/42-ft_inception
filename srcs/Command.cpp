@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 15:10:01 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 18:30:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -561,9 +561,8 @@ void Command::execMODE(std::string &input)
 		input.erase(0, pos + 1);
 		modesString = input;
 	}
-	std::cout << "modestring: " << modesString << std::endl;
 	if (target[0] == '#') // TARGET IS A CHANNEL!
-	{
+	{	
 		Channel *c = server.searchChannel(target);
 		if (!c)
 		{
@@ -607,18 +606,42 @@ void Command::execMODE(std::string &input)
 			}
 			int i = 0;
 			int j = 0;
+			std::string mode;
+			std::string args;
+			bool currentIsPlus;
+			if (modeList[0] == '-')
+			{
+				mode += "-";
+				currentIsPlus = false;
+			}
+			else
+			{
+				mode += "+";
+				currentIsPlus = true;
+			}
 			while (modeList[i])
 			{
 				if (modeList[i] == '+')
+				{
 					pos = true;
+					if (!currentIsPlus)
+						mode += "+";
+					currentIsPlus = true;
+				}
 				else if (modeList[i] == '-')
+				{
 					pos = false;
+					if (currentIsPlus)
+						mode += "-";
+					currentIsPlus = false;
+				}
 				else if (modeList[i] == 'i')
 				{
 					if (pos)
 						c->setModesInvite(true);
 					else
 						c->setModesInvite(false);
+					mode += "i";
 				}
 				else if(modeList[i] == 't')
 				{
@@ -626,6 +649,7 @@ void Command::execMODE(std::string &input)
 						c->setModesTopic(true);
 					else
 						c->setModesTopic(false);
+					mode += "t";
 				}
 				else if (modeList[i] == 'l')
 				{
@@ -633,7 +657,6 @@ void Command::execMODE(std::string &input)
 					{
 						if (j < argsVector.size())
 						{
-							//TODO CHECK IF ARGUMENT IS VALID!!!!
 							if (!isStrToNumberValid(argsVector[j]))
 							{
 								i++;
@@ -642,11 +665,15 @@ void Command::execMODE(std::string &input)
 							}
 							c->setModesLimitRequired(true);
 							c->setModesLimit(std::atoi(argsVector[j].c_str()));
+							args += argsVector[j] + " ";
 							j++;
 						}
 					}
 					else
+					{
 						c->setModesLimitRequired(false);
+					}
+					mode += "l";
 				}
 				else if (modeList[i] == 'k')
 				{
@@ -656,15 +683,42 @@ void Command::execMODE(std::string &input)
 						{
 							c->setModesPassRequired(true);
 							c->setPass(argsVector[j]);
+							args += argsVector[j] + " ";
 							j++;
 						}
 					}
 					else
-							c->setModesPassRequired(false);
+					{
+						c->setModesPassRequired(false);
+					}
+					mode += "k";
+				}
+				else if (modeList[i] == 'o')
+				{
+					Client *clientToAdd = *c->findClientByNick(argsVector[j]);
+					if (pos)
+					{
+						if (c->isClientInChannel(argsVector[j]) && !c->isClientBanned(argsVector[j]) && !c->isOper(argsVector[j]))
+						{
+							if (clientToAdd)
+							{
+								c->addOper(clientToAdd);
+								args += client.getNickname() + " ";
+							}
+						}
+					}
+					else
+					{
+						if (clientToAdd)
+						{
+							c->removeOper(clientToAdd->getNickname());
+						}
+					}
+					mode += "o";
 				}
 				i++;
 			}
-			modes = c->getChannelModes();
+			modes = mode + " " + args;
 			c->messageAll(&client, "MODE %s :%s", target.c_str(), modes.c_str());
 		}
 	}
