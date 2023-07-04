@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 12:02:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:32:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			} catch(BadChannelKeyException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch(InviteOnlyException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch(ChannelFullException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -279,12 +281,13 @@ void Command::execJOIN(std::string &input)
 				msg.reply(NULL, client, ERR_INVITEONLYCHAN_CODE, SERVER, ERR_INVITEONLYCHAN, client.getNickname().c_str(), channels[i].c_str());
 				throw InviteOnlyException("Invite only channel");
 			}
-			if (channel->totalClients() >= channel->getModesLimit())
+			if (channel->getModesLimitRequired() && channel->totalClients() >= channel->getModesLimit())
 			{
 				Message msg;
 				msg.reply(NULL, client, ERR_CHANNELISFULL_CODE, SERVER, ERR_CHANNELISFULL, client.getNickname().c_str(), channels[i].c_str());
+				throw ChannelFullException("Channel " + channels[i] + " is full");
 			}
-			if (keys[i] != channel->getPass())
+			if (channel->getModesPassRequired() && keys[i] != channel->getPass())
 			{
 				Message msg;
 				msg.reply(NULL, client, ERR_BADCHANNELKEY_CODE, SERVER, ERR_BADCHANNELKEY, client.getNickname().c_str(), channel->getName().c_str());
@@ -531,6 +534,15 @@ void Command::execKICK(std::string &input)
 	}
 }
 
+bool isStrToNumberValid(std::string num)
+{
+	char *end;
+	long val = std::strtol(num.c_str(), &end, 10);
+	if (end == num || *end != '\0' || errno == ERANGE)
+		return false;
+	return true;
+}
+
 void Command::execMODE(std::string &input)
 {
 	if (input.empty())
@@ -549,6 +561,7 @@ void Command::execMODE(std::string &input)
 		input.erase(0, pos + 1);
 		modesString = input;
 	}
+	std::cout << "modestring: " << modesString << std::endl;
 	if (target[0] == '#') // TARGET IS A CHANNEL!
 	{
 		Channel *c = server.searchChannel(target);
@@ -576,13 +589,46 @@ void Command::execMODE(std::string &input)
 				throw NoPrivilegesException("No privileges on channel " + target);
 			}
 			modesString.erase(0, 1);
-			int i = 0;
-			while (modesString[i])
+			pos = modesString.find(" ");
+			std::string modeList;
+			std::string modeArgs;
+			std::vector<std::string> argsVector;
+			if (pos == std::string::npos)
 			{
-				if (modesString[i] == 'i')
+				modeList = modesString;
+				modeArgs = "";
+			}
+			else
+			{
+				modeList = modesString.substr(0, pos);
+				modesString.erase(0, pos + 1);
+				modeArgs = modesString;
+				argsVector = split(modeArgs, " ");
+			}
+			int i = 0;
+			int j = 0;
+			while (modeList[i])
+			{
+				if (modeList[i] == 'i')
 					c->setModesInvite(true);
-				else if(modesString[i] == 't')
+				else if(modeList[i] == 't')
 					c->setModesTopic(true);
+				else if (modeList[i] == 'l')
+				{
+					if (j < argsVector.size())
+					{
+						//TODO CHECK IF ARGUMENT IS VALID!!!!
+						if (!isStrToNumberValid(argsVector[j]))
+						{
+							std::cout << "NOT A VALID NUMBER" << std::endl;
+							i++;
+							j++;
+							continue;
+						}
+						c->setModesLimitRequired(true);
+						c->setModesLimit(std::atoi(argsVector[j++].c_str()));
+					}
+				}
 				i++;
 			}
 			modes = c->getChannelModes();

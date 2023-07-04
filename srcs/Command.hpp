@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 12:02:56 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:30:25 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ public:
 	};
 	struct InviteOnlyException : public std::runtime_error {
 		InviteOnlyException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct ChannelFullException : public std::runtime_error {
+		ChannelFullException(const std::string &msg) : runtime_error(msg) {}
 	};
 	
 	Command(std::string &input, Client &client, Server &server);

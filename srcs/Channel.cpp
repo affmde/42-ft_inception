@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 09:52:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 12:48:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ void Channel::setModesTopic(bool topic) { modes.topic = topic; }
 
 int Channel::getModesLimit() const { return modes.limit; }
 void Channel:: setModesLimit(int limit) { modes.limit = limit; }
+
+bool Channel::getModesLimitRequired() const { return modes.limitRequired; }
+void Channel::setModesLimitRequired(bool req) { modes.limitRequired = req; }
+
+bool Channel::getModesPassRequired() const { return modes.passRequired; }
+void Channel::setModesPassRequired(bool req) { modes.passRequired = req; }
 
 std::string Channel::getCreationTimestampAsString() const { return toString(creationTime.getTimestamp()); }
 
@@ -210,9 +216,19 @@ bool Channel::isClientBanned(std::string nick)
 std::string Channel::getChannelModes() const
 {
 	std::string ret;
+	std::string modeStr;
+	std::string argsStr;
 	if (modes.invite)
-		ret += "i";
+		modeStr += "i";
 	if (modes.topic)
-		ret += "t";
+		modeStr += "t";
+	if (modes.limitRequired)
+	{
+		modeStr += "l";
+		argsStr += toString(modes.limit);
+	}
+	
+	ret = modeStr + " " + argsStr;
+	std::cout << "ret: " << ret << std::endl;
 	return ret;
 }

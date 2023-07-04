@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 09:19:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 12:31:00 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ struct Modes
 {
 	bool invite;
 	bool topic;
+	bool limitRequired;
 	int limit;
+	bool passRequired;
 };
 
 class Channel
@@ -63,6 +65,12 @@ public:
 
 	void setModesLimit(int limit);
 	int getModesLimit() const;
+
+	void setModesLimitRequired(bool req);
+	bool getModesLimitRequired() const;
+
+	void setModesPassRequired(bool req);
+	bool getModesPassRequired() const;
 
 	std::string getCreationTimestampAsString() const;
 
