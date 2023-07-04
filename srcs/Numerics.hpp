@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 20:28:40 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 11:19:32 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #define ERR_NEEDMOREPARAMS_CODE "461"
 #define ERR_ALREADYREGISTERED_CODE "462"
 #define ERR_PASSWDMISMATCH_CODE "464"
+#define ERR_CHANNELISFULL_CODE "471"
 #define ERR_INVITEONLYCHAN_CODE "473"
 #define ERR_BADCHANNELKEY_CODE "475"
 #define ERR_CHANOPRIVSNEEDED_CODE "482"
@@ -62,6 +63,7 @@
 #define ERR_NEEDMOREPARAMS "%s %s :Not enough parameters"				//461
 #define ERR_ALREADYREGISTERED "%s :You may not reregister"				//462
 #define ERR_PASSWDMISMATCH "%s :Password incorrect"						//464
+#define ERR_CHANNELISFULL "%s %s :Cannot join channel (+l)"				//471
 #define ERR_INVITEONLYCHAN "%s %s :Cannot join channel (+i)"			//473
 #define ERR_BADCHANNELKEY "%s %s :Cannot join channel (+k)"				//475
 #define ERR_CHANOPRIVSNEEDED "%s %s :You're not channel operator" 		//482

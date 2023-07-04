@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 10:19:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 11:25:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,11 @@ void Command::execJOIN(std::string &input)
 				Message msg;
 				msg.reply(NULL, client, ERR_INVITEONLYCHAN_CODE, SERVER, ERR_INVITEONLYCHAN, client.getNickname().c_str(), channels[i].c_str());
 				throw InviteOnlyException("Invite only channel");
+			}
+			if (channel->totalClients() >= channel->getModesLimit())
+			{
+				Message msg;
+				msg.reply(NULL, client, ERR_CHANNELISFULL_CODE, SERVER, ERR_CHANNELISFULL, client.getNickname().c_str(), channels[i].c_str());
 			}
 			if (keys[i] != channel->getPass())
 			{
@@ -599,6 +604,7 @@ void Command::execMODE(std::string &input)
 					c->setModesInvite(false);
 				else if(modesString[i] == 't')
 					c->setModesTopic(false);
+				//TODO still handle l (limit) and o (Operator)
 				i++;
 			}
 			modes = c->getChannelModes();
