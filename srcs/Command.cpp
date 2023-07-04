@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 09:21:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 09:40:14 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			try {
 				execMODE(input);
 			} catch (NoSuchChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NoPrivilegesException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -562,6 +564,12 @@ void Command::execMODE(std::string &input)
 		}
 		else if (modesString[0] == '+')
 		{
+			if (!c->isOper(client.getNickname()))
+			{
+				Message msg;
+				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
+				throw NoPrivilegesException("No privileges on channel " + target);
+			}
 			modesString.erase(0, 1);
 			int i = 0;
 			while (modesString[i])
@@ -577,6 +585,12 @@ void Command::execMODE(std::string &input)
 		}
 		else if (modesString[0] == '-')
 		{
+			if (!c->isOper(client.getNickname()))
+			{
+				Message msg;
+				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
+				throw NoPrivilegesException("No privileges on channel " + target);
+			}
 			std::cout << "MINUS" << std::endl;
 			modesString.erase(0, 1);
 			int i = 0;
