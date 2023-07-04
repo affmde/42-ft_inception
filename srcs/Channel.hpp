@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 19:53:39 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 09:19:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "Client.hpp"
+#include "Time.hpp"
 
 class Server;
 
@@ -63,11 +64,14 @@ public:
 	void setModesLimit(int limit);
 	int getModesLimit() const;
 
+	std::string getCreationTimestampAsString() const;
+
 	int totalClients() const;
 	std::vector<Client*>::iterator findClientByNick(std::string nick);
 	void eraseClient(std::string nick, std::string reason, int code);
 	void messageAll(Client *sender, std::string format, ...);
 	void messageAllOthers(Client * client, std::string format, ...);
+	void messageAllFromServer(std::string code, std::string format, ...);
 	void addOper(Client *client);
 	bool isOper(std::string nick);
 	bool isClientInChannel(std::string nick);
@@ -83,6 +87,7 @@ private:
 	std::string pass;
 	Server &server;
 	Modes modes;
+	Time creationTime;
 };
 
 #include "Server.hpp"

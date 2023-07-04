@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 20:32:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 09:21:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -551,13 +551,17 @@ void Command::execMODE(std::string &input)
 			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
 			throw NoSuchChannelException("No such channel");
 		}
+		std::string modes; //GET THE MODES STRING HERE!
 		if (modesString.empty())
 		{
+			Message msg;
+			modes = modes = c->getChannelModes(); 
+			msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
+			msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), c->getCreationTimestampAsString().c_str());
 			server.logMessage(1, "Channel modes", client.getNickname());
 		}
 		else if (modesString[0] == '+')
 		{
-			std::cout << "PLUS" << std::endl;
 			modesString.erase(0, 1);
 			int i = 0;
 			while (modesString[i])
@@ -568,6 +572,8 @@ void Command::execMODE(std::string &input)
 					c->setModesTopic(true);
 				i++;
 			}
+			modes = c->getChannelModes();
+			c->messageAll(&client, "MODE %s :%s", client.getNickname().c_str(), modes.c_str());
 		}
 		else if (modesString[0] == '-')
 		{
@@ -582,12 +588,9 @@ void Command::execMODE(std::string &input)
 					c->setModesTopic(false);
 				i++;
 			}
+			modes = c->getChannelModes(); 
+			c->messageAllFromServer(RPL_CHANNELMODEIS_CODE, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
 		}
-		std::string modes = c->getChannelModes(); //GET THE MODES STRING HERE!
-		std::cout << "modes: " << modes << std::endl;
-		Message msg;
-		msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
-		msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), server.getCreationTimestampAsString().c_str());
 	}
 }
 

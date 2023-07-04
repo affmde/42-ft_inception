@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 19:56:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 09:22:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 #include "Channel.hpp"
 #include "Message.hpp"
+#include "Utils.hpp"
 
 Channel::Channel(Server &server) :server(server)
 {
 	modes.invite = false;
 	modes.limit = 2147483647;
 	modes.topic = true;
+	
 }
 Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
 Channel::~Channel() {}
@@ -57,6 +59,8 @@ void Channel::setModesTopic(bool topic) { modes.topic = topic; }
 
 int Channel::getModesLimit() const { return modes.limit; }
 void Channel:: setModesLimit(int limit) { modes.limit = limit; }
+
+std::string Channel::getCreationTimestampAsString() const { return toString(creationTime.getTimestamp()); }
 
 void Channel::addUser(Client *client)
 {
@@ -149,6 +153,21 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
 		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
 			msg.reply(client, **it, "0", CLIENT, format);
+	}
+}
+
+void Channel::messageAllFromServer(std::string code, std::string format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	while (format.find("%s") != std::string::npos)
+		format.replace(format.find("%s"), 2, va_arg(args, char*));
+	va_end(args);
+	Message msg;
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if ((*it)->getActiveStatus() == LOGGED)
+			msg.reply(NULL, **it, code, CLIENT, format);
 	}
 }
 
