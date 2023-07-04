@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 20:31:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 11:34:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include "Client.hpp"
+#include "../Client.hpp"
 
 #define PASS 0
 #define NICK 1
@@ -94,6 +94,6 @@ private:
 	void execMODE(std::string &input);
 };
 
-#include "Server.hpp"
+#include "../Server.hpp"
 
 #endif

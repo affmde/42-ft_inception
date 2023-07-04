@@ -9,7 +9,7 @@
 #include "Server.hpp"
 #include "Message.hpp"
 #include "Parser.hpp"
-#include "Command.hpp"
+#include "Command/Command.hpp"
 #include "Utils.hpp"
 
 Server::Server(const char *port, std::string pass)
