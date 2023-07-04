@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 12:48:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:01:00 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,9 +225,13 @@ std::string Channel::getChannelModes() const
 	if (modes.limitRequired)
 	{
 		modeStr += "l";
-		argsStr += toString(modes.limit);
+		argsStr += toString(modes.limit) + " ";
 	}
-	
+	if (modes.passRequired)
+	{
+		modeStr += "k";
+		argsStr += pass + " ";
+	}
 	ret = modeStr + " " + argsStr;
 	std::cout << "ret: " << ret << std::endl;
 	return ret;

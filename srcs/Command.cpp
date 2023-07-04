@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 13:32:03 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:10:01 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -580,7 +580,7 @@ void Command::execMODE(std::string &input)
 			msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), c->getCreationTimestampAsString().c_str());
 			server.logMessage(1, "Channel modes", client.getNickname());
 		}
-		else if (modesString[0] == '+')
+		else
 		{
 			if (!c->isOper(client.getNickname()))
 			{
@@ -588,7 +588,7 @@ void Command::execMODE(std::string &input)
 				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
 				throw NoPrivilegesException("No privileges on channel " + target);
 			}
-			modesString.erase(0, 1);
+			//modesString.erase(0, 1);
 			pos = modesString.find(" ");
 			std::string modeList;
 			std::string modeArgs;
@@ -609,52 +609,63 @@ void Command::execMODE(std::string &input)
 			int j = 0;
 			while (modeList[i])
 			{
-				if (modeList[i] == 'i')
-					c->setModesInvite(true);
+				if (modeList[i] == '+')
+					pos = true;
+				else if (modeList[i] == '-')
+					pos = false;
+				else if (modeList[i] == 'i')
+				{
+					if (pos)
+						c->setModesInvite(true);
+					else
+						c->setModesInvite(false);
+				}
 				else if(modeList[i] == 't')
-					c->setModesTopic(true);
+				{
+					if (pos)
+						c->setModesTopic(true);
+					else
+						c->setModesTopic(false);
+				}
 				else if (modeList[i] == 'l')
 				{
-					if (j < argsVector.size())
+					if (pos)
 					{
-						//TODO CHECK IF ARGUMENT IS VALID!!!!
-						if (!isStrToNumberValid(argsVector[j]))
+						if (j < argsVector.size())
 						{
-							std::cout << "NOT A VALID NUMBER" << std::endl;
-							i++;
+							//TODO CHECK IF ARGUMENT IS VALID!!!!
+							if (!isStrToNumberValid(argsVector[j]))
+							{
+								i++;
+								j++;
+								continue;
+							}
+							c->setModesLimitRequired(true);
+							c->setModesLimit(std::atoi(argsVector[j].c_str()));
 							j++;
-							continue;
 						}
-						c->setModesLimitRequired(true);
-						c->setModesLimit(std::atoi(argsVector[j++].c_str()));
 					}
+					else
+						c->setModesLimitRequired(false);
+				}
+				else if (modeList[i] == 'k')
+				{
+					if (pos)
+					{
+						if (j < argsVector.size())
+						{
+							c->setModesPassRequired(true);
+							c->setPass(argsVector[j]);
+							j++;
+						}
+					}
+					else
+							c->setModesPassRequired(false);
 				}
 				i++;
 			}
 			modes = c->getChannelModes();
 			c->messageAll(&client, "MODE %s :%s", target.c_str(), modes.c_str());
-		}
-		else if (modesString[0] == '-')
-		{
-			if (!c->isOper(client.getNickname()))
-			{
-				Message msg;
-				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
-				throw NoPrivilegesException("No privileges on channel " + target);
-			}
-			modesString.erase(0, 1);
-			int i = 0;
-			while (modesString[i])
-			{
-				if (modesString[i] == 'i')
-					c->setModesInvite(false);
-				else if(modesString[i] == 't')
-					c->setModesTopic(false);
-				//TODO still handle l (limit) and o (Operator)
-				i++;
-			}
-			modes = c->getChannelModes();
-			c->messageAll(&client, "MODE %s %s", target.c_str(), modes.c_str());
 		}
 	}
 }
