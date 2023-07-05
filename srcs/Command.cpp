@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 11:32:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:25:19 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -497,13 +497,9 @@ void Command::execKICK(std::string &input)
 	std::string usersString = input.substr(0, pos);
 	input.erase(0 , pos + 1);
 	std::vector<std::string> users = split(usersString, ",");
-	for(std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-		std::cout << "User: " << *it << std::endl;
 	if (input[0] == ':')
 		input.erase(0, 1);
 	std::vector<std::string> comments = split(input, ",");
-	for(std::vector<std::string>::iterator it = comments.begin(); it != comments.end(); ++it)
-		std::cout << "Comment: " << *it << std::endl;
 	Channel *c = server.searchChannel(channelName);
 	if (!c)
 	{
@@ -541,6 +537,10 @@ void Command::execKICK(std::string &input)
 			server.logMessage(2, "User not in channel", client.getNickname());
 			continue;
 		}
+		Client *kickUser = *c->findClientByNick(it->first);
+		Message msg;
+		msg.reply(&client, *kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
+		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
 		c->eraseClient(it->first, it->second, 1);
 	}
 }
