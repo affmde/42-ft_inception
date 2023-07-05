@@ -152,7 +152,7 @@ void Server::handleClientMessage(Client &client)
 	buffer[bytes_read] = '\0';
 	Parser parser;
 	parser.setInput(std::string(buffer));
-	std::vector<std::string>	args = parser.parseInput();
+	std::vector<std::string> args = parser.parseInput();
 	int i = 0;
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it, i++)
@@ -184,7 +184,7 @@ void Server::handleClientMessage(Client &client)
 				{
 					Message msg;
 					msg.reply(NULL, client, ERR_NONICKNAMEGIVEN_CODE, SERVER, ERR_NONICKNAMEGIVEN);
-					logMessage(2, "Emptu nickname", client.getNickname());
+					logMessage(2, "Empty nickname", client.getNickname());
 					break ;
 				}
 				checkDuplicateNick(nick);
@@ -220,11 +220,11 @@ void Server::handleClientMessage(Client &client)
 				logMessage(2, e.what(), client.getNickname());
 			}
 		}
-		else
+		else if (client.getActiveStatus() == LOGGED)
 		{
 			try{
 				client.setBuffer(client.getBuffer() + *it);
-				if (client.isReadyToSend() && client.getActiveStatus() == LOGGED)
+				if (client.isReadyToSend())
 				{
 					std::string input = client.getBuffer();
 					Command cmd(input, client, *this);
