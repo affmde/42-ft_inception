@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 09:31:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 10:54:15 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ public:
 	void addChannelInvite(std::string channelName);
 	bool isInvited(std::string channelName);
 	std::vector<std::string>::iterator removeInvite(std::string channelName);
+	std::vector<std::string> getChannelInvites() const;
 
 private:
 	int clientFD;

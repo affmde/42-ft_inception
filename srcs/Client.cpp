@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 09:33:05 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 10:54:25 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,3 +111,5 @@ std::vector<std::string>::iterator Client::removeInvite(std::string channelName)
 	}
 	return channelInviteList.end();
 }
+
+std::vector<std::string> Client::getChannelInvites() const { return channelInviteList; }

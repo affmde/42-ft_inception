@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 09:46:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 11:32:04 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
 	int commandId = getCommandId(command);
-	input.erase(0, pos + 1);
+	input.erase(0, pos + 1);;
 	if (input[input.length() - 1] == '\n')
 		input.erase(input.length() - 1, 1);
 	if (input[input.length() - 1] == '\r')
@@ -279,7 +279,7 @@ void Command::execJOIN(std::string &input)
 		}
 		else
 		{
-			if (channel->getModesInvite())
+			if (channel->getModesInvite() && !channel->isClientInvited(client.getNickname()))
 			{
 				Message msg;
 				msg.reply(NULL, client, ERR_INVITEONLYCHAN_CODE, SERVER, ERR_INVITEONLYCHAN, client.getNickname().c_str(), channels[i].c_str());
@@ -312,6 +312,13 @@ void Command::execJOIN(std::string &input)
 		msg.reply(NULL, client, RPL_NAMREPLY_CODE, SERVER, RPL_NAMREPLY, client.getNickname().c_str(), "=", channel->getName().c_str(), channel->getListClientsNicknames().c_str());
 		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
 		server.logMessage(1, "joined channel " + channel->getName(), client.getNickname());
+		std::cout << "invites on channel before: " << channel->getInvitedClients().size() << std::endl;
+		if (channel->isClientInvited(client.getNickname()))
+		{
+			channel->removeInvitedClient(client.getNickname());
+			client.removeInvite(channel->getName());
+		}
+		std::cout << "invites on channel after: " << channel->getInvitedClients().size() << std::endl;
 	}
 }
 
@@ -770,7 +777,7 @@ void Command::execINVITE(std::string &input)
 		return;
 	Message msg;
 	msg.reply(NULL, client, RPL_INVITING_CODE, SERVER, RPL_INVITING, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
-	msg.reply(&client, *clientToSend, "0", CLIENT, "INVITE %s %s", targetChannel.c_str(), targetChannel.c_str());
+	msg.reply(&client, *clientToSend, "0", CLIENT, "INVITE %s :%s", targetClient.c_str(), targetChannel.c_str());
 	server.logMessage(1, "Invite " + targetClient + " to channel " + targetChannel, client.getNickname());
 	clientToSend->addChannelInvite(targetChannel);
 	c->addInvitedClient(clientToSend);

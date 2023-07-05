@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 19:20:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 10:46:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 #define RPL_CREATIONTIME_CODE "329"
 #define RPL_NOTOPIC_CODE "331"
 #define RPL_TOPIC_CODE "332"
+#define RPL_INVITELIST_CODE "336"
+#define RPL_ENDOFINVITELIST_CODE "337"
 #define RPL_INVITING_CODE "341"
 #define RPL_NAMREPLY_CODE "353"
 #define RPL_ENDOFNAMES_CODE "366"
@@ -53,6 +55,8 @@
 #define RPL_CREATIONTIME "%s %s %s"										//329
 #define RPL_NOTOPIC "%s %s :No topic is set"							//331
 #define RPL_TOPIC "%s %s :%s"											//332
+#define RPL_INVITELIST "%s %s"											//336
+#define RPL_ENDOFINVITELIST "%s :End of /INVITE list"					//337
 #define RPL_INVITING "%s %s %s"											//341
 #define RPL_NAMREPLY "%s %s %s :%s"										//353
 #define RPL_ENDOFNAMES "%s %s :End of /NAMES list"						//366
