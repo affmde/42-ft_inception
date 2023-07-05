@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 15:26:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:53:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -541,7 +541,17 @@ void Command::execKICK(std::string &input)
 	for (int i = 0; i < users.size(); i++)
 	{
 		if (i < comments.size())
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], comments[i]));
+		{
+			std::string reason;
+			if (comments[i].size() > 300)
+			{
+				reason = comments[i].substr(0, 299);
+				reason[299] = '.';
+			}
+			else
+				reason = comments[i];
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], reason));
+		}
 		else
 			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + channelName));
 	}

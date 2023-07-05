@@ -175,7 +175,7 @@ void Server::handleClientMessage(Client &client)
 				msg.reply(NULL, client, ERR_PASSWDMISMATCH_CODE, SERVER, ERR_PASSWDMISMATCH, "*");
 				client.setConnected(false);
 				logMessage(2, e.what(), client.getNickname());
-				break ;
+				continue ;
 			}
 			client.resetBuffer();
 		}
@@ -192,7 +192,7 @@ void Server::handleClientMessage(Client &client)
 					Message msg;
 					msg.reply(NULL, client, ERR_NONICKNAMEGIVEN_CODE, SERVER, ERR_NONICKNAMEGIVEN);
 					logMessage(2, "Empty nickname", client.getNickname());
-					break ;
+					continue ;
 				}
 				checkDuplicateNick(nick);
 				client.setNickname(nick);
@@ -206,12 +206,12 @@ void Server::handleClientMessage(Client &client)
 				Message msg;
 				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), nick.c_str());
 				logMessage(2, e.what(), client.getNickname());
-				break;
+				continue;
 			} catch (Parser::InvalidNickException &e){
 				Message msg;
 				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, "*", nick.c_str());
 				logMessage(2, e.what(), client.getNickname());
-				break;
+				continue;
 			}
 			client.resetBuffer();
 		}
@@ -258,7 +258,7 @@ void Server::handleClientMessage(Client &client)
 			std::string date = creationTime.getDateAsString();
 			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
 			msg.reply(NULL, client, RPL_MYINFO_CODE, SERVER, RPL_MYINFO, client.getNickname().c_str(), "IRCSERVER", "1.0.0");
-			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390";
+			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390 CHANTYPES=# KICKLEN=300";
 			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
 			client.setActiveStatus(LOGGED);
 		}
