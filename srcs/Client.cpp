@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/29 16:54:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:33:05 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,26 @@ bool Client::isReadyToSend() const
 		return true;
 	else
 		return false;
+}
+
+void Client::addChannelInvite(std::string channelName) { channelInviteList.push_back(channelName); }
+
+bool Client::isInvited(std::string channelName)
+{
+	for(std::vector<std::string>::iterator it = channelInviteList.begin(); it != channelInviteList.end(); ++it)
+	{
+		if (*it == channelName)
+			return true;
+	}
+	return false;
+}
+
+std::vector<std::string>::iterator Client::removeInvite(std::string channelName)
+{
+	for(std::vector<std::string>::iterator it = channelInviteList.begin(); it != channelInviteList.end(); ++it)
+	{
+		if (*it == channelName)
+			return channelInviteList.erase(it);
+	}
+	return channelInviteList.end();
 }

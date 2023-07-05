@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/30 17:57:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:31:48 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define CLIENT_HPP
 
 #include <string>
+#include <vector>
 
 #define NOT_CONNECTED 0
 #define CONNECTED 1
@@ -63,6 +64,9 @@ public:
 	void setActiveStatus(int status);
 
 	bool isReadyToSend() const;
+	void addChannelInvite(std::string channelName);
+	bool isInvited(std::string channelName);
+	std::vector<std::string>::iterator removeInvite(std::string channelName);
 
 private:
 	int clientFD;
@@ -75,6 +79,7 @@ private:
 	bool connected;
 	int activeStatus;
 	std::string buffer;
+	std::vector<std::string> channelInviteList;
 };
 
 #endif

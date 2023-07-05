@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 19:32:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:46:11 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -771,6 +771,9 @@ void Command::execINVITE(std::string &input)
 	Message msg;
 	msg.reply(NULL, client, RPL_INVITING_CODE, SERVER, RPL_INVITING, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
 	msg.reply(&client, *clientToSend, "0", CLIENT, "INVITE %s %s", targetChannel.c_str(), targetChannel.c_str());
+	server.logMessage(1, "Invite " + targetClient + " to channel " + targetChannel, client.getNickname());
+	clientToSend->addChannelInvite(targetChannel);
+	c->addInvitedClient(clientToSend);
 }
 
 std::vector<std::string> Command::split(std::string str, std::string del)

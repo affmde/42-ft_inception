@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 16:55:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:40:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,16 @@ public:
 	bool isClientInChannel(std::string nick);
 	bool isClientBanned(std::string nick);
 	std::string getChannelModes() const;
+	void addInvitedClient(Client *clientToAdd);
+	std::vector<Client*>::iterator removeInvitedClient(std::string nick);
+	bool isClientInvited(std::string nick);
+	std::vector<Client*> getInvitedClients() const;
 private:
 	std::string name;
 	std::vector<Client*> clients;
 	std::vector<Client*> operators;
 	std::vector<Client*> bannedList;
+	std::vector<Client*> invitedClients;
 	//CHECK BEST WAY TO ADD THE MODES!!!!!
 	std::string topic;
 	std::string pass;

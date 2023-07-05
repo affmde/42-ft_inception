@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/04 17:01:14 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:45:05 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,29 @@ std::string Channel::getChannelModes() const
 		argsStr += pass + " ";
 	}
 	ret = modeStr + " " + argsStr;
-	std::cout << "ret: " << ret << std::endl;
 	return ret;
 }
+
+void Channel::addInvitedClient(Client *clientToAdd) { invitedClients.push_back(clientToAdd); }
+
+std::vector<Client*>::iterator Channel::removeInvitedClient(std::string nick)
+{
+	for(std::vector<Client*>::iterator it = invitedClients.begin(); it != invitedClients.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return invitedClients.erase(it);
+	}
+	return invitedClients.end();
+}
+
+bool Channel::isClientInvited(std::string nick)
+{
+	for(std::vector<Client*>::iterator it = invitedClients.begin(); it != invitedClients.end(); ++it)
+	{
+		if ((*it)->getNickname() == nick)
+			return true;
+	}
+	return false;
+}
+
+std::vector<Client*> Channel::getInvitedClients() const { return invitedClients; }
