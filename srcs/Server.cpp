@@ -156,11 +156,14 @@ void Server::handleClientMessage(Client &client)
 	int i = 0;
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it, i++)
-	{
+	{		
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
+			client.setBuffer(*it);
+			if (client.getBuffer().find("\n") == std::string::npos)
+				continue;
 			try{
-				parser.parsePass(*it, pass);
+				parser.parsePass(client.getBuffer(), pass);
 				client.setActiveStatus(PASS_ACCEPTED);
 			} catch (Parser::NoPassException &e){
 				Message msg;
@@ -174,12 +177,16 @@ void Server::handleClientMessage(Client &client)
 				logMessage(2, e.what(), client.getNickname());
 				break ;
 			}
+			client.resetBuffer();
 		}
 		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
+			client.setBuffer(*it);
+			if (client.getBuffer().find("\n") == std::string::npos)
+				continue;
 			std::string nick;
 			try {
-				parser.parseNick(*it, nick);
+				parser.parseNick(client.getBuffer(), nick);
 				if (nick.empty())
 				{
 					Message msg;
@@ -206,12 +213,16 @@ void Server::handleClientMessage(Client &client)
 				logMessage(2, e.what(), client.getNickname());
 				break;
 			}
+			client.resetBuffer();
 		}
 		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
+			client.setBuffer(*it);
+			if (client.getBuffer().find("\n") == std::string::npos)
+				continue;
 			try {
 				Parser parser;
-				parser.parseUser(*it, client);
+				parser.parseUser(client.getBuffer(), client);
 				if (!client.getNickname().empty())
 					client.setActiveStatus(REGISTERED);
 			} catch (Parser::EmptyUserException &e) {
@@ -219,6 +230,7 @@ void Server::handleClientMessage(Client &client)
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "USER");
 				logMessage(2, e.what(), client.getNickname());
 			}
+			client.resetBuffer();
 		}
 		else if (client.getActiveStatus() == LOGGED)
 		{

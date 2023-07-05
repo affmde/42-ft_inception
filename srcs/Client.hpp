@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 10:54:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:09:48 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ public:
 	int getActiveStatus() const;
 	void setActiveStatus(int status);
 
+	void addChannel(std::string channelName);
+	std::vector<std::string>::iterator removeChannel(std::string channelName);
+
+	std::vector<std::string> getCurrentChannels() const;
 	bool isReadyToSend() const;
 	void addChannelInvite(std::string channelName);
 	bool isInvited(std::string channelName);
@@ -81,6 +85,7 @@ private:
 	int activeStatus;
 	std::string buffer;
 	std::vector<std::string> channelInviteList;
+	std::vector<std::string> currentChannels;
 };
 
 #endif

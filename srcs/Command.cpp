@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 12:25:19 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:26:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,10 @@ int Command::getCommandId(std::string &input) const
 
 void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 {
+	if (input.empty())
+		throw NeedMoreParamsException("Need more params.");
+	if (input[0] == ':')
+		input.erase(0, 1);
 	std::string clientNick = input;
 	for (int i = 0; i < clientNick.length(); i++)
 		clientNick[i] = std::tolower(clientNick[i]);
@@ -218,6 +222,7 @@ void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 		nickToCompare = (*(*it)).getNickname();
 		for (int i = 0; i < nickToCompare.length(); i++)
 			nickToCompare[i] = std::tolower(nickToCompare[i]);
+		std::cout << nickToCompare << " - " << clientNick << std::endl;
 		if (nickToCompare == clientNick)
 		{
 			Message msg;
@@ -230,6 +235,16 @@ void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 		Message msg;
 		msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, client.getNickname().c_str(), input.c_str());
 		throw InvalidNickException("Invalid Nick");
+	}
+	Message msg;
+	msg.reply(&client, client, "0", CLIENT, "NICK %s", input.c_str());
+	std::vector<std::string> currentChannels = client.getCurrentChannels();
+	for(std::vector<std::string>::iterator it = currentChannels.begin(); it != currentChannels.end(); ++it)
+	{
+		Channel *chan = server.searchChannel(*it);
+		if (!chan)
+			continue;
+		chan->messageAllOthers(&client, "NICK %s", input.c_str());
 	}
 	client.setNickname(input);
 }
@@ -376,6 +391,7 @@ void Command::execPART(std::string &input)
 			continue;
 		}
 		c->eraseClient(client.getNickname(), it->second, 0);
+		client.removeChannel(c->getName());
 	}
 }
 
@@ -465,6 +481,7 @@ void Command::execQUIT(std::string &input)
 		if ((*it)->isClientInChannel(client.getNickname()))
 		{
 			(*it)->messageAllOthers(&client,"QUIT :Quit: %s", input.c_str());
+			client.removeChannel((*it)->getName());
 		}
 	}
 	//TODO: HANDLE QUIT ON DISCONNECTION WITHOUT QUIT COMMAND (EX: CNTL_C). MAYBE SHOULD USE PING FOR THIS?
@@ -542,6 +559,7 @@ void Command::execKICK(std::string &input)
 		msg.reply(&client, *kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
 		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
 		c->eraseClient(it->first, it->second, 1);
+		client.removeChannel(c->getName());
 	}
 }
 

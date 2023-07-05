@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 10:54:25 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:10:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,3 +113,16 @@ std::vector<std::string>::iterator Client::removeInvite(std::string channelName)
 }
 
 std::vector<std::string> Client::getChannelInvites() const { return channelInviteList; }
+
+void Client::addChannel(std::string channelName) { currentChannels.push_back(channelName); }
+std::vector<std::string>::iterator Client::removeChannel(std::string channelName)
+{
+	for(std::vector<std::string>::iterator it = currentChannels.begin(); it != currentChannels.end(); ++it)
+	{
+		if (*it == channelName)
+			return currentChannels.erase(it);
+	}
+	return currentChannels.end();
+}
+
+std::vector<std::string> Client::getCurrentChannels() const { return currentChannels; }
