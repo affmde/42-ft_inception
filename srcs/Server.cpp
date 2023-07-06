@@ -11,6 +11,7 @@
 #include "Parser.hpp"
 #include "Command.hpp"
 #include "Utils.hpp"
+#include "rpl_isupport.hpp"
 
 Server::Server(const char *port, std::string pass)
 {
@@ -258,7 +259,7 @@ void Server::handleClientMessage(Client &client)
 			std::string date = creationTime.getDateAsString();
 			msg.reply(NULL, client, RPL_CREATED_CODE, SERVER, RPL_CREATED, client.getNickname().c_str(), date.c_str());
 			msg.reply(NULL, client, RPL_MYINFO_CODE, SERVER, RPL_MYINFO, client.getNickname().c_str(), "IRCSERVER", "1.0.0");
-			std::string supportedFeactures = "CHARSET=ascii CASEMAPPING=ascii NICKLEN=10 CHANNELLEN=50 TOPICLEN=390 CHANTYPES=# KICKLEN=300";
+			std::string supportedFeactures = getISupportAsString();
 			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
 			client.setActiveStatus(LOGGED);
 		}
@@ -363,6 +364,8 @@ void Server::addChannel(Channel *channel, Client &client)
 
 Channel *Server::createChannel(std::string name, std::string topic, std::string pass, Client &client)
 {
+	if (name.size() > CHANNELLEN)
+		throw ChannelLenException("Channel name too long");
 	Channel *newChannel = new Channel(*this);
 	newChannel->setName(name);
 	newChannel->setPass(pass);
@@ -386,3 +389,39 @@ std::string Server::getCreationTimeAsString() const
 }
 
 std::string Server::getCreationTimestampAsString() const { return toString(creationTime.getTimestamp()); }
+
+std::string Server::getISupportAsString() const
+{
+	std::string channellen = "CHANNELLEN=" + toString(CHANNELLEN);
+	std::string nicklen = " NICKLEN=" + toString(NICKLEN);
+	std::string charset = " CHARSET=" + std::string(CHARSET);
+	std::string casemapping = " CASEMAPPING=" + std::string(CASEMAPPING);
+	std::string topiclen = " TOPICLEN=" + toString(TOPICLEN);
+	std::string chantypes = " CHANTYPES=" + std::string(CHANTYPES);
+	std::string kicklen = " KICKLEN=" + toString(KICKLEN);
+	//std::string awaylen = " AWAYLEN=" + toString(AWAYLEN);
+	std::string chanlimit = " CHANLIMIT=" + std::string(CHANLIMIT);
+	std::string chanmodes = " CHANMODES=" + std::string(CHANMODES);
+	std::string hostlen = " HOSTLEN=" + toString(HOSTLEN);
+	std::string prefix = " PREFIX=" + std::string(PREFIX);
+	std::string userlen = " USERLEN=" + toString(USERLEN);
+	std::string features = channellen + nicklen + charset + casemapping + topiclen + chantypes + kicklen;
+	features += chanlimit + chanmodes + hostlen + prefix + userlen;
+	return features;
+
+	/*
+	#define CHANNELLEN 100
+#define NICKLEN 31
+#define CHARSET "ascii"
+#define CASEMAPPING "ascii"
+#define TOPICLEN 390
+#define CHANTYPES "#"
+#define KICKLEN 300
+#define AWAYLEN 300
+#define CHANLIMIT "#"
+#define CHANMODES "lkit"
+#define HOSTLEN 100
+#define PREFIX "(o)@"
+#define USERLEN 20
+	*/
+}

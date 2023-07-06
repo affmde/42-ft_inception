@@ -6,13 +6,14 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:43:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 14:43:43 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 09:14:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream> //DELETE AFTER DEBUGGING!!!!!!!!!!!!!!!!
 
 #include "Parser.hpp"
+#include "rpl_isupport.hpp"
 
 Parser::Parser() {}
 
@@ -117,8 +118,8 @@ void Parser::parseUser(std::string input, Client &client)
 	std::string username = args[1];
 	if (username.empty())
 		throw EmptyUserException("Empty username");
-	if (username.length() > maxClientUsernameLength)
-		username = username.substr(0, maxClientUsernameLength);
+	if (username.length() > USERLEN)
+		username = username.substr(0, USERLEN);
 	if (username[0] == ':')
 		username.erase(0, 1);
 	client.setUsername(username);

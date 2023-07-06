@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/04 19:30:58 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 20:47:59 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ public:
 	};
 	struct DuplicateNickException : public std::runtime_error {
 		DuplicateNickException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct ChannelLenException : public std::runtime_error {
+		ChannelLenException(const std::string &msg) : runtime_error(msg) {}
 	};
 
 	Server(const char *port, std::string pass);
@@ -75,6 +78,7 @@ private:
 	std::vector<Client*>::iterator findClientByFD(int fd);
 	std::vector<Client*>::iterator eraseUserByFD(int fd);
 	void checkDuplicateNick(std::string nick);
+	std::string getISupportAsString() const;
 };
 
 #endif

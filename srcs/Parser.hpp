@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 07:41:59 by andrferr          #+#    #+#             */
-/*   Updated: 2023/06/27 11:40:32 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 09:15:16 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ public:
 	int parseChannelName(std::string name);
 
 private:
-	static const int maxClientUsernameLength = 10;
 	std::string input;
 	std::string pass;
 	std::string nick;

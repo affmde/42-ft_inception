@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 15:53:23 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/05 19:58:08 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "Parser.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
+#include "rpl_isupport.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -236,6 +237,8 @@ void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 		msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, client.getNickname().c_str(), input.c_str());
 		throw InvalidNickException("Invalid Nick");
 	}
+	if (input.size() > NICKLEN)
+		input = input.substr(0, NICKLEN);
 	Message msg;
 	msg.reply(&client, client, "0", CLIENT, "NICK %s", input.c_str());
 	std::vector<std::string> currentChannels = client.getCurrentChannels();
@@ -289,8 +292,15 @@ void Command::execJOIN(std::string &input)
 		Channel *channel = server.searchChannel(channels[i]);
 		if (!channel)
 		{
-			channel = server.createChannel(channels[i], "", keys[i], client);
-			channel->addOper(&client);
+			try{
+				channel = server.createChannel(channels[i], "", keys[i], client);
+				channel->addOper(&client);
+			} catch (Server::ChannelLenException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+				Message msg;
+				msg.reply(NULL, client, "0", SERVER, "ERROR Channel name is too long");
+				continue;
+			}
 		}
 		else
 		{
@@ -451,6 +461,8 @@ void Command::execTOPIC(std::string &input)
 		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());
 		throw NoPrivilegesException("No privileges");
 	}
+	if (input.size() > TOPICLEN)
+		input = input.substr(0, TOPICLEN);
 	if (input[0] == ':' && input.length() > 1)
 	{
 		input.erase(0, 1);
@@ -543,11 +555,8 @@ void Command::execKICK(std::string &input)
 		if (i < comments.size())
 		{
 			std::string reason;
-			if (comments[i].size() > 300)
-			{
-				reason = comments[i].substr(0, 299);
-				reason[299] = '.';
-			}
+			if (comments[i].size() > KICKLEN)
+				reason = comments[i].substr(0, KICKLEN);
 			else
 				reason = comments[i];
 			usersToKick.insert(std::pair<std::string, std::string>(users[i], reason));
