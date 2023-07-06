@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 10:46:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:20:56 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define RPL_INVITING_CODE "341"
 #define RPL_NAMREPLY_CODE "353"
 #define RPL_ENDOFNAMES_CODE "366"
+#define ERR_NOSUCHNICK_CODE "401"
 #define ERR_NOSUCHCHANNEL_CODE "403"
 #define ERR_CANNOTSENDTOCHAN_CODE "404"
 #define ERR_NONICKNAMEGIVEN_CODE "431"
@@ -60,6 +61,7 @@
 #define RPL_INVITING "%s %s %s"											//341
 #define RPL_NAMREPLY "%s %s %s :%s"										//353
 #define RPL_ENDOFNAMES "%s %s :End of /NAMES list"						//366
+#define ERR_NOSUCHNICK "%s %s :No such nick/channel"					//401
 #define ERR_NOSUCHCHANNEL "%s %s :No such channel"						//403
 #define ERR_CANNOTSENDTOCHAN "%s %s :Cannot send to channel"			//404
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
