@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/06 16:44:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:50:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			} catch (NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (InvalidNickException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch (NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -809,7 +811,6 @@ void Command::execINVITE(std::string &input)
 
 void Command::execPRIVMSG(std::string &input)
 {
-	std::cout << "input: " << input << std::endl;
 	size_t pos = input.find(" ");
 	if (pos == std::string::npos)
 		throw NeedMoreParamsException("Need more params");
