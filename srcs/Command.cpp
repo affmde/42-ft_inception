@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/06 16:50:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 17:10:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -658,6 +658,7 @@ void Command::execMODE(std::string &input)
 			}
 			while (modeList[i])
 			{
+				std::cout << "letter: " << modeList[i] << std::endl;
 				if (modeList[i] == '+')
 				{
 					pos = true;
@@ -742,6 +743,7 @@ void Command::execMODE(std::string &input)
 								c->addOper(clientToAdd);
 								args += client.getNickname() + " ";
 							}
+							mode += "o";
 						}
 					}
 					else
@@ -749,9 +751,10 @@ void Command::execMODE(std::string &input)
 						if (clientToAdd)
 						{
 							c->removeOper(clientToAdd->getNickname());
+							mode += "o";
 						}
 					}
-					mode += "o";
+					j++;
 				}
 				i++;
 			}
