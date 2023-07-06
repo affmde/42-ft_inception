@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 19:58:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:44:08 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ Command &Command::operator=(const Command &other)
 
 void Command::checkCommands(std::vector<Client*> *clients)
 {
+	std::cout << input << std::endl;
 	size_t pos;
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
@@ -161,7 +162,18 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case NOTICE:
+		{
+			try {
+				execNOTICE(input);
+			} catch(NeedMoreParamsException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch(NoSuchChannelException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			} catch(InvalidNickException &e) {
+				server.logMessage(2, e.what(), client.getNickname());
+			}
 			break;
+		}
 		case PING:
 		{
 			execPING(input);
@@ -337,13 +349,11 @@ void Command::execJOIN(std::string &input)
 		msg.reply(NULL, client, RPL_NAMREPLY_CODE, SERVER, RPL_NAMREPLY, client.getNickname().c_str(), "=", channel->getName().c_str(), channel->getListClientsNicknames().c_str());
 		msg.reply(NULL, client, RPL_ENDOFNAMES_CODE, SERVER, RPL_ENDOFNAMES, client.getNickname().c_str(), channel->getName().c_str());
 		server.logMessage(1, "joined channel " + channel->getName(), client.getNickname());
-		std::cout << "invites on channel before: " << channel->getInvitedClients().size() << std::endl;
 		if (channel->isClientInvited(client.getNickname()))
 		{
 			channel->removeInvitedClient(client.getNickname());
 			client.removeInvite(channel->getName());
 		}
-		std::cout << "invites on channel after: " << channel->getInvitedClients().size() << std::endl;
 	}
 }
 
@@ -610,7 +620,7 @@ void Command::execMODE(std::string &input)
 		modesString = input;
 	}
 	if (target[0] == '#') // TARGET IS A CHANNEL!
-	{	
+	{
 		Channel *c = server.searchChannel(target);
 		if (!c)
 		{
@@ -622,7 +632,7 @@ void Command::execMODE(std::string &input)
 		if (modesString.empty())
 		{
 			Message msg;
-			modes = modes = c->getChannelModes(); 
+			modes = modes = c->getChannelModes();
 			msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
 			msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), c->getCreationTimestampAsString().c_str());
 			server.logMessage(1, "Channel modes", client.getNickname());
@@ -818,6 +828,38 @@ void Command::execINVITE(std::string &input)
 	server.logMessage(1, "Invite " + targetClient + " to channel " + targetChannel, client.getNickname());
 	clientToSend->addChannelInvite(targetChannel);
 	c->addInvitedClient(clientToSend);
+}
+
+void Command::execNOTICE(std::string &input)
+{
+	size_t pos = input.find(" ");
+	if (pos == std::string::npos)
+		throw NeedMoreParamsException("Need more params");
+	std::vector<std::string> info = split(input, " ");
+	if (info.size() < 2)
+		return;
+	std::vector<std::string> targets = split(info[0], ",");
+	if (!info[1].empty() && info[1][0] == ':')
+		info[1].erase(0, 1);
+	for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
+	{
+		if ((*it)[0] == '#') //target is chennel
+		{
+			Channel *c = server.searchChannel(*it);
+			if (!c)
+				throw NoSuchChannelException("No such channel " + *it);
+			c->messageAllOthers(&client, "NOTICE %s :%s", (*it).c_str(), info[1].c_str());
+		}
+		else //target is a Client
+		{
+			Client *c = server.findClientByNick(*it);
+			if (!c)
+				throw InvalidNickException("Nick doesn't exist: " + *it);
+			Message msg;
+			msg.reply(&client, *c, "0", CLIENT, "NOTICE %s :%s", (*it).c_str(), info[1].c_str());
+		}
+		server.logMessage(1, "NOTICE: " + info[1], client.getNickname());
+	}
 }
 
 std::vector<std::string> Command::split(std::string str, std::string del)

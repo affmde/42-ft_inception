@@ -157,7 +157,7 @@ void Server::handleClientMessage(Client &client)
 	int i = 0;
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it, i++)
-	{		
+	{
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
 			client.setBuffer(*it);

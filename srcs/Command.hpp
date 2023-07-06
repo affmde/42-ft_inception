@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 11:55:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/06 12:17:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,19 @@ public:
 	struct UserOnChannelException : public std::runtime_error {
 		UserOnChannelException(const std::string &msg) : runtime_error(msg) {}
 	};
-	
+
 	Command(std::string &input, Client &client, Server &server);
 	Command(const Command &other);
 	~Command();
 	Command &operator=(const Command &other);
 
 	void checkCommands(std::vector<Client*> *clients);
-	
+
 private:
 	std::string &input;
 	Client &client;
 	Server &server;
-	
+
 	int getCommandId(std::string &input) const;
 	std::vector<std::string> split(std::string str, std::string del);
 	void execNICK(std::string &input, std::vector<Client*> &clients);
@@ -98,6 +98,7 @@ private:
 	void execKICK(std::string &input);
 	void execMODE(std::string &input);
 	void execINVITE(std::string &input);
+	void execNOTICE(std::string &input);
 };
 
 #include "Server.hpp"
