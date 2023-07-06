@@ -408,20 +408,4 @@ std::string Server::getISupportAsString() const
 	std::string features = channellen + nicklen + charset + casemapping + topiclen + chantypes + kicklen;
 	features += chanlimit + chanmodes + hostlen + prefix + userlen;
 	return features;
-
-	/*
-	#define CHANNELLEN 100
-#define NICKLEN 31
-#define CHARSET "ascii"
-#define CASEMAPPING "ascii"
-#define TOPICLEN 390
-#define CHANTYPES "#"
-#define KICKLEN 300
-#define AWAYLEN 300
-#define CHANLIMIT "#"
-#define CHANMODES "lkit"
-#define HOSTLEN 100
-#define PREFIX "(o)@"
-#define USERLEN 20
-	*/
 }
