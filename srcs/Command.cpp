@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 15:14:10 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:23:29 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "Message.hpp"
 #include "Channel.hpp"
 #include "rpl_isupport.hpp"
+#include "commands/NICK.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -52,10 +53,11 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case NICK:
 		{
 			try{
-				execNICK(input, *clients);
-			} catch(InvalidNickException &e) {
+				Nick n(server, client, input, *clients);
+				n.execNICK();
+			} catch(ACommand::InvalidNickException &e) {
 				std::cerr << client.getNickname() << " cant update NICK." << std::endl;
-			} catch(DuplicateNickException &e) {
+			} catch(ACommand::DuplicateNickException &e) {
 				std::cerr << client.getNickname() << " cant update NICK because already exists." << std::endl;
 			}
 			break;
@@ -220,49 +222,6 @@ int Command::getCommandId(std::string &input) const
 	else if (input == "PING")
 		return PING;
 	return (-1);
-}
-
-void Command::execNICK(std::string &input, std::vector<Client*> &clients)
-{
-	if (input.empty())
-		throw NeedMoreParamsException("Need more params.");
-	if (input[0] == ':')
-		input.erase(0, 1);
-	std::string clientNick = input;
-	for (int i = 0; i < clientNick.length(); i++)
-		clientNick[i] = std::tolower(clientNick[i]);
-	std::string nickToCompare;
-	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
-	{
-		nickToCompare = (*(*it)).getNickname();
-		for (int i = 0; i < nickToCompare.length(); i++)
-			nickToCompare[i] = std::tolower(nickToCompare[i]);
-		if (nickToCompare == clientNick)
-		{
-			Message msg;
-			msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), input.c_str());
-			throw DuplicateNickException("Duplicate nick");
-		}
-	}
-	if (std::isdigit(input[0]) || input[0] == '#' || input[0] == ' ' || input[0] == ':')
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, client.getNickname().c_str(), input.c_str());
-		throw InvalidNickException("Invalid Nick");
-	}
-	if (input.size() > NICKLEN)
-		input = input.substr(0, NICKLEN);
-	Message msg;
-	msg.reply(&client, client, "0", CLIENT, "NICK %s", input.c_str());
-	std::vector<std::string> currentChannels = client.getCurrentChannels();
-	for(std::vector<std::string>::iterator it = currentChannels.begin(); it != currentChannels.end(); ++it)
-	{
-		Channel *chan = server.searchChannel(*it);
-		if (!chan)
-			continue;
-		chan->messageAllOthers(&client, "NICK %s", input.c_str());
-	}
-	client.setNickname(input);
 }
 
 void Command::execJOIN(std::string &input)

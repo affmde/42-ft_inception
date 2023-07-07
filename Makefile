@@ -13,11 +13,15 @@ COMPILE_FLAGS = -std=c++98 -Wall -Wextra -Werror
 #Dirs
 OBJS_DIR = obj/
 SRCS_DIR = srcs/
+COMMANDS_DIR = srcs/commands/
 
 SRCS := main.cpp Client.cpp Server.cpp Parser.cpp Message.cpp Time.cpp Channel.cpp Command.cpp
+COMMANDS := ACommand.cpp NICK.cpp
+ALL_SRCS = $(SRCS) $(COMMANDS)
 
-OBJ_FILES = $(SRCS:.cpp=.o)
-OBJS = $(patsubst %, $(OBJS_DIR)%, $(SRCS:.cpp=.o))
+
+OBJ_FILES = $(SRCS:.cpp=.o) $(ALL_SRCS:.cpp=.o)
+OBJS = $(patsubst %, $(OBJS_DIR)%, $(ALL_SRCS:.cpp=.o))
 
 all: $(NAME)
 
@@ -30,6 +34,10 @@ $(OBJS_DIR):
 	@echo "$(COLOUR_BLUE)object directory created$(COLOUR_END)"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
+	@cc $(FLAGS) -c $< -o $@
+	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
+
+$(OBJS_DIR)%.o: $(COMMANDS_DIR)%.cpp
 	@cc $(FLAGS) -c $< -o $@
 	@echo "$(COLOUR_GREEN)[OK]$(COLOUR_END)$(COLOUR_YELLOW)	$@ created$(COLOUR_END)"
 
