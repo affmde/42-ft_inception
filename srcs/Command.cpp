@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:00:55 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:08:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "commands/JOIN.hpp"
 #include "commands/PART.hpp"
 #include "commands/TOPIC.hpp"
+#include "commands/KICK.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -71,14 +72,15 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case KICK:
 		{
 			try {
-				execKICK(input);
-			} catch (NoSuchChannelException &e) {
+				Kick k(server, client, input, *clients);
+				k.execKICK();
+			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NeedMoreParamsException &e) {
+			} catch (ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NoPrivilegesException &e) {
+			} catch (ACommand::NoPrivilegesException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NotOnChannelException &e) {
+			} catch (ACommand::NotOnChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -258,77 +260,6 @@ void Command::execPING(std::string &input)
 	Message msg;
 	msg.reply(NULL, client, "0", SERVER, "PONG :%s %s", "IRCSERVER", input.c_str());
 	server.logMessage(1, "PONG: " + input, "");
-}
-
-void Command::execKICK(std::string &input)
-{
-	if (input.empty())
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "KICK");
-		throw NeedMoreParamsException ("KICK: Need more params");
-	}
-	size_t pos = input.find(" ");
-	std::string channelName = input.substr(0, pos);
-	input.erase(0, pos + 1);
-	pos = input.find(" ");
-	std::string usersString = input.substr(0, pos);
-	input.erase(0 , pos + 1);
-	std::vector<std::string> users = split(usersString, ",");
-	if (input[0] == ':')
-		input.erase(0, 1);
-	std::vector<std::string> comments = split(input, ",");
-	Channel *c = server.searchChannel(channelName);
-	if (!c)
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channelName.c_str());
-		throw NoSuchChannelException("No such channel " + channelName);
-	}
-	if (!c->isOper(client.getNickname()))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), channelName.c_str());
-		throw NoPrivilegesException("No privileges: Not oper.");
-	}
-	if (!c->isClientInChannel(client.getNickname()))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), channelName.c_str());
-		throw NotOnChannelException("Not on channel");
-	}
-	std::map<std::string, std::string> usersToKick;
-
-	for (int i = 0; i < users.size(); i++)
-	{
-		if (i < comments.size())
-		{
-			std::string reason;
-			if (comments[i].size() > KICKLEN)
-				reason = comments[i].substr(0, KICKLEN);
-			else
-				reason = comments[i];
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], reason));
-		}
-		else
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + channelName));
-	}
-	for(std::map<std::string, std::string>::iterator it = usersToKick.begin(); it != usersToKick.end(); ++it)
-	{
-		if (!c->isClientInChannel(it->first))
-		{
-			Message msg;
-			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), channelName.c_str());
-			server.logMessage(2, "User not in channel", client.getNickname());
-			continue;
-		}
-		Client *kickUser = *c->findClientByNick(it->first);
-		Message msg;
-		msg.reply(&client, *kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
-		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
-		c->eraseClient(it->first, it->second, 1);
-		client.removeChannel(c->getName());
-	}
 }
 
 bool isStrToNumberValid(std::string num)

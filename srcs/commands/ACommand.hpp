@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:24:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 15:44:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:06:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ protected:
 	Client &client;
 	std::string &input;
 	std::vector<Client*> &clientsList;
+
+	std::vector<std::string> split(std::string str, std::string del);
 
 };
 
