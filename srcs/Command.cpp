@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 11:31:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:14:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,9 +186,6 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			execPING(input);
 			break;
 		}
-
-		case PONG:
-			break;
 		default:
 			break;
 	}
@@ -222,8 +219,6 @@ int Command::getCommandId(std::string &input) const
 		return NOTICE;
 	else if (input == "PING")
 		return PING;
-	else if (input == "PONG")
-		return PONG;
 	return (-1);
 }
 

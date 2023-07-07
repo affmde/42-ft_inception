@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:27:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 15:10:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:15:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Client::setActiveStatus(int status) { activeStatus = status; }
 bool Client::isReadyToSend() const
 {
 	size_t pos;
-	if ((pos = buffer.find("\n")) != std::string::npos) //STILL CHECK THIS TO DECIDE ABOUT ACCEPT \n or \r\n!!!!!!
+	if ((pos = buffer.find("\r\n")) != std::string::npos)
 		return true;
 	else
 		return false;

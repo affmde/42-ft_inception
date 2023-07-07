@@ -161,7 +161,7 @@ void Server::handleClientMessage(Client &client)
 		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
 			client.setBuffer(*it);
-			if (client.getBuffer().find("\n") == std::string::npos)
+			if (!client.isReadyToSend())
 				continue;
 			try{
 				parser.parsePass(client.getBuffer(), pass);
@@ -183,7 +183,7 @@ void Server::handleClientMessage(Client &client)
 		else if (it->find("NICK ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
 			client.setBuffer(*it);
-			if (client.getBuffer().find("\n") == std::string::npos)
+			if (!client.isReadyToSend())
 				continue;
 			std::string nick;
 			try {
@@ -219,7 +219,7 @@ void Server::handleClientMessage(Client &client)
 		else if (it->find("USER ") != std::string::npos && client.isConnected() && client.getActiveStatus() == PASS_ACCEPTED)
 		{
 			client.setBuffer(*it);
-			if (client.getBuffer().find("\n") == std::string::npos)
+			if (!client.isReadyToSend())
 				continue;
 			try {
 				Parser parser;
