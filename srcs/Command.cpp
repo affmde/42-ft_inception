@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:24:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:29:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include "commands/TOPIC.hpp"
 #include "commands/KICK.hpp"
 #include "commands/QUIT.hpp"
+#include "commands/INVITE.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -89,16 +90,17 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case INVITE:
 		{
 			try {
-				execINVITE(input);
-			} catch (NeedMoreParamsException &e) {
+				Invite i(server, client, input, *clients);
+				i.execINVITE();
+			} catch (ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NoSuchChannelException &e) {
+			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NotOnChannelException &e) {
+			} catch (ACommand::NotOnChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (NoPrivilegesException &e) {
+			} catch (ACommand::NoPrivilegesException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch (UserOnChannelException &e) {
+			} catch (ACommand::UserOnChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 		}
@@ -433,54 +435,6 @@ void Command::execMODE(std::string &input)
 			c->messageAll(&client, "MODE %s :%s", target.c_str(), modes.c_str());
 		}
 	}
-}
-
-void Command::execINVITE(std::string &input)
-{
-	if (input.empty())
-		throw NeedMoreParamsException("Need more params");
-	size_t pos = input.find(" ");
-	if (pos == std::string::npos)
-		throw NeedMoreParamsException("Need more params");
-	std::string targetClient = input.substr(0, pos);
-	input.erase(0, pos + 1);
-	std::string targetChannel = input;
-	if (targetClient.empty() || targetChannel.empty())
-		throw NeedMoreParamsException("Need more params");
-	Channel *c = server.searchChannel(targetChannel);
-	if (!c)
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), targetChannel.c_str());
-		throw NoSuchChannelException("No such channel: " + targetChannel);
-	}
-	if (!c->isClientInChannel(client.getNickname()))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), targetChannel.c_str());
-		throw NotOnChannelException("Not on channel " + targetChannel);
-	}
-	if (c->getModesInvite() && !c->isOper(client.getNickname()))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), targetChannel.c_str());
-		throw NoPrivilegesException("No privileges on channel " + targetChannel);
-	}
-	if (c->isClientInChannel(targetClient))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_USERONCHANNEL_CODE, SERVER, ERR_USERONCHANNEL, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
-		throw UserOnChannelException(targetClient + " already on channel " + targetChannel);
-	}
-	Client *clientToSend = server.findClientByNick(targetClient);
-	if (!clientToSend)
-		return;
-	Message msg;
-	msg.reply(NULL, client, RPL_INVITING_CODE, SERVER, RPL_INVITING, client.getNickname().c_str(), targetClient.c_str(), targetChannel.c_str());
-	msg.reply(&client, *clientToSend, "0", CLIENT, "INVITE %s :%s", targetClient.c_str(), targetChannel.c_str());
-	server.logMessage(1, "Invite " + targetClient + " to channel " + targetChannel, client.getNickname());
-	clientToSend->addChannelInvite(targetChannel);
-	c->addInvitedClient(clientToSend);
 }
 
 void Command::execPRIVMSG(std::string &input)
