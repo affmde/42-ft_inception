@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:53:50 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:00:55 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "commands/NICK.hpp"
 #include "commands/JOIN.hpp"
 #include "commands/PART.hpp"
+#include "commands/TOPIC.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -102,17 +103,18 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case TOPIC:
 		{
 			try {
-				execTOPIC(input);
+				Topic t(server, client, input, *clients);
+				t.execTOPIC();
 				server.logMessage(1, "Topic changed", client.getNickname());
-			} catch (NeedMoreParamsException &e) {
+			} catch (ACommand::NeedMoreParamsException &e) {
 				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "TOPIC");
 				server.logMessage(2, "TOPIC: need more params", client.getNickname());
-			} catch (NoSuchChannelException &e) {
+			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, "TOPIC: no such channel", client.getNickname());
-			} catch (NotOnChannelException &e) {
+			} catch (ACommand::NotOnChannelException &e) {
 				server.logMessage(2, "TOPIC: not on channel", client.getNickname());
-			} catch (NoPrivilegesException &e) {
+			} catch (ACommand::NoPrivilegesException &e) {
 				server.logMessage(2, "TOPIC: no priviledges", client.getNickname());
 			}
 			break;
@@ -226,53 +228,6 @@ int Command::getCommandId(std::string &input) const
 	else if (input == "PING")
 		return PING;
 	return (-1);
-}
-
-void Command::execTOPIC(std::string &input)
-{
-	size_t pos;
-	pos = input.find(" ");
-	std::string target = input.substr(0, pos);
-	if (target.empty())
-		throw NeedMoreParamsException("Need more params");
-	input.erase(0, pos + 1);
-	Channel *c = server.searchChannel(target);
-	if (!c)
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
-		throw NoSuchChannelException("No such channel");
-	}
-	if (!c->isClientInChannel(client.getNickname()))
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_NOTONCHANNEL, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), c->getName().c_str());
-		throw NotOnChannelException("Not on channel");
-	}
-	if (!c->isOper(client.getNickname()) && c->getModesTopic())
-	{
-		Message msg;
-		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());
-		throw NoPrivilegesException("No privileges");
-	}
-	if (input.size() > TOPICLEN)
-		input = input.substr(0, TOPICLEN);
-	if (input[0] == ':' && input.length() > 1)
-	{
-		input.erase(0, 1);
-		c->setTopic(input);
-		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
-	}
-	else if (input[0] == ':' && input.length() <= 1)
-	{
-		c->setTopic("");
-		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
-	}
-	else
-	{
-		Message msg;
-		msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), c->getName().c_str(), c->getTopic().c_str());
-	}
 }
 
 void Command::execQUIT(std::string &input)
