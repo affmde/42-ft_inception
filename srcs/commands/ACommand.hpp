@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:24:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:06:50 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:56:13 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 class ACommand
 {
 public:
-
 	struct AlreadyRegisteredException : public std::runtime_error {
 		AlreadyRegisteredException(const std::string &msg) : runtime_error(msg) {}
 	};
