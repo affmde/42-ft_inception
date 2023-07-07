@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:46:40 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:46:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,7 @@ private:
 	Server &server;
 
 	int getCommandId(std::string &input) const;
-	std::vector<std::string> split(std::string str, std::string del);
-	void execPART(std::string &input);
-	void execPRIVMSG(std::string &input);
-	void execTOPIC(std::string &input);
-	void execQUIT(std::string &input);
 	void execPING(std::string &input);
-	void execKICK(std::string &input);
-	void execMODE(std::string &input);
-	void execINVITE(std::string &input);
-	void execNOTICE(std::string &input);
 };
 
 #include "Server.hpp"
