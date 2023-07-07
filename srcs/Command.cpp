@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:46:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:51:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include <map>
 
 #include "Command.hpp"
 #include "Parser.hpp"
@@ -28,6 +27,7 @@
 #include "commands/NOTICE.hpp"
 #include "commands/PRIVMSG.hpp"
 #include "commands/MODE.hpp"
+#include "commands/PING.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -203,7 +203,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		}
 		case PING:
 		{
-			execPING(input);
+			Ping p(server, client, input, *clients);
+			p.execPING();
 			break;
 		}
 		default:
@@ -240,13 +241,4 @@ int Command::getCommandId(std::string &input) const
 	else if (input == "PING")
 		return PING;
 	return (-1);
-}
-
-void Command::execPING(std::string &input)
-{
-	if (input.empty())
-		return ;
-	Message msg;
-	msg.reply(NULL, client, "0", SERVER, "PONG :%s %s", "IRCSERVER", input.c_str());
-	server.logMessage(1, "PONG: " + input, "");
 }
