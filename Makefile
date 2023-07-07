@@ -16,7 +16,7 @@ SRCS_DIR = srcs/
 COMMANDS_DIR = srcs/commands/
 
 SRCS := main.cpp Client.cpp Server.cpp Parser.cpp Message.cpp Time.cpp Channel.cpp Command.cpp
-COMMANDS := ACommand.cpp NICK.cpp
+COMMANDS := ACommand.cpp NICK.cpp JOIN.cpp
 ALL_SRCS = $(SRCS) $(COMMANDS)
 
 

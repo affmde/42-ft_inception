@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 15:13:57 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:46:40 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ private:
 
 	int getCommandId(std::string &input) const;
 	std::vector<std::string> split(std::string str, std::string del);
-	void execNICK(std::string &input, std::vector<Client*> &clients);
-	void execJOIN(std::string &input);
 	void execPART(std::string &input);
 	void execPRIVMSG(std::string &input);
 	void execTOPIC(std::string &input);
