@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:52:13 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:53:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			try {
 				Part p(server, client, input, *clients);
 				p.execPART();
-			} catch (NeedMoreParamsException &e) {
+			} catch (ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, "PART: Need more params.", client.getNickname());
 			}
 			break;
