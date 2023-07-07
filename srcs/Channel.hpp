@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 09:40:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:33:48 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ public:
 	struct AlreadyUserException : public std::runtime_error {
 		AlreadyUserException(const std::string &msg) : runtime_error(msg) {}
 	};
-	
+
 	Channel(Server &server);
 	Channel(const Channel &other);
 	~Channel();
@@ -100,7 +100,6 @@ private:
 	std::vector<Client*> operators;
 	std::vector<Client*> bannedList;
 	std::vector<Client*> invitedClients;
-	//CHECK BEST WAY TO ADD THE MODES!!!!!
 	std::string topic;
 	std::string pass;
 	Server &server;

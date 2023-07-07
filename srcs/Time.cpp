@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:18:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/03 16:27:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:32:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ctime>
-#include <iostream> // JUST FOR DEBUGGING! DELETE THIS!!!!!
 
 #include "Time.hpp"
 #include "Utils.hpp"
@@ -46,7 +45,7 @@ void Time::getDate(Date &date)
 {
 	std::time_t time = std::time(0);
 	std::tm *now = std::localtime(&time);
-	
+
 	date.timestamp = time;
 	date.year = now->tm_year + 1900;
 	date.month = now->tm_mon + 1;

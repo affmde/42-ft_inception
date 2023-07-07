@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 08:19:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:31:45 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ Command &Command::operator=(const Command &other)
 
 void Command::checkCommands(std::vector<Client*> *clients)
 {
-	std::cout << input << std::endl;
 	size_t pos;
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
@@ -243,7 +242,6 @@ void Command::execNICK(std::string &input, std::vector<Client*> &clients)
 		nickToCompare = (*(*it)).getNickname();
 		for (int i = 0; i < nickToCompare.length(); i++)
 			nickToCompare[i] = std::tolower(nickToCompare[i]);
-		std::cout << nickToCompare << " - " << clientNick << std::endl;
 		if (nickToCompare == clientNick)
 		{
 			Message msg;
@@ -658,7 +656,6 @@ void Command::execMODE(std::string &input)
 			}
 			while (modeList[i])
 			{
-				std::cout << "letter: " << modeList[i] << std::endl;
 				if (modeList[i] == '+')
 				{
 					pos = true;
@@ -820,8 +817,6 @@ void Command::execPRIVMSG(std::string &input)
 	std::vector<std::string> info = split(input, " ");
 	if (info.size() < 2)
 		return;
-	for(std::vector<std::string>::iterator it = info.begin(); it != info.end(); ++it)
-		std::cout << "it: " << *it << std::endl;
 	std::vector<std::string> targets = split(info[0], ",");
 	if (!info[1].empty() && info[1][0] == ':')
 		info[1].erase(0, 1);
@@ -845,7 +840,7 @@ void Command::execPRIVMSG(std::string &input)
 				msg.reply(NULL, client, ERR_CANNOTSENDTOCHAN_CODE, SERVER, ERR_CANNOTSENDTOCHAN, client.getNickname().c_str(), (*it).c_str());
 				throw NoSuchChannelException("No such channel " + *it);
 			}
-			c->messageAllOthers(&client, "PRIVMSG %s %s", (*it).c_str(), message.c_str());
+			c->messageAllOthers(&client, "PRIVMSG %s :%s", (*it).c_str(), message.c_str());
 		}
 		else//target is a Client
 		{

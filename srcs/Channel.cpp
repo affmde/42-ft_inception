@@ -6,11 +6,10 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/05 15:28:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:34:07 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream> //JUST NEEDED FOR DEBUG! DELETE THIS!!!
 #include <stdarg.h>
 
 #include "Channel.hpp"
@@ -25,8 +24,8 @@ Channel::Channel(Server &server) :server(server)
 	modes.limitRequired = false;
 	modes.passRequired = false;
 	modes.op = 0;
-	
-	
+
+
 }
 Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
 Channel::~Channel() {}
@@ -116,7 +115,7 @@ void Channel::eraseClient(std::string nick, std::string reason, int code)
 {
 	std::vector<Client*>::iterator it = findClientByNick(nick);
 	if (it == clients.end()) return;
-	if (code == 0)
+	if (code == 0 && (*it)->getActiveStatus() == LOGGED)
 	{
 		messageAll(*it, "%s %s :%s", "PART", getName().c_str(), reason.c_str());
 		server.logMessage(1, "left channel " + getName(), nick);
@@ -156,7 +155,7 @@ void Channel::messageAll(Client *sender, std::string format, ...)
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		//INFORM EVERY SINGLE CLIENT!!!
+		//INFORM EVERY SINGLE CLIENT!
 		if ((*it)->getActiveStatus() == LOGGED)
 			msg.reply(sender, **it, "0", CLIENT, format);
 	}
@@ -172,7 +171,7 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 	Message msg;
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!!!
+		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!
 		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
 			msg.reply(client, **it, "0", CLIENT, format);
 	}
