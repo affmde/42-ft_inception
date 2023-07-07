@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/06 17:10:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 08:19:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -857,7 +857,7 @@ void Command::execPRIVMSG(std::string &input)
 				throw InvalidNickException("Nick doesn't exist: " + *it);
 			}
 			Message msg;
-			msg.reply(&client, *c, "0", CLIENT, "NOTICE %s :%s", (*it).c_str(), message.c_str());
+			msg.reply(&client, *c, "0", CLIENT, "PRIVMSG %s :%s", (*it).c_str(), message.c_str());
 		}
 		server.logMessage(1, "PRIVMSG " + *it + ": " + message, client.getNickname());
 	}
