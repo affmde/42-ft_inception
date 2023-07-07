@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:08:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:24:04 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "commands/PART.hpp"
 #include "commands/TOPIC.hpp"
 #include "commands/KICK.hpp"
+#include "commands/QUIT.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -134,7 +135,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		}
 		case QUIT:
 		{
-			execQUIT(input);
+			Quit q(server, client, input, *clients);
+			q.execQUIT();
 			break;
 		}
 		case JOIN:
@@ -230,27 +232,6 @@ int Command::getCommandId(std::string &input) const
 	else if (input == "PING")
 		return PING;
 	return (-1);
-}
-
-void Command::execQUIT(std::string &input)
-{
-	if (input.empty()) return;
-	if (input[0] == ':')
-		input.erase(0, 1);
-	Message msg;
-	msg.reply(NULL, client, "0", SERVER, "ERROR: %s", input.c_str());
-	for(std::vector<Channel*>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); ++it)
-	{
-		if ((*it)->isClientInChannel(client.getNickname()))
-		{
-			(*it)->messageAllOthers(&client,"QUIT :Quit: %s", input.c_str());
-			client.removeChannel((*it)->getName());
-		}
-	}
-	//TODO: HANDLE QUIT ON DISCONNECTION WITHOUT QUIT COMMAND (EX: CNTL_C). MAYBE SHOULD USE PING FOR THIS?
-	client.setConnected(false);
-	client.setActiveStatus(NOT_CONNECTED);
-	server.logMessage(1, "disconnected (" + input + ")", client.getNickname());
 }
 
 void Command::execPING(std::string &input)
