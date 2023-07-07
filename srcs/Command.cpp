@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:29:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:34:49 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "commands/KICK.hpp"
 #include "commands/QUIT.hpp"
 #include "commands/INVITE.hpp"
+#include "commands/NOTICE.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -185,12 +186,13 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case NOTICE:
 		{
 			try {
-				execNOTICE(input);
-			} catch(NeedMoreParamsException &e) {
+				Notice n(server, client, input, *clients);
+				n.execNOTICE();
+			} catch(ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch(NoSuchChannelException &e) {
+			} catch(ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-			} catch(InvalidNickException &e) {
+			} catch(ACommand::InvalidNickException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
@@ -483,45 +485,6 @@ void Command::execPRIVMSG(std::string &input)
 			msg.reply(&client, *c, "0", CLIENT, "PRIVMSG %s :%s", (*it).c_str(), message.c_str());
 		}
 		server.logMessage(1, "PRIVMSG " + *it + ": " + message, client.getNickname());
-	}
-}
-
-void Command::execNOTICE(std::string &input)
-{
-	size_t pos = input.find(" ");
-	if (pos == std::string::npos)
-		throw NeedMoreParamsException("Need more params");
-	std::vector<std::string> info = split(input, " ");
-	if (info.size() < 2)
-		return;
-	std::vector<std::string> targets = split(info[0], ",");
-	if (!info[1].empty() && info[1][0] == ':')
-		info[1].erase(0, 1);
-	std::string message;
-	for(int i = 1; i < info.size(); i++)
-	{
-		message += info[i];
-		if (i - 1 < info.size())
-			message += " ";
-	}
-	for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
-	{
-		if ((*it)[0] == '#') //target is chennel
-		{
-			Channel *c = server.searchChannel(*it);
-			if (!c)
-				throw NoSuchChannelException("No such channel " + *it);
-			c->messageAllOthers(&client, "NOTICE %s :%s", (*it).c_str(), message.c_str());
-		}
-		else //target is a Client
-		{
-			Client *c = server.findClientByNick(*it);
-			if (!c)
-				throw InvalidNickException("Nick doesn't exist: " + *it);
-			Message msg;
-			msg.reply(&client, *c, "0", CLIENT, "NOTICE %s :%s", (*it).c_str(), message.c_str());
-		}
-		server.logMessage(1, "NOTICE: " + message, client.getNickname());
 	}
 }
 
