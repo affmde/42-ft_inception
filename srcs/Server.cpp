@@ -316,16 +316,10 @@ std::vector<Client*>::iterator Server::eraseUserByFD(int fd)
 
 void Server::checkDuplicateNick(std::string nick)
 {
-	std::string clientNick = nick;
-	for (int i = 0; i < clientNick.length(); i++)
-		clientNick[i] = std::tolower(clientNick[i]);
-	std::string nickToCompare;
+	nick = toLowercase(nick);
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		nickToCompare = (*it)->getNickname();
-		for (int i = 0; i < nickToCompare.length(); i++)
-			nickToCompare[i] = std::tolower(nickToCompare[i]);
-		if (nickToCompare == clientNick)
+		if (toLowercase((*it)->getNickname()) == nick)
 			throw DuplicateNickException("Duplicate nick");
 	}
 }

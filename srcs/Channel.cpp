@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 10:15:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:51:19 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,9 +199,10 @@ bool Channel::isOper(std::string nick)
 
 bool Channel::isClientInChannel(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return (true);
 	}
 	return (false);
@@ -214,9 +215,10 @@ int Channel::totalClients() const
 
 bool Channel::isClientBanned(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client*>::iterator it = bannedList.begin(); it != bannedList.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return (true);
 	}
 	return (false);
@@ -249,9 +251,10 @@ void Channel::addInvitedClient(Client *clientToAdd) { invitedClients.push_back(c
 
 std::vector<Client*>::iterator Channel::removeInvitedClient(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client*>::iterator it = invitedClients.begin(); it != invitedClients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return invitedClients.erase(it);
 	}
 	return invitedClients.end();
@@ -259,9 +262,10 @@ std::vector<Client*>::iterator Channel::removeInvitedClient(std::string nick)
 
 bool Channel::isClientInvited(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client*>::iterator it = invitedClients.begin(); it != invitedClients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return true;
 	}
 	return false;
