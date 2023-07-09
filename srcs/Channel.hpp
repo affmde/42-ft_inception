@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:26:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:16:01 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ public:
 	void eraseClient(std::string nick, std::string reason, int code);
 	void messageAll(Client *sender, std::string format, ...);
 	void messageAllOthers(Client * client, std::string format, ...);
-	void messageAllFromServer(std::string code, std::string format, ...);
 	void addOper(Client *client);
 	std::vector<Client*>::iterator removeOper(std::string nick);
 	bool isOper(std::string nick);
@@ -96,6 +95,7 @@ public:
 	std::vector<Client*>::iterator removeInvitedClient(std::string nick);
 	bool isClientInvited(std::string nick);
 	std::vector<Client*> getInvitedClients() const;
+	bool isEnd(std::vector<Client*>::iterator &it);
 private:
 	std::string name;
 	std::vector<Client*> clients;

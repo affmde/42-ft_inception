@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:36:33 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:41 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 09:22:31 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void Privmsg::exec()
 				msg.reply(NULL, client, ERR_CANNOTSENDTOCHAN_CODE, SERVER, ERR_CANNOTSENDTOCHAN, client.getNickname().c_str(), (*it).c_str());
 				throw NoSuchChannelException("No such channel " + *it);
 			}
-			c->messageAllOthers(&client, "PRIVMSG %s :%s", (*it).c_str(), message.c_str());
+			c->messageAllOthers(&client, "PRIVMSG %s :%s", c->getName().c_str(), message.c_str());
 		}
 		else//target is a Client
 		{
@@ -64,7 +64,7 @@ void Privmsg::exec()
 				throw InvalidNickException("Nick doesn't exist: " + *it);
 			}
 			Message msg;
-			msg.reply(&client, *c, "0", CLIENT, "PRIVMSG %s :%s", (*it).c_str(), message.c_str());
+			msg.reply(&client, *c, "0", CLIENT, "PRIVMSG %s :%s", c->getNickname().c_str(), message.c_str());
 		}
 		server.logMessage(1, "PRIVMSG " + *it + ": " + message, client.getNickname());
 	}

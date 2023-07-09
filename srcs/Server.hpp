@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/07 15:42:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 09:38:57 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ public:
 	std::string getCreationTimeAsString() const;
 	std::string getCreationTimestampAsString() const;
 	Client *findClientByNick(std::string nick);
+	std::string toLowercase(std::string nick);
 
 private:
 	static const int listenTimeout = 10;
@@ -73,7 +74,6 @@ private:
 	void eraseDisconnectedUsers();
 	void eraseEmptyChannels();
 	void handleClientMessage(Client &client);
-	void emit(int client_fd, std::string msg);
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);
 	std::vector<Client*>::iterator findClientByFD(int fd);
 	std::vector<Client*>::iterator eraseUserByFD(int fd);

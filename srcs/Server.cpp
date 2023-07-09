@@ -271,17 +271,6 @@ int Server::totalChannels() const
 	return channels.size();
 }
 
-void Server::emit(int client_fd, std::string msg)
-{
-	Message message(msg);
-	for (std::vector<Client*>::iterator it = clients.begin();
-		it != clients.end(); ++it)
-	{
-		if ((*it)->getClientFD() != sockfd && (*it)->getClientFD() != client_fd)
-			message.sendData((*it)->getClientFD());
-	}
-}
-
 std::vector<pollfd>::iterator Server::findPollfdByFD(int fd)
 {
 	for (std::vector<pollfd>::iterator it = pollfds.begin();
@@ -301,9 +290,10 @@ std::vector<Client*>::iterator Server::findClientByFD(int fd)
 Client *Server::findClientByNick(std::string nick)
 {
 	Client *c;
+	nick = toLowercase(nick);
 	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (toLowercase((*it)->getNickname()) == nick)
 			return (*it);
 	}
 	return (NULL);
@@ -347,9 +337,10 @@ std::vector<Channel*> &Server::getChannels()
 
 Channel *Server::searchChannel(std::string name)
 {
+	name = toLowercase(name);
 	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if ((*it)->getName() == name)
+		if (toLowercase((*it)->getName()) == name)
 			return (*it);
 	}
 	return (NULL);
@@ -408,4 +399,12 @@ std::string Server::getISupportAsString() const
 	std::string features = channellen + nicklen + charset + casemapping + topiclen + chantypes + kicklen;
 	features += chanlimit + chanmodes + hostlen + prefix + userlen;
 	return features;
+}
+
+std::string Server::toLowercase(std::string str)
+{
+	std::string ret = str;
+	for(int i = 0; i < ret.length(); i++)
+		ret[i] = std::tolower(ret[i]);
+	return ret;
 }

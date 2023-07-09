@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 11:34:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:15:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,19 @@ std::string Channel::getListClientsNicknames()
 	return (list);
 }
 
+bool Channel::isEnd(std::vector<Client*>::iterator &it)
+{
+	if (it == clients.end())
+		return true;
+	return false;
+}
+
 std::vector<Client*>::iterator Channel::findClientByNick(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return it;
 	}
 	return (clients.end());
@@ -129,7 +137,7 @@ void Channel::addOper(Client *client)
 {
 	for(std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
 	{
-		if ((*it)->getNickname() == client->getNickname())
+		if (server.toLowercase((*it)->getNickname()) == server.toLowercase(client->getNickname()))
 			return;
 	}
 	operators.push_back(client);
@@ -137,9 +145,10 @@ void Channel::addOper(Client *client)
 
 std::vector<Client*>::iterator Channel::removeOper(std::string nick)
 {
+	nick = server.toLowercase(nick);
 	for(std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it)
 	{
-		if ((*it)->getNickname() == nick)
+		if (server.toLowercase((*it)->getNickname()) == nick)
 			return operators.erase(it);
 	}
 	return operators.end();
@@ -172,23 +181,9 @@ void Channel::messageAllOthers(Client * client, std::string format, ...)
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		//INFORM EVERY SINGLE CLIENT EXCEPT MYSELF!
-		if ((*it)->getNickname() != client->getNickname() && (*it)->getActiveStatus() == LOGGED)
+		if (server.toLowercase((*it)->getNickname()) != server.toLowercase(client->getNickname()) \
+		&& (*it)->getActiveStatus() == LOGGED)
 			msg.reply(client, **it, "0", CLIENT, format);
-	}
-}
-
-void Channel::messageAllFromServer(std::string code, std::string format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	while (format.find("%s") != std::string::npos)
-		format.replace(format.find("%s"), 2, va_arg(args, char*));
-	va_end(args);
-	Message msg;
-	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
-	{
-		if ((*it)->getActiveStatus() == LOGGED)
-			msg.reply(NULL, **it, code, CLIENT, format);
 	}
 }
 

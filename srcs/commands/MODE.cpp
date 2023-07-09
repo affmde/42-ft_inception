@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:41:17 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:54 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:37:01 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,14 +185,20 @@ void Mode::exec()
 				}
 				else if (modeList[i] == 'o')
 				{
-					Client *clientToAdd = *c->findClientByNick(argsVector[j]);
+					std::vector<Client*>::iterator clientToAdd = c->findClientByNick(argsVector[j]);
+					if (c->isEnd(clientToAdd))
+					{
+						j++;
+						i++;
+						continue;
+					}
 					if (pos)
 					{
 						if (c->isClientInChannel(argsVector[j]) && !c->isClientBanned(argsVector[j]) && !c->isOper(argsVector[j]))
 						{
-							if (clientToAdd)
+							if (*clientToAdd)
 							{
-								c->addOper(clientToAdd);
+								c->addOper(*clientToAdd);
 								args += client.getNickname() + " ";
 							}
 							mode += "o";
@@ -200,9 +206,9 @@ void Mode::exec()
 					}
 					else
 					{
-						if (clientToAdd)
+						if (*clientToAdd)
 						{
-							c->removeOper(clientToAdd->getNickname());
+							c->removeOper((*clientToAdd)->getNickname());
 							mode += "o";
 						}
 					}

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 08:53:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:02:11 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,18 @@ void Kick::exec()
 	}
 	for(std::map<std::string, std::string>::iterator it = usersToKick.begin(); it != usersToKick.end(); ++it)
 	{
-		if (!c->isClientInChannel(it->first))
+		std::vector<Client*>::iterator kickUser = c->findClientByNick(it->first);
+		if (c->isEnd(kickUser) || !c->isClientInChannel((*kickUser)->getNickname()))
 		{
 			Message msg;
 			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), channelName.c_str());
 			server.logMessage(2, "User not in channel", client.getNickname());
 			continue;
 		}
-		Client *kickUser = *c->findClientByNick(it->first);
 		Message msg;
-		msg.reply(&client, *kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
-		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), it->first.c_str(), it->second.c_str());
-		c->eraseClient(it->first, it->second, 1);
+		msg.reply(&client, **kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), (*kickUser)->getNickname().c_str(), it->second.c_str());
+		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), (*kickUser)->getNickname().c_str(), it->second.c_str());
+		c->eraseClient((*kickUser)->getNickname(), it->second, 1);
 		client.removeChannel(c->getName());
 	}
 }
