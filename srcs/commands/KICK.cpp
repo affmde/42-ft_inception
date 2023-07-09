@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 08:53:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void Kick::exec()
 	std::vector<std::string> users = split(usersString, ",");
 	if (input[0] == ':')
 		input.erase(0, 1);
-	std::vector<std::string> comments = split(input, ",");
+	//std::vector<std::string> comments = split(input, ",");
+	std::string comment = input;
 	Channel *c = server.searchChannel(channelName);
 	if (!c)
 	{
@@ -66,15 +67,11 @@ void Kick::exec()
 
 	for (int i = 0; i < users.size(); i++)
 	{
-		if (i < comments.size())
+		if (!comment.empty())
 		{
-			std::string reason;
-			if (comments[i].size() > KICKLEN)
-				reason = comments[i].substr(0, KICKLEN);
-			else
-				reason = comments[i];
-			std::cout << "Comment: " << comments[i] << std::endl;
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], reason));
+			if (comment.size() > KICKLEN)
+				comment = comment.substr(0, KICKLEN);
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], comment));
 		}
 		else
 			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + channelName));
