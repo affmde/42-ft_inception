@@ -6,13 +6,13 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:21:27 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 15:32:55 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:50:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
 #include <string>
-#include <iostream>
+
 #include "NICK.hpp"
 #include "../Message.hpp"
 #include "../rpl_isupport.hpp"
