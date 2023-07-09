@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:36:33 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:37:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:41 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Privmsg::~Privmsg(){}
 Privmsg &Privmsg::operator=(const Privmsg &other) { return *this; }
 
-void Privmsg::execPRIVMSG()
+void Privmsg::exec()
 {
 	size_t pos = input.find(" ");
 	if (pos == std::string::npos)

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:38:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:44:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Join();
 	Join &operator=(const Join &other);
 
-	void execJOIN();
+	void exec();
 
 };
 

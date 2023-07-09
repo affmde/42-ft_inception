@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:47:30 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:48:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Ping();
 	Ping &operator=(const Ping &other);
 
-	void execPING();
+	void exec();
 };
 
 #endif

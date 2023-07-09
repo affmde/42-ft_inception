@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:01:57 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:02:29 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:38 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Kick();
 	Kick &operator=(const Kick &other);
 
-	void execKICK();
+	void exec();
 
 };
 

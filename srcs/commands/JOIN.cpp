@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:40:42 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:44:27 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Join::~Join(){}
 Join &Join::operator=(const Join &other) { return *this; }
 
-void Join::execJOIN()
+void Join::exec()
 {
 	std::vector<std::string> channels, keys;
 	size_t pos;

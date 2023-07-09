@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:32:38 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:33:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:15 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Notice::~Notice(){}
 Notice &Notice::operator=(const Notice &other) { return *this; }
 
-void Notice::execNOTICE()
+void Notice::exec()
 {
 	size_t pos = input.find(" ");
 	if (pos == std::string::npos)

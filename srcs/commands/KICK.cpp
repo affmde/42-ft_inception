@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:14:52 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Kick::~Kick(){}
 Kick &Kick::operator=(const Kick &other) { return *this; }
 
-void Kick::execKICK()
+void Kick::exec()
 {
 	if (input.empty())
 	{

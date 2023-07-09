@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:41:17 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:46:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:54 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool Mode::isStrToNumberValid(std::string num)
 	return true;
 }
 
-void Mode::execMODE()
+void Mode::exec()
 {
 	if (input.empty())
 		return ;

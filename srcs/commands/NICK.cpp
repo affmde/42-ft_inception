@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:21:27 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:17:39 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:05 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Nick::~Nick(){}
 Nick &Nick::operator=(const Nick &other) { return *this; }
 
 
-void Nick::execNICK()
+void Nick::exec()
 {
 	if (input.empty())
 		throw NeedMoreParamsException("Need more params.");

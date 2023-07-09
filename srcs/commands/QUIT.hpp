@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:20:48 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:21:19 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Quit();
 	Quit &operator=(const Quit &other);
 
-	void execQUIT();
+	void exec();
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:25:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 11:33:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:26:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 #include <vector>
+//**Just to work home - DELETE LATER!!!!****
+#include <stdexcept>
 
 #include "Client.hpp"
 #include "Time.hpp"

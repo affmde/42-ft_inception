@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:55:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:57:34 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:31:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Topic::~Topic(){}
 Topic &Topic::operator=(const Topic &other) { return *this; }
 
-void Topic::execTOPIC()
+void Topic::exec()
 {
 	size_t pos;
 	pos = input.find(" ");

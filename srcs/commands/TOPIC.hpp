@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:55:00 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:55:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:31:08 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Topic();
 	Topic &operator=(const Topic &other);
 
-	void execTOPIC();
+	void exec();
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:26:44 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:27:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:16 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Invite::~Invite(){}
 Invite &Invite::operator=(const Invite &other) { return *this; }
 
-void Invite::execINVITE()
+void Invite::exec()
 {
 	if (input.empty())
 		throw NeedMoreParamsException("Need more params");

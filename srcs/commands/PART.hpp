@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:48:15 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:48:45 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:28 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Part();
 	Part &operator=(const Part &other);
 
-	void execPART();
+	void exec();
 
 };
 

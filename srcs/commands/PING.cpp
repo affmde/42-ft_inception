@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:48:22 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:49:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:32 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Ping::~Ping(){}
 Ping &Ping::operator=(const Ping &other) { return *this; }
 
-void Ping::execPING()
+void Ping::exec()
 {
 	if (input.empty())
 		return ;

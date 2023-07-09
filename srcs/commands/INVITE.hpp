@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:25:58 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:26:39 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:29:03 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Invite();
 	Invite &operator=(const Invite &other);
 
-	void execINVITE();
+	void exec();
 
 };
 

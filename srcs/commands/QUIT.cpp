@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:21:26 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:23:08 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:53 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Quit::~Quit(){}
 Quit &Quit::operator=(const Quit &other) { return *this; }
 
-void Quit::execQUIT()
+void Quit::exec()
 {
 	if (input.empty()) return;
 	if (input[0] == ':')

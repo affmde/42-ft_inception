@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:48:56 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 16:50:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:24 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Part::~Part(){}
 Part &Part::operator=(const Part &other) { return *this; }
 
-void Part::execPART()
+void Part::exec()
 {
 	std::vector<std::string> channels;
 	size_t pos = input.find(" ");

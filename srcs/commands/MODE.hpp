@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:40:40 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:44:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:00 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Mode();
 	Mode &operator=(const Mode &other);
 
-	void execMODE();
+	void exec();
 
 private:
 	bool isStrToNumberValid(std::string num);

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:19:29 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 15:59:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:30:10 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
 	~Nick();
 	Nick &operator=(const Nick &other);
 
-	void execNICK();
+	void exec();
 
 };
 

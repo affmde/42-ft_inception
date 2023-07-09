@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:24:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:56:13 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:28:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ public:
 
 	ACommand(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList);
 	ACommand(const ACommand &other);
-	~ACommand();
+	virtual ~ACommand();
 	ACommand &operator=(const ACommand &other);
 
 protected:
@@ -67,6 +67,7 @@ protected:
 	std::vector<Client*> &clientsList;
 
 	std::vector<std::string> split(std::string str, std::string del);
+	virtual void exec() = 0;
 
 };
 

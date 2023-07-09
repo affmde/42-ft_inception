@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:51:03 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:31:52 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try{
 				Nick n(server, client, input, *clients);
-				n.execNICK();
+				n.exec();
 			} catch(ACommand::InvalidNickException &e) {
 				std::cerr << client.getNickname() << " cant update NICK." << std::endl;
 			} catch(ACommand::DuplicateNickException &e) {
@@ -78,7 +78,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Kick k(server, client, input, *clients);
-				k.execKICK();
+				k.exec();
 			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (ACommand::NeedMoreParamsException &e) {
@@ -94,7 +94,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Invite i(server, client, input, *clients);
-				i.execINVITE();
+				i.exec();
 			} catch (ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (ACommand::NoSuchChannelException &e) {
@@ -112,7 +112,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Topic t(server, client, input, *clients);
-				t.execTOPIC();
+				t.exec();
 				server.logMessage(1, "Topic changed", client.getNickname());
 			} catch (ACommand::NeedMoreParamsException &e) {
 				Message msg;
@@ -131,7 +131,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Mode m(server, client, input, *clients);
-				m.execMODE();
+				m.exec();
 			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (ACommand::NoPrivilegesException &e) {
@@ -142,13 +142,13 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case QUIT:
 		{
 			Quit q(server, client, input, *clients);
-			q.execQUIT();
+			q.exec();
 			break;
 		}
 		case JOIN:
 			try {
 				Join j(server, client, input, *clients);
-				j.execJOIN();
+				j.exec();
 			} catch(ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, "JOIN: Need more params", client.getNickname());
 				Message msg;
@@ -167,7 +167,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Part p(server, client, input, *clients);
-				p.execPART();
+				p.exec();
 			} catch (ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, "PART: Need more params.", client.getNickname());
 			}
@@ -177,7 +177,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Privmsg p(server, client, input, *clients);
-				p.execPRIVMSG();
+				p.exec();
 			} catch (ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch (ACommand::InvalidNickException &e) {
@@ -191,7 +191,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		{
 			try {
 				Notice n(server, client, input, *clients);
-				n.execNOTICE();
+				n.exec();
 			} catch(ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
 			} catch(ACommand::NoSuchChannelException &e) {
@@ -204,7 +204,7 @@ void Command::checkCommands(std::vector<Client*> *clients)
 		case PING:
 		{
 			Ping p(server, client, input, *clients);
-			p.execPING();
+			p.exec();
 			break;
 		}
 		default:
