@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:48:56 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:24 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:45:57 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,42 +42,32 @@ void Part::exec()
 		channels.push_back(channels_list);
 	if (channels.size() < 1)
 		throw NeedMoreParamsException("Need more params");
-	std::vector<std::string> reasons;
+	std::string reasons;
 	if (!input.empty() && input[0] == ':')
 		input.erase(0, 1);
-	while ((pos = input.find(",")) != std::string::npos)
-	{
-		tmp = input.substr(0, pos);
-		reasons.push_back(tmp);
-		input.erase(0, pos + 1);
-	}
-	if (!input.empty())
-		reasons.push_back(input);
-	for(int i = 0; i < channels.size(); i++)
-	{
-		if(i < reasons.size())
-			list.insert(std::pair<std::string, std::string>(channels[i], reasons[i]));
-		else
-			list.insert(std::pair<std::string, std::string>(channels[i], ""));
-	}
-	for(std::map<std::string, std::string>::iterator it = list.begin(); it != list.end(); ++it)
+	pos = input.find(" ");
+	if (pos == std::string::npos)
+		reasons = "";
+	else
+		reasons = input;
+	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
 		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
 		Message msg;
-		Channel *c = server.searchChannel(it->first);
+		Channel *c = server.searchChannel(*it);
 		if (!c)
 		{
 			Message msg;
-			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).first.c_str());
+			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).c_str());
 			continue;
 		}
 		if (!c->isClientInChannel(client.getNickname()))
 		{
 			Message msg;
-			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).first.c_str());
+			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).c_str());
 			continue;
 		}
-		c->eraseClient(client.getNickname(), it->second, 0);
+		c->eraseClient(client.getNickname(), reasons, 0);
 		client.removeChannel(c->getName());
 	}
 }
