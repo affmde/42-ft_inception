@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/09 09:38:57 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:31:31 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ public:
 	std::string getCreationTimestampAsString() const;
 	Client *findClientByNick(std::string nick);
 	std::string toLowercase(std::string nick);
+	bool isDuplicate(std::string nick);
 
 private:
 	static const int listenTimeout = 10;

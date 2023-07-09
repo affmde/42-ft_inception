@@ -395,6 +395,17 @@ std::string Server::getISupportAsString() const
 	return features;
 }
 
+bool Server::isDuplicate(std::string nick)
+{
+	nick = toLowercase(nick);
+	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (toLowercase((*it)->getNickname()) == nick)
+			return true;
+	}
+	return false;
+}
+
 std::string Server::toLowercase(std::string str)
 {
 	std::string ret = str;

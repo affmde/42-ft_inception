@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:19:29 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:10 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:15:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ public:
 	Nick &operator=(const Nick &other);
 
 	void exec();
+	
+private:
+	bool isNickValid();
+	void informChannels();
 
 };
 

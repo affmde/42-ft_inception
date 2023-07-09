@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/06 16:20:56 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:08:58 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 #define ERR_NOSUCHCHANNEL_CODE "403"
 #define ERR_CANNOTSENDTOCHAN_CODE "404"
 #define ERR_NONICKNAMEGIVEN_CODE "431"
-#define ERR_NICKNAMEINUSE_CODE "432"
-#define ERR_ERRONEUSNICKNAME_CODE "433"
+#define ERR_ERRONEUSNICKNAME_CODE "432"
+#define ERR_NICKNAMEINUSE_CODE "433"
 #define ERR_USERNOTINCHANNEL_CODE "441"
 #define ERR_NOTONCHANNEL_CODE "442"
 #define ERR_USERONCHANNEL_CODE "443"
@@ -65,8 +65,8 @@
 #define ERR_NOSUCHCHANNEL "%s %s :No such channel"						//403
 #define ERR_CANNOTSENDTOCHAN "%s %s :Cannot send to channel"			//404
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
-#define ERR_NICKNAMEINUSE "%s %s :Nickname is already in use"			//432
-#define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//433
+#define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//432
+#define ERR_NICKNAMEINUSE "%s %s :Nickname is already in use"			//433
 #define ERR_USERNOTINCHANNEL "%s %s %s :They aren't on channel"			//441
 #define ERR_NOTONCHANNEL "%s %s :You're not on that channel"			//442
 #define ERR_USERONCHANNEL "%s %s %s :is already on channel"				//443
