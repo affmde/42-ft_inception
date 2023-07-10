@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 12:17:02 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:40:46 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include "Command.hpp"
 #include "Parser.hpp"
-#include "Message.hpp"
 #include "Channel.hpp"
 #include "rpl_isupport.hpp"
 #include "commands/NICK.hpp"
@@ -41,6 +40,7 @@ Command &Command::operator=(const Command &other)
 	if (this == &other) return *this;
 	input = other.input;
 	client = other.client;
+	msg = other.msg;
 	return (*this);
 }
 
@@ -116,7 +116,6 @@ void Command::checkCommands(std::vector<Client*> *clients)
 				t.exec();
 				server.logMessage(1, "Topic changed", client.getNickname());
 			} catch (ACommand::NeedMoreParamsException &e) {
-				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "TOPIC");
 				server.logMessage(2, "TOPIC: need more params", client.getNickname());
 			} catch (ACommand::NoSuchChannelException &e) {
@@ -152,7 +151,6 @@ void Command::checkCommands(std::vector<Client*> *clients)
 				j.exec();
 			} catch(ACommand::NeedMoreParamsException &e) {
 				server.logMessage(2, "JOIN: Need more params", client.getNickname());
-				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
 			} catch(ACommand::NoSuchChannelException &e) {
 				server.logMessage(2, "JOIN: No such channel", client.getNickname());

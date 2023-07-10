@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 12:04:16 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:38:50 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "Client.hpp"
+#include "Message.hpp"
 
 #define PASS 0
 #define NICK 1
@@ -55,6 +56,7 @@ private:
 	std::string &input;
 	Client &client;
 	Server &server;
+	Message msg;
 
 	int getCommandId(std::string &input) const;
 };

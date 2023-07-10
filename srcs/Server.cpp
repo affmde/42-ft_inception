@@ -7,7 +7,6 @@
 #include <netdb.h>
 
 #include "Server.hpp"
-#include "Message.hpp"
 #include "Parser.hpp"
 #include "Command.hpp"
 #include "Utils.hpp"
@@ -168,12 +167,10 @@ void Server::handleClientMessage(Client &client)
 				parser.parsePass(client.getBuffer(), pass);
 				client.setActiveStatus(PASS_ACCEPTED);
 			} catch (Parser::NoPassException &e){
-				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "PASS");
 				client.setConnected(false);
 				logMessage(2, e.what(), client.getNickname());
 			} catch (Parser::WrongPassException &e){
-				Message msg;
 				msg.reply(NULL, client, ERR_PASSWDMISMATCH_CODE, SERVER, ERR_PASSWDMISMATCH, "*");
 				client.setConnected(false);
 				logMessage(2, e.what(), client.getNickname());
@@ -191,7 +188,6 @@ void Server::handleClientMessage(Client &client)
 				parser.parseNick(client.getBuffer(), nick);
 				if (nick.empty())
 				{
-					Message msg;
 					msg.reply(NULL, client, ERR_NONICKNAMEGIVEN_CODE, SERVER, ERR_NONICKNAMEGIVEN);
 					logMessage(2, "Empty nickname", client.getNickname());
 					continue ;
@@ -201,16 +197,13 @@ void Server::handleClientMessage(Client &client)
 				if (!client.getUsername().empty())
 					client.setActiveStatus(REGISTERED);
 			} catch (Parser::NoNickException &e){
-				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "NICK");
 				logMessage(2, e.what(), client.getNickname());
 			} catch (DuplicateNickException &e){
-				Message msg;
 				msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), nick.c_str());
 				logMessage(2, e.what(), client.getNickname());
 				continue;
 			} catch (Parser::InvalidNickException &e){
-				Message msg;
 				msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, "*", nick.c_str());
 				logMessage(2, e.what(), client.getNickname());
 				continue;
@@ -228,7 +221,6 @@ void Server::handleClientMessage(Client &client)
 				if (!client.getNickname().empty())
 					client.setActiveStatus(REGISTERED);
 			} catch (Parser::EmptyUserException &e) {
-				Message msg;
 				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, "*", "USER");
 				logMessage(2, e.what(), client.getNickname());
 			}
@@ -246,14 +238,12 @@ void Server::handleClientMessage(Client &client)
 					client.resetBuffer();
 				}
 			} catch(Command::AlreadyRegisteredException &e) {
-				Message msg;
 				msg.reply(NULL, client, ERR_ALREADYREGISTERED_CODE, SERVER, ERR_ALREADYREGISTERED, client.getNickname().c_str());
 				logMessage(2, e.what(), client.getNickname());
 			}
 		}
 		if (client.getActiveStatus() == REGISTERED)
 		{
-			Message msg;
 			logMessage(1, "Registered successfuly", client.getNickname());
 			msg.reply(NULL, client, RPL_WELCOME_CODE, SERVER, RPL_WELCOME, client.getNickname().c_str(), client.getNickname().c_str());
 			msg.reply(NULL, client, RPL_YOURHOST_CODE, SERVER, RPL_YOURHOST, client.getNickname().c_str());

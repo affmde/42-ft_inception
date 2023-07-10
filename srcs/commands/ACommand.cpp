@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:28:11 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:31:12 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:40:19 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ ACommand::ACommand(const ACommand &other) :
 server(other.server),
 client(other.client),
 input(other.input),
-clientsList(other.clientsList),
-msg(other.msg)
-{}
+clientsList(other.clientsList)
+{ *this = other; }
 
 ACommand::~ACommand(){}
 

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/10 11:54:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:42:17 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include "Client.hpp"
 #include "Time.hpp"
 #include "Channel.hpp"
+#include "Message.hpp"
 
 #define COLOUR_GREEN "\033[32m"
 #define COLOUR_CYAN "\033[36m"
@@ -74,6 +75,7 @@ private:
 	std::vector<Client*> clients;
 	std::vector<Channel*> channels;
 	Time creationTime;
+	Message msg;
 
 	void registerNewUser();
 	void eraseDisconnectedUsers();
