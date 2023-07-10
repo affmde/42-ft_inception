@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:21:26 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:35:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:17:25 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void Quit::exec()
 			client.removeChannel((*it)->getName());
 		}
 	}
-	//TODO: HANDLE QUIT ON DISCONNECTION WITHOUT QUIT COMMAND (EX: CNTL_C). MAYBE SHOULD USE PING FOR THIS?
 	client.setConnected(false);
 	client.setActiveStatus(NOT_CONNECTED);
 	server.logMessage(1, "disconnected (" + input + ")", client.getNickname());

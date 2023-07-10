@@ -255,6 +255,7 @@ void Server::handleClientMessage(Client &client)
 			client.setActiveStatus(LOGGED);
 			Motd m(*this, client, *it, clients);
 			m.exec();
+			client.resetBuffer();
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:40:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:13:07 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ Command &Command::operator=(const Command &other)
 
 void Command::checkCommands(std::vector<Client*> *clients)
 {
-	size_t pos;
-	pos = input.find(" ");
-	std::string command = input.substr(0, pos);
-	int commandId = getCommandId(command);
-	input.erase(0, pos + 1);;
 	if (input[input.length() - 1] == '\n')
 		input.erase(input.length() - 1, 1);
 	if (input[input.length() - 1] == '\r')
 		input.erase(input.length() - 1, 1);
+	size_t pos;
+	pos = input.find(" ");
+	std::string command = input.substr(0, pos);
+	int commandId = getCommandId(command);
+	std::cout << "command: " << command << std::endl;
+	std::cout << "id: " << commandId << std::endl;
+	input.erase(0, pos + 1);;
 	switch (commandId)
 	{
 		case PASS:
@@ -245,7 +247,7 @@ int Command::getCommandId(std::string &input) const
 		return NOTICE;
 	else if (input == "PING")
 		return PING;
-	else if (input == "motd\r\n")
+	else if (input == "motd")
 		return MOTD;
 	return (-1);
 }
