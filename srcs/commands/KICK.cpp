@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 10:02:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:33:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "KICK.hpp"
 #include "../rpl_isupport.hpp"
-#include "../Message.hpp"
 
 Kick::Kick(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -29,7 +28,6 @@ void Kick::exec()
 {
 	if (input.empty())
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "KICK");
 		throw NeedMoreParamsException ("KICK: Need more params");
 	}
@@ -47,19 +45,16 @@ void Kick::exec()
 	Channel *c = server.searchChannel(channelName);
 	if (!c)
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channelName.c_str());
 		throw NoSuchChannelException("No such channel " + channelName);
 	}
 	if (!c->isOper(client.getNickname()))
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), channelName.c_str());
 		throw NoPrivilegesException("No privileges: Not oper.");
 	}
 	if (!c->isClientInChannel(client.getNickname()))
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), channelName.c_str());
 		throw NotOnChannelException("Not on channel");
 	}
@@ -81,12 +76,10 @@ void Kick::exec()
 		std::vector<Client*>::iterator kickUser = c->findClientByNick(it->first);
 		if (c->isEnd(kickUser) || !c->isClientInChannel((*kickUser)->getNickname()))
 		{
-			Message msg;
 			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), channelName.c_str());
 			server.logMessage(2, "User not in channel", client.getNickname());
 			continue;
 		}
-		Message msg;
 		msg.reply(&client, **kickUser, "0", CLIENT, "KICK %s %s :%s", c->getName().c_str(), (*kickUser)->getNickname().c_str(), it->second.c_str());
 		c->messageAll(&client, "KICK %s %s :%s", c->getName().c_str(), (*kickUser)->getNickname().c_str(), it->second.c_str());
 		c->eraseClient((*kickUser)->getNickname(), it->second, 1);

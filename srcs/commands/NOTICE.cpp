@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:32:38 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:34:22 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NOTICE.hpp"
-#include "../Message.hpp"
 
 Notice::Notice(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -53,7 +52,6 @@ void Notice::exec()
 			Client *c = server.findClientByNick(*it);
 			if (!c)
 				throw InvalidNickException("Nick doesn't exist: " + *it);
-			Message msg;
 			msg.reply(&client, *c, "0", CLIENT, "NOTICE %s :%s", (*it).c_str(), message.c_str());
 		}
 		server.logMessage(1, "NOTICE: " + message, client.getNickname());

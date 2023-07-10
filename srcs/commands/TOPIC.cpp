@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:55:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:31:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:35:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "TOPIC.hpp"
-#include "../Message.hpp"
 #include "../rpl_isupport.hpp"
 
 Topic::Topic(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
@@ -33,19 +32,16 @@ void Topic::exec()
 	Channel *c = server.searchChannel(target);
 	if (!c)
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
 		throw NoSuchChannelException("No such channel");
 	}
 	if (!c->isClientInChannel(client.getNickname()))
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NOTONCHANNEL, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), c->getName().c_str());
 		throw NotOnChannelException("Not on channel");
 	}
 	if (!c->isOper(client.getNickname()) && c->getModesTopic())
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), c->getName().c_str());
 		throw NoPrivilegesException("No privileges");
 	}
@@ -63,8 +59,5 @@ void Topic::exec()
 		c->messageAll(&client, "TOPIC %s :%s", c->getName().c_str(), c->getTopic().c_str());
 	}
 	else
-	{
-		Message msg;
 		msg.reply(NULL, client, RPL_TOPIC_CODE, SERVER, RPL_TOPIC, client.getNickname().c_str(), c->getName().c_str(), c->getTopic().c_str());
-	}
 }

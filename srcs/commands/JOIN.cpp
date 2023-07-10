@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:40:42 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:33 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:32:43 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "JOIN.hpp"
-#include "../Message.hpp"
 #include "../Parser.hpp"
 
 Join::Join(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
@@ -55,7 +54,7 @@ void Join::exec()
 		if (parser.parseChannelName(channels[i]) == -1)
 		{
 			server.logMessage(2, "Bad channel name", client.getNickname());
-			Message msg;
+
 			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channels[i].c_str());
 			throw NoSuchChannelException("No such channel");
 		}
@@ -67,7 +66,6 @@ void Join::exec()
 				channel->addOper(&client);
 			} catch (Server::ChannelLenException &e) {
 				server.logMessage(2, e.what(), client.getNickname());
-				Message msg;
 				msg.reply(NULL, client, "0", SERVER, "ERROR Channel name is too long");
 				continue;
 			}
@@ -76,19 +74,16 @@ void Join::exec()
 		{
 			if (channel->getModesInvite() && !channel->isClientInvited(client.getNickname()))
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_INVITEONLYCHAN_CODE, SERVER, ERR_INVITEONLYCHAN, client.getNickname().c_str(), channels[i].c_str());
 				throw InviteOnlyException("Invite only channel");
 			}
 			if (channel->getModesLimitRequired() && channel->totalClients() >= channel->getModesLimit())
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_CHANNELISFULL_CODE, SERVER, ERR_CHANNELISFULL, client.getNickname().c_str(), channels[i].c_str());
 				throw ChannelFullException("Channel " + channels[i] + " is full");
 			}
 			if (channel->getModesPassRequired() && keys[i] != channel->getPass())
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_BADCHANNELKEY_CODE, SERVER, ERR_BADCHANNELKEY, client.getNickname().c_str(), channel->getName().c_str());
 				throw BadChannelKeyException("Invalid key to join channel " + channel->getName());
 			}
@@ -98,7 +93,6 @@ void Join::exec()
 		} catch (Channel::AlreadyUserException &e) {
 			break ;
 		}
-		Message msg;
 		channel->messageAll(&client, "%s %s", "JOIN", channel->getName().c_str());
 		if (channel->getTopic().empty())
 			msg.reply(NULL, client, RPL_NOTOPIC_CODE, SERVER, RPL_NOTOPIC, client.getNickname().c_str(), channel->getName().c_str());

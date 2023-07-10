@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:21:27 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 15:50:03 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:34:07 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include <string>
 
 #include "NICK.hpp"
-#include "../Message.hpp"
 #include "../rpl_isupport.hpp"
 
 Nick::Nick(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
@@ -29,7 +28,6 @@ bool Nick::isNickValid()
 {
 	if (std::isdigit(input[0]) || input[0] == '#' || input[0] == ' ' || input[0] == ':')
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_ERRONEUSNICKNAME_CODE, SERVER, ERR_ERRONEUSNICKNAME, client.getNickname().c_str(), input.c_str());
 		return false;
 	}
@@ -55,7 +53,6 @@ void Nick::exec()
 	std::string clientNick = server.toLowercase(input);
 	if (server.isDuplicate(input))
 	{
-		Message msg;
 		msg.reply(NULL, client, ERR_NICKNAMEINUSE_CODE, SERVER, ERR_NICKNAMEINUSE, client.getNickname().c_str(), input.c_str());
 		throw DuplicateNickException("Duplicate nick");
 	}
@@ -63,7 +60,6 @@ void Nick::exec()
 		throw InvalidNickException("Invalid Nick");
 	if (input.size() > NICKLEN)
 		input = input.substr(0, NICKLEN);
-	Message msg;
 	msg.reply(&client, client, "0", CLIENT, "NICK %s", input.c_str());
 	informChannels();
 	client.setNickname(input);

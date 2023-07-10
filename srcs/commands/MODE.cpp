@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:41:17 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 14:06:38 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:33:27 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #include "MODE.hpp"
 #include "../rpl_isupport.hpp"
-#include "../Message.hpp"
 
 Mode::Mode(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -56,14 +55,12 @@ void Mode::exec()
 		Channel *c = server.searchChannel(target);
 		if (!c)
 		{
-			Message msg;
 			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
 			throw NoSuchChannelException("No such channel");
 		}
 		std::string modes; //GET THE MODES STRING HERE!
 		if (modesString.empty())
 		{
-			Message msg;
 			modes = modes = c->getChannelModes();
 			msg.reply(NULL, client, RPL_CHANNELMODEIS_CODE, SERVER, RPL_CHANNELMODEIS, client.getNickname().c_str(), target.c_str(), modes.c_str());
 			msg.reply(NULL, client, RPL_CREATIONTIME_CODE, SERVER, RPL_CREATIONTIME, client.getNickname().c_str(), target.c_str(), c->getCreationTimestampAsString().c_str());
@@ -73,7 +70,6 @@ void Mode::exec()
 		{
 			if (!c->isOper(client.getNickname()))
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
 				throw NoPrivilegesException("No privileges on channel " + target);
 			}

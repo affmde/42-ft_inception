@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:24:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:28:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:12:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 #include "../Server.hpp"
 #include "../Client.hpp"
+#include "../Message.hpp"
 
 class ACommand
 {
@@ -68,6 +69,7 @@ protected:
 
 	std::vector<std::string> split(std::string str, std::string del);
 	virtual void exec() = 0;
+	Message msg;
 
 };
 

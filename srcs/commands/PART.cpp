@@ -6,15 +6,13 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:48:56 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 15:45:57 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:34:44 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <map>
 
 #include "PART.hpp"
-#include "../Message.hpp"
-
 
 Part::Part(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -53,17 +51,14 @@ void Part::exec()
 	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
 		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
-		Message msg;
 		Channel *c = server.searchChannel(*it);
 		if (!c)
 		{
-			Message msg;
 			msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), (*it).c_str());
 			continue;
 		}
 		if (!c->isClientInChannel(client.getNickname()))
 		{
-			Message msg;
 			msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), (*it).c_str());
 			continue;
 		}

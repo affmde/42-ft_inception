@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:21:26 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:53 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:35:15 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "QUIT.hpp"
-#include "../Message.hpp"
 
 Quit::Quit(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -26,7 +25,6 @@ void Quit::exec()
 	if (input.empty()) return;
 	if (input[0] == ':')
 		input.erase(0, 1);
-	Message msg;
 	msg.reply(NULL, client, "0", SERVER, "ERROR: %s", input.c_str());
 	for(std::vector<Channel*>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); ++it)
 	{

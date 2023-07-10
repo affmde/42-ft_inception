@@ -6,12 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:36:33 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 09:22:31 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:35:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PRIVMSG.hpp"
-#include "../Message.hpp"
 
 Privmsg::Privmsg(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -48,7 +47,6 @@ void Privmsg::exec()
 			Channel *c = server.searchChannel(*it);
 			if (!c)
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_CANNOTSENDTOCHAN_CODE, SERVER, ERR_CANNOTSENDTOCHAN, client.getNickname().c_str(), (*it).c_str());
 				throw NoSuchChannelException("No such channel " + *it);
 			}
@@ -59,11 +57,9 @@ void Privmsg::exec()
 			Client *c = server.findClientByNick(*it);
 			if (!c)
 			{
-				Message msg;
 				msg.reply(NULL, client, ERR_NOSUCHNICK_CODE, SERVER, ERR_NOSUCHNICK, client.getNickname().c_str(), (*it).c_str());
 				throw InvalidNickException("Nick doesn't exist: " + *it);
 			}
-			Message msg;
 			msg.reply(&client, *c, "0", CLIENT, "PRIVMSG %s :%s", c->getNickname().c_str(), message.c_str());
 		}
 		server.logMessage(1, "PRIVMSG " + *it + ": " + message, client.getNickname());

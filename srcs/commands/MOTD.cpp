@@ -6,15 +6,11 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 12:07:36 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 13:13:35 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:33:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream> ///DELETE THIS!!!
-
 #include "MOTD.hpp"
-#include "../Message.hpp"
-
 
 Motd::Motd(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
@@ -28,7 +24,6 @@ void Motd::exec()
 {
 	if (input.empty())
 		return ;
-	Message msg;
 	msg.reply(NULL, client, RPL_MOTDSTART_CODE, SERVER, RPL_MOTDSTART, client.getNickname().c_str(), "IRCSERV");
 	std::vector<std::string> messageOfTheDay;
 	messageOfTheDay.push_back("*******************************************************************************");
