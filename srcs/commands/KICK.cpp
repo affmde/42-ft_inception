@@ -6,12 +6,9 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 16:31:30 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:01:20 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <map>
-#include <iostream> //DELETE!!!!!
 
 #include "KICK.hpp"
 #include "../rpl_isupport.hpp"
@@ -22,7 +19,14 @@ ACommand(server, client, input, clientsList){}
 Kick::Kick(const Kick &other) :
 ACommand(other.server, other.client, other.input, other.clientsList) { *this = other; }
 Kick::~Kick(){}
-Kick &Kick::operator=(const Kick &other) { return *this; }
+Kick &Kick::operator=(const Kick &other)
+{
+	target = other.target;
+	reason = other.reason;
+	usersToKick.clear();
+	usersToKick.insert(other.usersToKick.begin(), other.usersToKick.end());
+	return *this;
+}
 
 void Kick::parseInput()
 {

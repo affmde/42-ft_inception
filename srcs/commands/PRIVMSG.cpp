@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:36:33 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:35:06 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:55:12 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,37 @@ ACommand(server, client, input, clientsList){}
 Privmsg::Privmsg(const Privmsg &other) :
 ACommand(other.server, other.client, other.input, other.clientsList) { *this = other; }
 Privmsg::~Privmsg(){}
-Privmsg &Privmsg::operator=(const Privmsg &other) { return *this; }
-
-void Privmsg::exec()
+Privmsg &Privmsg::operator=(const Privmsg &other)
 {
-	size_t pos = input.find(" ");
-	if (pos == std::string::npos)
-		throw NeedMoreParamsException("Need more params");
+	message = other.message;
+	targets = other.targets;
+	return *this;
+}
+
+void Privmsg::parseInput()
+{
 	std::vector<std::string> info = split(input, " ");
 	if (info.size() < 2)
 		return;
-	std::vector<std::string> targets = split(info[0], ",");
+	targets = split(info[0], ",");
 	if (!info[1].empty() && info[1][0] == ':')
 		info[1].erase(0, 1);
-	std::string message;
 	for(int i = 1; i < info.size(); i++)
 	{
 		message += info[i];
 		if (i - 1 < info.size())
 			message += " ";
 	}
+}
+
+void Privmsg::exec()
+{
+	size_t pos = input.find(" ");
+	if (pos == std::string::npos)
+		throw NeedMoreParamsException("Need more params");
+	parseInput();
+	if (message.empty())
+		throw NeedMoreParamsException("Need more params");
 	for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
 		if ((*it)[0] == '#')//target is a channel
