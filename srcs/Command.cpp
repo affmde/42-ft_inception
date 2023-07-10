@@ -6,11 +6,9 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 16:13:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:20:42 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <iostream>
 
 #include "Command.hpp"
 #include "Parser.hpp"
@@ -54,8 +52,6 @@ void Command::checkCommands(std::vector<Client*> *clients)
 	pos = input.find(" ");
 	std::string command = input.substr(0, pos);
 	int commandId = getCommandId(command);
-	std::cout << "command: " << command << std::endl;
-	std::cout << "id: " << commandId << std::endl;
 	input.erase(0, pos + 1);;
 	switch (commandId)
 	{
@@ -68,9 +64,9 @@ void Command::checkCommands(std::vector<Client*> *clients)
 				Nick n(server, client, input, *clients);
 				n.exec();
 			} catch(ACommand::InvalidNickException &e) {
-				std::cerr << client.getNickname() << " cant update NICK." << std::endl;
+				server.logMessage(2, e.what(), client.getNickname());
 			} catch(ACommand::DuplicateNickException &e) {
-				std::cerr << client.getNickname() << " cant update NICK because already exists." << std::endl;
+				server.logMessage(2, e.what(), client.getNickname());
 			}
 			break;
 		}
