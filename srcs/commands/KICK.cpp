@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:02:34 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:33:09 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:31:30 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,10 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Kick::~Kick(){}
 Kick &Kick::operator=(const Kick &other) { return *this; }
 
-void Kick::exec()
+void Kick::parseInput()
 {
-	if (input.empty())
-	{
-		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "KICK");
-		throw NeedMoreParamsException ("KICK: Need more params");
-	}
 	size_t pos = input.find(" ");
-	std::string channelName = input.substr(0, pos);
+	target = input.substr(0, pos);
 	input.erase(0, pos + 1);
 	pos = input.find(" ");
 	std::string usersString = input.substr(0, pos);
@@ -40,43 +35,50 @@ void Kick::exec()
 	std::vector<std::string> users = split(usersString, ",");
 	if (input[0] == ':')
 		input.erase(0, 1);
-	//std::vector<std::string> comments = split(input, ",");
-	std::string comment = input;
-	Channel *c = server.searchChannel(channelName);
+	reason = input;
+	for (int i = 0; i < users.size(); i++)
+	{
+		if (!reason.empty())
+		{
+			if (reason.size() > KICKLEN)
+				reason = reason.substr(0, KICKLEN);
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], reason));
+		}
+		else
+			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + target));
+	}
+}
+
+void Kick::exec()
+{
+	if (input.empty())
+	{
+		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "KICK");
+		throw NeedMoreParamsException ("KICK: Need more params");
+	}
+	parseInput();
+	Channel *c = server.searchChannel(target);
 	if (!c)
 	{
-		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), channelName.c_str());
-		throw NoSuchChannelException("No such channel " + channelName);
+		msg.reply(NULL, client, ERR_NOSUCHCHANNEL_CODE, SERVER, ERR_NOSUCHCHANNEL, client.getNickname().c_str(), target.c_str());
+		throw NoSuchChannelException("No such channel " + target);
 	}
 	if (!c->isOper(client.getNickname()))
 	{
-		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), channelName.c_str());
+		msg.reply(NULL, client, ERR_CHANOPRIVSNEEDED_CODE, SERVER, ERR_CHANOPRIVSNEEDED, client.getNickname().c_str(), target.c_str());
 		throw NoPrivilegesException("No privileges: Not oper.");
 	}
 	if (!c->isClientInChannel(client.getNickname()))
 	{
-		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), channelName.c_str());
+		msg.reply(NULL, client, ERR_NOTONCHANNEL_CODE, SERVER, ERR_NOTONCHANNEL, client.getNickname().c_str(), target.c_str());
 		throw NotOnChannelException("Not on channel");
-	}
-	std::map<std::string, std::string> usersToKick;
-
-	for (int i = 0; i < users.size(); i++)
-	{
-		if (!comment.empty())
-		{
-			if (comment.size() > KICKLEN)
-				comment = comment.substr(0, KICKLEN);
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], comment));
-		}
-		else
-			usersToKick.insert(std::pair<std::string, std::string>(users[i], "You were kicked from the channel " + channelName));
 	}
 	for(std::map<std::string, std::string>::iterator it = usersToKick.begin(); it != usersToKick.end(); ++it)
 	{
 		std::vector<Client*>::iterator kickUser = c->findClientByNick(it->first);
 		if (c->isEnd(kickUser) || !c->isClientInChannel((*kickUser)->getNickname()))
 		{
-			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), channelName.c_str());
+			msg.reply(NULL, client, ERR_USERNOTINCHANNEL_CODE, SERVER, ERR_USERNOTINCHANNEL, client.getNickname().c_str(), client.getNickname().c_str(), target.c_str());
 			server.logMessage(2, "User not in channel", client.getNickname());
 			continue;
 		}
