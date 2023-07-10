@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:41:17 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 10:37:01 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 14:06:38 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ void Mode::exec()
 							if (*clientToAdd)
 							{
 								c->addOper(*clientToAdd);
-								args += client.getNickname() + " ";
+								args += (*clientToAdd)->getNickname() + " ";
 							}
 							mode += "o";
 						}
