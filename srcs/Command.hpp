@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/07 17:57:43 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 12:04:16 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #define PRIVMSG 11
 #define NOTICE 12
 #define PING 13
+#define MOTD 14
 
 class Server;
 

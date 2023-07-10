@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 15:53:00 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 12:17:02 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include "commands/PRIVMSG.hpp"
 #include "commands/MODE.hpp"
 #include "commands/PING.hpp"
+#include "commands/MOTD.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -207,6 +208,12 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			p.exec();
 			break;
 		}
+		case MOTD:
+		{
+			Motd m(server, client, input, *clients);
+			m.exec();
+			break;
+		}
 		default:
 			break;
 	}
@@ -240,5 +247,7 @@ int Command::getCommandId(std::string &input) const
 		return NOTICE;
 	else if (input == "PING")
 		return PING;
+	else if (input == "motd\r\n")
+		return MOTD;
 	return (-1);
 }

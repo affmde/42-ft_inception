@@ -12,6 +12,7 @@
 #include "Command.hpp"
 #include "Utils.hpp"
 #include "rpl_isupport.hpp"
+#include "commands/MOTD.hpp"
 
 Server::Server(const char *port, std::string pass)
 {
@@ -262,6 +263,8 @@ void Server::handleClientMessage(Client &client)
 			std::string supportedFeactures = getISupportAsString();
 			msg.reply(NULL, client, RPL_ISUPPORT_CODE, SERVER, RPL_ISUPPORT, client.getNickname().c_str(), supportedFeactures.c_str());
 			client.setActiveStatus(LOGGED);
+			Motd m(*this, client, *it, clients);
+			m.exec();
 		}
 	}
 }
@@ -363,9 +366,9 @@ void Server::logMessage(int fd, std::string msg, std::string nickname) const
 {
 	Time time;
 	if (fd == 2)
-		std::cerr << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
+		std::cerr << COLOUR_CYAN + time.getDateAsString() + COLOUR_END + " " + COLOUR_GREEN + nickname + COLOUR_END + ": " + msg << std::endl;
 	else if (fd == 1)
-		std::cout << time.getDateAsString() + " " + nickname + ": " + msg << std::endl;
+		std::cout << COLOUR_CYAN + time.getDateAsString() + COLOUR_END + " " + COLOUR_GREEN + nickname + COLOUR_END + ": " + msg << std::endl;
 }
 
 std::string Server::getCreationTimeAsString() const

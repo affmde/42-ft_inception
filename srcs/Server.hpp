@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/09 15:31:31 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 11:54:06 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@
 #include "Client.hpp"
 #include "Time.hpp"
 #include "Channel.hpp"
+
+#define COLOUR_GREEN "\033[32m"
+#define COLOUR_CYAN "\033[36m"
+#define COLOUR_END "\033[0m"
 
 class Server
 {
