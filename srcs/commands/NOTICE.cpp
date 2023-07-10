@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:32:38 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:34:22 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:07:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,30 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Notice::~Notice(){}
 Notice &Notice::operator=(const Notice &other) { return *this; }
 
-void Notice::exec()
+void Notice::parseInput()
 {
-	size_t pos = input.find(" ");
-	if (pos == std::string::npos)
-		throw NeedMoreParamsException("Need more params");
 	std::vector<std::string> info = split(input, " ");
 	if (info.size() < 2)
 		return;
-	std::vector<std::string> targets = split(info[0], ",");
+	targets = split(info[0], ",");
 	if (!info[1].empty() && info[1][0] == ':')
 		info[1].erase(0, 1);
-	std::string message;
 	for(int i = 1; i < info.size(); i++)
 	{
 		message += info[i];
 		if (i - 1 < info.size())
 			message += " ";
 	}
+}
+
+void Notice::exec()
+{
+	size_t pos = input.find(" ");
+	if (pos == std::string::npos)
+		throw NeedMoreParamsException("Need more params");
+	parseInput();
+	if (message.empty())
+		throw NeedMoreParamsException("Need more params");
 	for(std::vector<std::string>::iterator it = targets.begin(); it != targets.end(); ++it)
 	{
 		if ((*it)[0] == '#') //target is chennel

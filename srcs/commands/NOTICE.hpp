@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:31:48 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:30:20 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:05:23 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ public:
 	Notice &operator=(const Notice &other);
 
 	void exec();
+
+private:
+	std::vector<std::string> targets;
+	std::string message;
+
+	void parseInput();
 
 };
 
