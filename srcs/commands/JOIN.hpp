@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:38:23 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:28 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/13 17:30:56 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ public:
 
 	void exec();
 
+private:
+	std::vector<std::string> channels;
+	std::vector<std::string> keys;
+
+	void parseInput();
 };
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:40:42 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:32:43 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/13 17:38:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "JOIN.hpp"
 #include "../Parser.hpp"
-
+#include <iostream> //DELETE THIS NOT DEENED
 Join::Join(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
 
@@ -21,31 +21,25 @@ ACommand(other.server, other.client, other.input, other.clientsList) { *this = o
 Join::~Join(){}
 Join &Join::operator=(const Join &other) { return *this; }
 
-void Join::exec()
+void Join::parseInput()
 {
-	std::vector<std::string> channels, keys;
 	size_t pos;
-	std::string arg, list;
+	std::string list;
 
 	pos = input.find(" ");
 	list = input.substr(0, pos);
 	input.erase(0, pos + 1);
-	while ((pos = list.find(",")) != std::string::npos)
-	{
-		arg = list.substr(0, pos);
-		channels.push_back(arg);
-		list.erase(0, pos + 1);
-	}
-	if (!list.empty())
-		channels.push_back(list);
-	while ((pos = input.find(",")) != std::string::npos)
-	{
-		arg = input.substr(0, pos);
-		keys.push_back(arg);
-		input.erase(0, pos + 1);
-	}
-	if (!input.empty())
-		keys.push_back(input);
+	channels = split(list, ",");
+	keys = split(input, ",");
+	for(int i = 0; i < channels.size(); i++)
+		std::cout << "channel: " << channels[i] << std::endl;
+	for(int i = 0; i < keys.size(); i++)
+		std::cout << "channel: " << keys[i] << std::endl;
+}
+
+void Join::exec()
+{
+	parseInput();
 	if (channels.size() < 1)
 		throw NeedMoreParamsException("Need more params");
 	for (int i = 0; i < channels.size(); i++)
