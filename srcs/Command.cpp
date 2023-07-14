@@ -39,6 +39,7 @@ Command &Command::operator=(const Command &other)
 	input = other.input;
 	client = other.client;
 	msg = other.msg;
+	server = other.server;
 	return (*this);
 }
 

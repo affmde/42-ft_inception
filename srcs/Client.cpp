@@ -44,6 +44,12 @@ Client &Client::operator=(const Client &other)
 		hostname = other.hostname;
 		buffer = other.buffer;
 		activeStatus = other.activeStatus;
+		channelInviteList.clear();
+		for(std::vector<std::string>::const_iterator it = other.channelInviteList.begin(); it != other.channelInviteList.end(); ++it)
+			channelInviteList.push_back(*it);
+		currentChannels.clear();
+		for(std::vector<std::string>::const_iterator it = other.currentChannels.begin(); it != other.currentChannels.end(); ++it)
+			currentChannels.push_back(*it);
 	}
 	return (*this);
 }

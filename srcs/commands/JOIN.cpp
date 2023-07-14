@@ -12,14 +12,24 @@
 
 #include "JOIN.hpp"
 #include "../Parser.hpp"
-#include <iostream> //DELETE THIS NOT DEENED
+
 Join::Join(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}
 
 Join::Join(const Join &other) :
-ACommand(other.server, other.client, other.input, other.clientsList) { *this = other; }
+ACommand(other.server, other.client, other.input, other.clientsList){ *this = other; }
+
 Join::~Join(){}
-Join &Join::operator=(const Join &other) { return *this; }
+Join &Join::operator=(const Join &other)
+{
+	channels.clear();
+	for(std::vector<std::string>::const_iterator it = other.channels.begin(); it != other.channels.end(); ++it)
+		channels.push_back(*it);
+	keys.clear();
+	for(std::vector<std::string>::const_iterator it = other.keys.begin(); it != other.keys.end(); ++it)
+		keys.push_back(*it);
+	return *this;
+}
 
 void Join::parseInput()
 {
@@ -31,10 +41,6 @@ void Join::parseInput()
 	input.erase(0, pos + 1);
 	channels = split(list, ",");
 	keys = split(input, ",");
-	for(int i = 0; i < channels.size(); i++)
-		std::cout << "channel: " << channels[i] << std::endl;
-	for(int i = 0; i < keys.size(); i++)
-		std::cout << "channel: " << keys[i] << std::endl;
 }
 
 void Join::exec()

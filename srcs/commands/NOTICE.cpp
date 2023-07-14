@@ -17,8 +17,15 @@ ACommand(server, client, input, clientsList){}
 
 Notice::Notice(const Notice &other) :
 ACommand(other.server, other.client, other.input, other.clientsList) { *this = other; }
+
 Notice::~Notice(){}
-Notice &Notice::operator=(const Notice &other) { return *this; }
+Notice &Notice::operator=(const Notice &other)
+{
+	message = other.message;
+	for(std::vector<std::string>::const_iterator it = other.targets.begin(); it != other.targets.end(); ++it)
+		targets.push_back(*it);
+	return *this;
+}
 
 void Notice::parseInput()
 {

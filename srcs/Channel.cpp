@@ -42,6 +42,18 @@ Channel &Channel::operator=(const Channel &other)
 	modes.limitRequired = other.modes.limitRequired;
 	modes.passRequired = other.modes.passRequired;
 	modes.op = other.modes.op;
+	clients.clear();
+	for(std::vector<Client*>::const_iterator it = other.clients.begin(); it != other.clients.end(); ++it)
+			clients.push_back(*it);
+	operators.clear();
+	for(std::vector<Client*>::const_iterator it = other.operators.begin(); it != other.operators.end(); ++it)
+			operators.push_back(*it);
+	bannedList.clear();
+	for(std::vector<Client*>::const_iterator it = other.bannedList.begin(); it != other.bannedList.end(); ++it)
+			bannedList.push_back(*it);
+	invitedClients.clear();
+	for(std::vector<Client*>::const_iterator it = other.invitedClients.begin(); it != other.invitedClients.end(); ++it)
+			invitedClients.push_back(*it);
 	return (*this);
 }
 

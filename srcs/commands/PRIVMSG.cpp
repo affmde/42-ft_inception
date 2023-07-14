@@ -17,11 +17,14 @@ ACommand(server, client, input, clientsList){}
 
 Privmsg::Privmsg(const Privmsg &other) :
 ACommand(other.server, other.client, other.input, other.clientsList) { *this = other; }
+
 Privmsg::~Privmsg(){}
 Privmsg &Privmsg::operator=(const Privmsg &other)
 {
 	message = other.message;
-	targets = other.targets;
+	targets.clear();
+	for(std::vector<std::string>::const_iterator it = other.targets.begin(); it != other.targets.end(); ++it)
+		targets.push_back(*it);
 	return *this;
 }
 
