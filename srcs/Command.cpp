@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 16:20:42 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/14 15:18:48 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,140 @@ Command &Command::operator=(const Command &other)
 	return (*this);
 }
 
+void Command::handleNick(std::vector<Client*> *clients)
+{
+	try{
+		Nick n(server, client, input, *clients);
+		n.exec();
+	} catch(ACommand::InvalidNickException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::DuplicateNickException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleKick(std::vector<Client*> *clients)
+{
+	try {
+		Kick k(server, client, input, *clients);
+		k.exec();
+	} catch (ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NoPrivilegesException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NotOnChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleInvite(std::vector<Client*> *clients)
+{
+	try {
+		Invite i(server, client, input, *clients);
+		i.exec();
+	} catch (ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NotOnChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NoPrivilegesException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::UserOnChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleTopic(std::vector<Client*> *clients)
+{
+	try {
+		Join j(server, client, input, *clients);
+		j.exec();
+	} catch(ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, "JOIN: Need more params", client.getNickname());
+		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
+	} catch(ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, "JOIN: No such channel", client.getNickname());
+	} catch(ACommand::BadChannelKeyException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::InviteOnlyException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::ChannelFullException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleMode(std::vector<Client*> *clients)
+{
+	try {
+		Mode m(server, client, input, *clients);
+		m.exec();
+	} catch (ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NoPrivilegesException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handlePart(std::vector<Client*> *clients)
+{
+	try {
+		Part p(server, client, input, *clients);
+		p.exec();
+	} catch (ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, "PART: Need more params.", client.getNickname());
+	}
+}
+
+void Command::handlePrivmsg(std::vector<Client*> *clients)
+{
+	try {
+		Privmsg p(server, client, input, *clients);
+		p.exec();
+	} catch (ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::InvalidNickException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch (ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleNotice(std::vector<Client*> *clients)
+{
+	try {
+		Notice n(server, client, input, *clients);
+		n.exec();
+	} catch(ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::InvalidNickException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
+void Command::handleJoin(std::vector<Client*> *clients)
+{
+	try {
+		Join j(server, client, input, *clients);
+		j.exec();
+	} catch(ACommand::NeedMoreParamsException &e) {
+		server.logMessage(2, "JOIN: Need more params", client.getNickname());
+		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
+	} catch(ACommand::NoSuchChannelException &e) {
+		server.logMessage(2, "JOIN: No such channel", client.getNickname());
+	} catch(ACommand::BadChannelKeyException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::InviteOnlyException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	} catch(ACommand::ChannelFullException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
 void Command::checkCommands(std::vector<Client*> *clients)
 {
 	if (input[input.length() - 1] == '\n')
@@ -60,84 +194,23 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			throw AlreadyRegisteredException("Already registered");
 			break;
 		case NICK:
-		{
-			try{
-				Nick n(server, client, input, *clients);
-				n.exec();
-			} catch(ACommand::InvalidNickException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch(ACommand::DuplicateNickException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handleNick(clients);
 			break;
-		}
 		case USER:
 			throw AlreadyRegisteredException("Already registered");
 			break;
 		case KICK:
-		{
-			try {
-				Kick k(server, client, input, *clients);
-				k.exec();
-			} catch (ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NoPrivilegesException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NotOnChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handleKick(clients);
 			break;
-		}
 		case INVITE:
-		{
-			try {
-				Invite i(server, client, input, *clients);
-				i.exec();
-			} catch (ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NotOnChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NoPrivilegesException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::UserOnChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
-		}
+			handleInvite(clients);
 			break;
 		case TOPIC:
-		{
-			try {
-				Topic t(server, client, input, *clients);
-				t.exec();
-				server.logMessage(1, "Topic changed", client.getNickname());
-			} catch (ACommand::NeedMoreParamsException &e) {
-				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "TOPIC");
-				server.logMessage(2, "TOPIC: need more params", client.getNickname());
-			} catch (ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, "TOPIC: no such channel", client.getNickname());
-			} catch (ACommand::NotOnChannelException &e) {
-				server.logMessage(2, "TOPIC: not on channel", client.getNickname());
-			} catch (ACommand::NoPrivilegesException &e) {
-				server.logMessage(2, "TOPIC: no priviledges", client.getNickname());
-			}
+			handleTopic(clients);
 			break;
-		}
 		case MODE:
-		{
-			try {
-				Mode m(server, client, input, *clients);
-				m.exec();
-			} catch (ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NoPrivilegesException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handleMode(clients);
 			break;
-		}
 		case QUIT:
 		{
 			Quit q(server, client, input, *clients);
@@ -145,60 +218,17 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case JOIN:
-			try {
-				Join j(server, client, input, *clients);
-				j.exec();
-			} catch(ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, "JOIN: Need more params", client.getNickname());
-				msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
-			} catch(ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, "JOIN: No such channel", client.getNickname());
-			} catch(ACommand::BadChannelKeyException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch(ACommand::InviteOnlyException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch(ACommand::ChannelFullException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handleJoin(clients);
 			break;
 		case PART:
-		{
-			try {
-				Part p(server, client, input, *clients);
-				p.exec();
-			} catch (ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, "PART: Need more params.", client.getNickname());
-			}
+			handlePart(clients);
 			break;
-		}
 		case PRIVMSG:
-		{
-			try {
-				Privmsg p(server, client, input, *clients);
-				p.exec();
-			} catch (ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::InvalidNickException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch (ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handlePrivmsg(clients);
 			break;
-		}
 		case NOTICE:
-		{
-			try {
-				Notice n(server, client, input, *clients);
-				n.exec();
-			} catch(ACommand::NeedMoreParamsException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch(ACommand::NoSuchChannelException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			} catch(ACommand::InvalidNickException &e) {
-				server.logMessage(2, e.what(), client.getNickname());
-			}
+			handleNotice(clients);
 			break;
-		}
 		case PING:
 		{
 			Ping p(server, client, input, *clients);

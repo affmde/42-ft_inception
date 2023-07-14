@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:38:50 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/14 15:18:51 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,15 @@ private:
 	Server &server;
 	Message msg;
 
+	void handleNick(std::vector<Client*> *clients);
+	void handleKick(std::vector<Client*> *clients);
+	void handleInvite(std::vector<Client*> *clients);
+	void handleTopic(std::vector<Client*> *clients);
+	void handleMode(std::vector<Client*> *clients);
+	void handlePart(std::vector<Client*> *clients);
+	void handlePrivmsg(std::vector<Client*> *clients);
+	void handleNotice(std::vector<Client*> *clients);
+	void handleJoin(std::vector<Client*> *clients);
 	int getCommandId(std::string &input) const;
 };
 
