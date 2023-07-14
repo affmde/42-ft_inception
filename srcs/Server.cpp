@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 16:23:43 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/14 16:23:46 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/14 16:25:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void Server::eraseDisconnectedUsers()
 		{
 			for(std::vector<Channel*>::iterator ch = channels.begin(); ch != channels.end(); ++ch)
 			{
-				(*ch)->eraseClient((*it)->getNickname(), "", 0); // REMOVE THE USERS FROM THE CHANNELS THEY WERE IN!! STILL CHECK THIS!
+				(*ch)->eraseClient((*it)->getNickname(), "", 0);
 			}
 			it = eraseUserByFD((*it)->getClientFD());
 		}

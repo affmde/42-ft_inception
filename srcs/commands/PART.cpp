@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:48:56 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:34:44 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/14 16:25:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void Part::exec()
 		reasons = input;
 	for(std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		//HANDLE PART OF EVERY CHANNEL IN THE LIST!!!
 		Channel *c = server.searchChannel(*it);
 		if (!c)
 		{
