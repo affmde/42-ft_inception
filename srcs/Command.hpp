@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/14 15:18:51 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 16:23:14 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 #define NOTICE 12
 #define PING 13
 #define MOTD 14
+#define CAP 15
 
 class Server;
 

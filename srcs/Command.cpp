@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/14 15:18:48 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 16:24:57 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			m.exec();
 			break;
 		}
+		case CAP:
+			break;
 		default:
 			break;
 	}
@@ -276,5 +278,7 @@ int Command::getCommandId(std::string &input) const
 		return PING;
 	else if (input == "motd")
 		return MOTD;
+	else if (input == "CAP")
+		return CAP;
 	return (-1);
 }
