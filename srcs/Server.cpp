@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 16:23:43 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 17:17:33 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:07:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
-	logMessage(1, buffer, "");
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string> args = parser.parseInput();
@@ -178,10 +177,14 @@ void Server::handleClientMessage(Client &client)
 			client.setBuffer(*it);
 			if (!client.isReadyToSend())
 				continue;
-			std::string str = client.getBuffer();
-			std::string input = str.substr(str.find(" ") + 1, str.length());
-			Cap c(*this, client, input, clients);
-			c.exec();
+			try{
+				std::string str = client.getBuffer();
+				std::string input = str.substr(str.find(" ") + 1, str.length());
+				Cap c(*this, client, input, clients);
+				c.exec();
+			} catch (ACommand::BadCapException &e) {
+				logMessage(2, e.what(), client.getNickname());
+			}
 			client.resetBuffer();
 		}
 		else if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)

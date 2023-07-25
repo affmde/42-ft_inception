@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:38:03 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 16:23:14 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:02:18 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ private:
 	void handlePrivmsg(std::vector<Client*> *clients);
 	void handleNotice(std::vector<Client*> *clients);
 	void handleJoin(std::vector<Client*> *clients);
+	void handleCAP(std::vector<Client*> *clients);
 	int getCommandId(std::string &input) const;
 };
 

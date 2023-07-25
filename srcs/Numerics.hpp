@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 10:41:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 12:43:35 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 17:54:09 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 #define ERR_NOSUCHNICK_CODE "401"
 #define ERR_NOSUCHCHANNEL_CODE "403"
 #define ERR_CANNOTSENDTOCHAN_CODE "404"
+#define ERR_BADCAP_CODE "410"
 #define ERR_NONICKNAMEGIVEN_CODE "431"
 #define ERR_ERRONEUSNICKNAME_CODE "432"
 #define ERR_NICKNAMEINUSE_CODE "433"
@@ -70,6 +71,7 @@
 #define ERR_NOSUCHNICK "%s %s :No such nick/channel"					//401
 #define ERR_NOSUCHCHANNEL "%s %s :No such channel"						//403
 #define ERR_CANNOTSENDTOCHAN "%s %s :Cannot send to channel"			//404
+#define ERR_BADCAP "%s :Invalid CAP command"							//410
 #define ERR_NONICKNAMEGIVEN "%s :No nickname given"						//431
 #define ERR_ERRONEUSNICKNAME "%s %s :Erroneus nickname"					//432
 #define ERR_NICKNAMEINUSE "%s %s :Nickname is already in use"			//433

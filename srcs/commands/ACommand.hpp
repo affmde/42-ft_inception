@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:24:05 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 14:12:18 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:00:04 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ public:
 	};
 	struct UserOnChannelException : public std::runtime_error {
 		UserOnChannelException(const std::string &msg) : runtime_error(msg) {}
+	};
+	struct BadCapException : public std::runtime_error {
+		BadCapException(const std::string &msg) : runtime_error(msg) {}
 	};
 
 	ACommand(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList);

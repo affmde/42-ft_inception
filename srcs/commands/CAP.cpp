@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:41:01 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 17:30:16 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:08:36 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,23 @@ void Cap::parseInput()
 	code = std::atoi(input.c_str());
 }
 
+bool Cap::isValidCAP()
+{
+	if (subcommand != "LS" || subcommand != "LIST" || subcommand != "REQ"\
+	 || subcommand != "ACK" || subcommand != "NAK" || subcommand != "END"\
+	 || subcommand != "NEW (302)" || subcommand != "DEL (302)")
+		return false;
+	return true;
+}
+
 void Cap::exec()
 {
 	parseInput();
+	if (!isValidCAP())
+	{
+		msg.reply(NULL, client, ERR_BADCAP_CODE, SERVER, ERR_BADCAP, subcommand.c_str());
+		throw BadCapException("Invalid CAP command");
+	}
 	std::cout << "subcommand: " << subcommand << std::endl;
 	std::cout << "code: " << code <<  std::endl;
 	msg.reply(NULL, client, "0", SERVER, "CAP * LS :");

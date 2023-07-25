@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 17:00:21 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 18:06:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,17 @@ void Command::handleJoin(std::vector<Client*> *clients)
 	}
 }
 
+void Command::handleCAP(std::vector<Client*> *clients)
+{
+	try{
+		Cap c(server, client, input, *clients);
+		c.exec();
+	}
+	catch(ACommand::BadCapException &e) {
+		server.logMessage(2, e.what(), client.getNickname());
+	}
+}
+
 void Command::checkCommands(std::vector<Client*> *clients)
 {
 	if (input[input.length() - 1] == '\n')
@@ -243,11 +254,8 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case CAP:
-		{
-			Cap c(server, client, input, *clients);
-			c.exec();
+			handleCAP(clients);
 			break;
-		}
 		default:
 			break;
 	}

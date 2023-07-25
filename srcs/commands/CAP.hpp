@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:39:37 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 17:20:04 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 17:55:32 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ public:
 	void parseInput();
 
 private:
+	bool isValidCAP();
+
 	int code;
 	std::string subcommand;
 };
