@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 16:24:57 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 17:00:21 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include "commands/MODE.hpp"
 #include "commands/PING.hpp"
 #include "commands/MOTD.hpp"
+#include "commands/CAP.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),
@@ -242,7 +243,11 @@ void Command::checkCommands(std::vector<Client*> *clients)
 			break;
 		}
 		case CAP:
+		{
+			Cap c(server, client, input, *clients);
+			c.exec();
 			break;
+		}
 		default:
 			break;
 	}

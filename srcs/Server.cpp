@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 16:23:43 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 15:02:15 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/25 17:17:33 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "Utils.hpp"
 #include "rpl_isupport.hpp"
 #include "commands/MOTD.hpp"
+#include "commands/CAP.hpp"
 
 Server::Server(const char *port, std::string pass)
 {
@@ -164,6 +165,7 @@ void Server::handleClientMessage(Client &client)
 		return;
 	}
 	buffer[bytes_read] = '\0';
+	logMessage(1, buffer, "");
 	Parser parser;
 	parser.setInput(std::string(buffer));
 	std::vector<std::string> args = parser.parseInput();
@@ -171,7 +173,18 @@ void Server::handleClientMessage(Client &client)
 	for(std::vector<std::string>::iterator it = args.begin();
 		it != args.end(); ++it, i++)
 	{
-		if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
+		if (it->find("CAP ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
+		{
+			client.setBuffer(*it);
+			if (!client.isReadyToSend())
+				continue;
+			std::string str = client.getBuffer();
+			std::string input = str.substr(str.find(" ") + 1, str.length());
+			Cap c(*this, client, input, clients);
+			c.exec();
+			client.resetBuffer();
+		}
+		else if (it->find("PASS ") != std::string::npos && client.isConnected() && client.getActiveStatus() == CONNECTED)
 		{
 			client.setBuffer(*it);
 			if (!client.isReadyToSend())
