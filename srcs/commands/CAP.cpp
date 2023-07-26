@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:41:01 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 08:55:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 09:21:11 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ void Cap::exec()
 	if (!isValidCAP())
 	{
 		msg.reply(NULL, client, ERR_BADCAP_CODE, SERVER, ERR_BADCAP, subcommand.c_str());
-		throw BadCapException("Invalid CAP command");
+		throw BadCapException("Invalid CAP command: " + subcommand);
 	}
-	std::cout << "subcommand: " << subcommand << std::endl;
-	std::cout << "code: " << code <<  std::endl;
 	msg.reply(NULL, client, "0", SERVER, "CAP * LS :");
 }
