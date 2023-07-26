@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:41:01 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 18:08:36 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 08:55:47 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void Cap::parseInput()
 
 bool Cap::isValidCAP()
 {
-	if (subcommand != "LS" || subcommand != "LIST" || subcommand != "REQ"\
-	 || subcommand != "ACK" || subcommand != "NAK" || subcommand != "END"\
-	 || subcommand != "NEW (302)" || subcommand != "DEL (302)")
-		return false;
-	return true;
+	if (subcommand == "LS" || subcommand == "LIST" || subcommand == "REQ"\
+	 || subcommand == "ACK" || subcommand == "NAK" || subcommand == "END"\
+	 || subcommand == "NEW (302)" || subcommand == "DEL (302)")
+		return true;
+	return false;
 }
 
 void Cap::exec()
