@@ -6,7 +6,7 @@
 /*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:41:01 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 09:21:11 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 10:57:40 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ bool Cap::isValidCAP()
 
 void Cap::exec()
 {
+	if (input[input.length() - 1] == '\n')
+		input.erase(input.length() - 1, 1);
+	if (input[input.length() - 1] == '\r')
+		input.erase(input.length() - 1, 1);
 	parseInput();
 	if (!isValidCAP())
 	{
