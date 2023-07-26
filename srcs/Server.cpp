@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 16:23:43 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 12:53:47 by helneff          ###   ########.fr       */
+/*   Updated: 2023/07/26 13:38:07 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@
 #include "commands/Motd.hpp"
 #include "commands/Cap.hpp"
 
-Server::Server(const char *port, std::string pass)
+Server::Server(const char *port, const std::string &pass)
+: pass(pass)
 {
 	logMessage(1, "Server started", "");
-	this->pass = pass;
 	addrinfo hints;
 	bzero(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -310,13 +310,12 @@ std::vector<Client*>::iterator Server::findClientByFD(int fd)
 	return clients.end();
 }
 
-Client *Server::findClientByNick(std::string nick)
+Client *Server::findClientByNick(const std::string &nick)
 {
 	Client *c;
-	nick = toLowercase(nick);
 	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (toLowercase((*it)->getNickname()) == nick)
+		if (toLowercase((*it)->getNickname()) == toLowercase(nick))
 			return (*it);
 	}
 	return (NULL);
@@ -337,12 +336,11 @@ std::vector<Client*>::iterator Server::eraseUserByFD(int fd)
 }
 
 
-void Server::checkDuplicateNick(std::string nick)
+void Server::checkDuplicateNick(const std::string &nick)
 {
-	nick = toLowercase(nick);
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (toLowercase((*it)->getNickname()) == nick)
+		if (toLowercase((*it)->getNickname()) == toLowercase(nick))
 			throw DuplicateNickException("Duplicate nick");
 	}
 }
@@ -352,12 +350,11 @@ std::vector<Channel*> &Server::getChannels()
 	return channels;
 }
 
-Channel *Server::searchChannel(std::string name)
+Channel *Server::searchChannel(const std::string &name)
 {
-	name = toLowercase(name);
 	for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if (toLowercase((*it)->getName()) == name)
+		if (toLowercase((*it)->getName()) == toLowercase(name))
 			return (*it);
 	}
 	return (NULL);
@@ -370,7 +367,8 @@ void Server::addChannel(Channel *channel, Client &client)
 	logMessage(1, message, client.getNickname());
 }
 
-Channel *Server::createChannel(std::string name, std::string topic, std::string pass, Client &client)
+Channel *Server::createChannel(
+	const std::string &name, const std::string &topic, const std::string &pass, Client &client)
 {
 	if (name.size() > CHANNELLEN)
 		throw ChannelLenException("Channel name too long");
@@ -382,7 +380,7 @@ Channel *Server::createChannel(std::string name, std::string topic, std::string 
 	return (newChannel);
 }
 
-void Server::logMessage(int fd, std::string msg, std::string nickname) const
+void Server::logMessage(int fd, const std::string &msg, const std::string &nickname) const
 {
 	Time time;
 	if (fd == 2)
@@ -418,18 +416,17 @@ std::string Server::getISupportAsString() const
 	return features;
 }
 
-bool Server::isDuplicate(std::string nick)
+bool Server::isDuplicate(const std::string &nick)
 {
-	nick = toLowercase(nick);
 	for(std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (toLowercase((*it)->getNickname()) == nick)
+		if (toLowercase((*it)->getNickname()) == toLowercase(nick))
 			return true;
 	}
 	return false;
 }
 
-std::string Server::toLowercase(std::string str)
+std::string Server::toLowercase(const std::string &str)
 {
 	std::string ret = str;
 	for(int i = 0; i < ret.length(); i++)

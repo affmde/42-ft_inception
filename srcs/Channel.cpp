@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:27:10 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/09 10:51:19 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 13:40:15 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@ Channel::Channel(Server &server) :server(server)
 	modes.limitRequired = false;
 	modes.passRequired = false;
 	modes.op = 0;
-
-
 }
+
 Channel::Channel(const Channel & other) : server(other.server) { *this = other; }
+
 Channel::~Channel() {}
+
 Channel &Channel::operator=(const Channel &other)
 {
 	if (this == &other) return *this;

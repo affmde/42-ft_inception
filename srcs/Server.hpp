@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 14:25:54 by helneff           #+#    #+#             */
-/*   Updated: 2023/07/10 15:42:17 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 13:34:17 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ public:
 		ChannelLenException(const std::string &msg) : runtime_error(msg) {}
 	};
 
-	Server(const char *port, std::string pass);
+	Server(const char *port, const std::string &pass);
 	~Server();
 
 	void pollClientEvents();
-	void logMessage(int fd, std::string msg, std::string nickname) const;
-	Channel *searchChannel(std::string name);
+	void logMessage(int fd, const std::string &msg, const std::string &nickname) const;
+	Channel *searchChannel(const std::string &name);
 	void addChannel(Channel *channel, Client &client);
-	Channel *createChannel(std::string name, std::string topic, std::string pass, Client &client);
+	Channel *createChannel(const std::string &name, const std::string &topic, const std::string &pass, Client &client);
 	int totalChannels() const;
 	std::vector<Channel*> &getChannels();
 	std::string getCreationTimeAsString() const;
 	std::string getCreationTimestampAsString() const;
-	Client *findClientByNick(std::string nick);
-	std::string toLowercase(std::string nick);
-	bool isDuplicate(std::string nick);
+	Client *findClientByNick(const std::string &nick);
+	std::string toLowercase(const std::string &nick);
+	bool isDuplicate(const std::string &nick);
 
 private:
 	static const int listenTimeout = 10;
@@ -84,7 +84,7 @@ private:
 	std::vector<pollfd>::iterator findPollfdByFD(int fd);
 	std::vector<Client*>::iterator findClientByFD(int fd);
 	std::vector<Client*>::iterator eraseUserByFD(int fd);
-	void checkDuplicateNick(std::string nick);
+	void checkDuplicateNick(const std::string &nick);
 	std::string getISupportAsString() const;
 };
 
