@@ -6,7 +6,7 @@
 /*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 12:07:36 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 12:53:13 by helneff          ###   ########.fr       */
+/*   Updated: 2023/07/26 13:58:26 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Motd::exec()
 	msg.reply(NULL, client, RPL_MOTDSTART_CODE, SERVER, RPL_MOTDSTART, client.getNickname().c_str(), "IRCSERV");
 	std::vector<std::string> messageOfTheDay;
 	messageOfTheDay.push_back("*******************************************************************************");
-	messageOfTheDay.push_back(COLOUR_CYAN + std::string("Welcome to IRCSERV. This web server is made for ft_irc project from 42school HIVE, Helsinki") + COLOUR_END);
+	messageOfTheDay.push_back(COLOUR_CYAN + std::string("Welcome to IRCSERV. This IRC server is made for the ft_irc project from 42school HIVE, Helsinki") + COLOUR_END);
 	messageOfTheDay.push_back("        _________");
 	messageOfTheDay.push_back("       / ======= \\");
 	messageOfTheDay.push_back("      / __________\\");
