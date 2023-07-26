@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   NICK.cpp                                           :+:      :+:    :+:   */
+/*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 15:21:27 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:34:07 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:14 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
 #include <string>
 
-#include "NICK.hpp"
+#include "Nick.hpp"
 #include "../rpl_isupport.hpp"
 
 Nick::Nick(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :

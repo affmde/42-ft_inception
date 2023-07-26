@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CAP.cpp                                            :+:      :+:    :+:   */
+/*   Cap.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 16:41:01 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 10:57:40 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:05 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream> //DELETE THIS!!!! JUST FOR DEBUGGING!!!
 
-#include "CAP.hpp"
+#include "Cap.hpp"
 
 Cap::Cap(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}

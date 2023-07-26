@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 16:23:43 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 18:07:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:47 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 #include "Command.hpp"
 #include "Utils.hpp"
 #include "rpl_isupport.hpp"
-#include "commands/MOTD.hpp"
-#include "commands/CAP.hpp"
+#include "commands/Motd.hpp"
+#include "commands/Cap.hpp"
 
 Server::Server(const char *port, std::string pass)
 {

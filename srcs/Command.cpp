@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/25 18:06:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:44 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 #include "Parser.hpp"
 #include "Channel.hpp"
 #include "rpl_isupport.hpp"
-#include "commands/NICK.hpp"
-#include "commands/JOIN.hpp"
-#include "commands/PART.hpp"
-#include "commands/TOPIC.hpp"
-#include "commands/KICK.hpp"
-#include "commands/QUIT.hpp"
-#include "commands/INVITE.hpp"
-#include "commands/NOTICE.hpp"
-#include "commands/PRIVMSG.hpp"
-#include "commands/MODE.hpp"
-#include "commands/PING.hpp"
-#include "commands/MOTD.hpp"
-#include "commands/CAP.hpp"
+#include "commands/Nick.hpp"
+#include "commands/Join.hpp"
+#include "commands/Part.hpp"
+#include "commands/Topic.hpp"
+#include "commands/Kick.hpp"
+#include "commands/Quit.hpp"
+#include "commands/Invite.hpp"
+#include "commands/Notice.hpp"
+#include "commands/Privmsg.hpp"
+#include "commands/Mode.hpp"
+#include "commands/Ping.hpp"
+#include "commands/Motd.hpp"
+#include "commands/Cap.hpp"
 
 Command::Command(std::string &input, Client &client, Server &server) :
 input(input),

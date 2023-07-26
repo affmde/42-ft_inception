@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TOPIC.cpp                                          :+:      :+:    :+:   */
+/*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:55:53 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:35:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:23 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "TOPIC.hpp"
+#include "Topic.hpp"
 #include "../rpl_isupport.hpp"
 
 Topic::Topic(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :

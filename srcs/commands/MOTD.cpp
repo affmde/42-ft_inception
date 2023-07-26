@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MOTD.cpp                                           :+:      :+:    :+:   */
+/*   Motd.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 12:07:36 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/10 15:33:47 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:13 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "MOTD.hpp"
+#include "Motd.hpp"
 
 Motd::Motd(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
 ACommand(server, client, input, clientsList){}

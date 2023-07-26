@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   JOIN.cpp                                           :+:      :+:    :+:   */
+/*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 16:40:42 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/13 17:38:37 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:09 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "JOIN.hpp"
+#include "Join.hpp"
 #include "../Parser.hpp"
 
 Join::Join(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :

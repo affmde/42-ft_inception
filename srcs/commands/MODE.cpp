@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MODE.cpp                                           :+:      :+:    :+:   */
+/*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 17:41:17 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/14 16:24:19 by andrferr         ###   ########.fr       */
+/*   Updated: 2023/07/26 12:53:11 by helneff          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 
-#include "MODE.hpp"
+#include "Mode.hpp"
 #include "../rpl_isupport.hpp"
 
 Mode::Mode(Server &server, Client &client, std::string &input, std::vector<Client*> &clientsList) :
