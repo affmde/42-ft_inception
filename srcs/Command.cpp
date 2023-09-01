@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: helneff <helneff@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: andrferr <andrferr@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 15:40:52 by andrferr          #+#    #+#             */
-/*   Updated: 2023/07/26 12:53:44 by helneff          ###   ########.fr       */
+/*   Updated: 2023/09/01 10:13:37 by andrferr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ void Command::handleInvite(std::vector<Client*> *clients)
 void Command::handleTopic(std::vector<Client*> *clients)
 {
 	try {
-		Join j(server, client, input, *clients);
-		j.exec();
+		Topic t(server, client, input, *clients);
+		t.exec();
 	} catch(ACommand::NeedMoreParamsException &e) {
 		server.logMessage(2, "JOIN: Need more params", client.getNickname());
 		msg.reply(NULL, client, ERR_NEEDMOREPARAMS_CODE, SERVER, ERR_NEEDMOREPARAMS, client.getNickname().c_str(), "JOIN");
